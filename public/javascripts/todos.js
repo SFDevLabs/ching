@@ -2,28 +2,9 @@
 
   "use strict";
 
-  var Todo, TodoList, Todos, TodoView, AppView, App;
-
-  // TodoList = Backbone.Collection.extend({
-
-  //   // Reference to this collection's model.
-  //   model: Todo,
-
-  //   // Returns the relative URL where the model's resource would be
-  //   // located on the server. If your models are located somewhere else,
-  //   // override this method with the correct logic. Generates URLs of the
-  //   // form: "/[collection.url]/[id]", falling back to "/[urlRoot]/id" if
-  //   // the model is not part of a collection.
-  //   // Note that url may also be defined as a function.
-  //   url: function () {
-  //     return "/todo" + ((this.id) ? '/' + this.id : '');
-  //   },
+  var AppView, App;
 
 
-  // });
-
-
-  // Our overall **AppView** is the top-level piece of UI.
   AppView = Backbone.View.extend({
     el: $("#todoapp"),
 
@@ -64,10 +45,11 @@
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
     addOne: function (todo) {
-      debugger
-      //var view = new TodoView({model: todo});
-      //$("#todo-list").append(view.render().el);
+      todo.save();
     },
+    destroy: function(){
+      todo.destroy();
+    }
 
     // createOnEnter: function (e) {
     //   if (e.keyCode !== 13) { return; }
@@ -100,9 +82,6 @@
                     } else{
                       this.save();
                     }
-
-                    this.save()
-
                   }
 
 
@@ -134,11 +113,6 @@
               //minSpareRows: 1 //see notes on the left for `minSpareRows`
             });
 
-            // this will log all the Backbone events getting fired!
-            
-
-            // you'll have to make something like these until there is a better
-            // way to use the string notation, i.e. "bb:make"!
 
             // normally, you'd get these from the server with .fetch()
             function attr(attr, type) {
@@ -186,7 +160,7 @@
             // }
 
             $("#add_car").click(function () {
-              cars.add({title:'stuff'});
+              cars.add();
             })
 
             App = new AppView();
