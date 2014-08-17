@@ -67,6 +67,7 @@
     return function (req, res) {
       //console.log('update', req.body);
       model.findById(req.params.id, function (err, result) {
+        console.log(result)
         var key;
         for (key in req.body) {
           result[key] = req.body[key];

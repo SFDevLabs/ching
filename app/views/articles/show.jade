@@ -2,6 +2,8 @@ extends ../layouts/default
 
 block main
   h1= article.title
+  link(rel='stylesheet', href='/css/jquery.handsontable.bootstrap.css')
+  link(rel='stylesheet', href='/css/jquery.handsontable.full.css')
 
 block content
   .row
@@ -31,10 +33,22 @@ block content
     a.btn.btn-default(href='/articles/'+article._id+'/edit', title="edit") Edit
     | &nbsp;
     input(type="hidden", name="_method", value="DELETE")
+    
     button.btn.btn-danger(type="submit") Delete
+  br
+  button#add_car.btn.btn-default
+    | add
+  #example1
 
   br
   h3 Comments
   - each comment in article.comments
     include ../comments/comment
   include ../comments/form
+
+
+  script(type="text/javascript", src="/js/vendor/jquery-1.7.2.min.js")
+  script(type="text/javascript", src="/js/vendor/underscore-min.js")
+  script(type="text/javascript", src="/js/vendor/backbone-min.js")
+  script(type="text/javascript", src="/js/vendor/jquery.handsontable.full.js")
+  script(type="text/javascript", src="../js/todos.js")

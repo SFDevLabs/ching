@@ -15,8 +15,11 @@
   // List
   //
   function getListController(model) {
+
     return function (req, res) {
       //console.log('list', req.body);
+            console.log('hit 1')
+
       model.find({}, function (err, result) {
         if (!err) {
           res.send(result);
@@ -49,7 +52,7 @@
   //
   function getReadController(model) {
     return function (req, res) {
-      //console.log('read', req.body);
+      console.log('read!!');
       model.findById(req.params.id, function (err, result) {
         if (!err) {
           res.send(result);
@@ -66,7 +69,13 @@
   function getUpdateController(model) {
     return function (req, res) {
       //console.log('update', req.body);
-      model.findById(req.params.id, function (err, result) {
+      console.log(req.params)
+      model.findById(req.params.idt, function (err, result) {
+
+        if (result===null){
+          res.send({'err':true, 'description':'no model'});
+          return
+        }
         var key;
         for (key in req.body) {
           result[key] = req.body[key];
@@ -116,8 +125,9 @@
     }
 
     path = options.path || '/' + model.modelName.toLowerCase();
-    pathWithId = path + '/:id';
+    pathWithId = path + '/:idt';
 
+    console.log(pathWithId);
     app.get(path, getListController(model));
     app.post(path, getCreateController(model));
     app.get(pathWithId, getReadController(model));

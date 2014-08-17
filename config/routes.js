@@ -11,8 +11,8 @@ var async = require('async')
 var users = require('../app/controllers/users')
   , articles = require('../app/controllers/articles')
   , auth = require('./middlewares/authorization')
-  , crudUtils = require('../utils/crudUtils');
-    mongoose = require('mongoose')
+  , crudUtils = require('../utils/crudUtils')
+  , mongoose = require('mongoose')
   , Todo = mongoose.model('Todo');
 
 /**
@@ -27,6 +27,8 @@ var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
  */
 
 module.exports = function (app, passport) {
+
+  crudUtils.initRoutesForModel({ 'app': app, 'model': Todo });
 
   // user routes
   app.get('/login', users.login)
@@ -114,7 +116,10 @@ module.exports = function (app, passport) {
   var tags = require('../app/controllers/tags')
   app.get('/tags/:tag', tags.index)
 
-  crudUtils.initRoutesForModel({ 'app': app, 'model': Todo });
+  app.get('/crud', function(req, res){
+    res.render('crud')
+  } );
+
 
 
 }

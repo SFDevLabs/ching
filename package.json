@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-express-mongoose-demo",
+  "name": "ching",
   "description": "A demo app illustrating the usage of express, mongoose, passportjs, jade and other modules in nodejs",
   "keywords": [
     "express",
@@ -41,7 +41,8 @@
     "notifier": "latest",
     "async": "latest",
     "view-helpers": "latest",
-    "forever": "latest"
+    "forever": "latest",
+    "stylus":"latest"
   },
   "devDependencies": {
     "supertest": "latest",

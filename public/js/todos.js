@@ -7,6 +7,7 @@
 
   AppView = Backbone.View.extend({
     el: $("#todoapp"),
+    
     // Delegated events for creating new items, and clearing completed ones.
     events: {
      // "keypress #new-todo":  "createOnEnter",
