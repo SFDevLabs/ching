@@ -7,6 +7,9 @@
 
   "use strict";
 
+  var mongoose = require('mongoose')
+    , Article = mongoose.model('Article');
+
   function errMsg(msg) {
     return {'error': {'message': msg.toString()}};
   }
@@ -17,9 +20,7 @@
   function getListController(model) {
 
     return function (req, res) {
-      //console.log('list', req.body);
-            console.log('hit 1')
-
+      console.log('list', req.body);
       model.find({}, function (err, result) {
         if (!err) {
           res.send(result);
@@ -114,9 +115,8 @@
     };
   }
 
-  exports.initRoutesForModel = function (options) {
-    var app = options.app,
-      model = options.model,
+  exports.initRoutesForModel = function (app) {
+    var model = Article,
       path,
       pathWithId;
 
@@ -124,11 +124,11 @@
       return;
     }
 
-    path = options.path || '/' + model.modelName.toLowerCase();
-    pathWithId = path + '/:idt';
+    path = '/articles/:id'
+    pathWithId = path + '/list/:idt';
 
     console.log(pathWithId);
-    app.get(path, getListController(model));
+    app.get(path+'/list', getListController(model));
     app.post(path, getCreateController(model));
     app.get(pathWithId, getReadController(model));
     app.put(pathWithId, getUpdateController(model));

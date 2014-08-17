@@ -28,7 +28,6 @@ var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
 
 module.exports = function (app, passport) {
 
-  crudUtils.initRoutesForModel({ 'app': app, 'model': Todo });
 
   // user routes
   app.get('/login', users.login)
@@ -111,6 +110,8 @@ module.exports = function (app, passport) {
   app.post('/articles/:id/comments', auth.requiresLogin, comments.create)
   app.get('/articles/:id/comments', auth.requiresLogin, comments.create)
   app.del('/articles/:id/comments/:commentId', commentAuth, comments.destroy)
+
+  crudUtils.initRoutesForModel(app);
 
   // tag routes
   var tags = require('../app/controllers/tags')

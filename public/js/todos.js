@@ -90,7 +90,7 @@
               splice: hacked_splice,
 
               url: function () {
-                return "/todo" + ((this.id) ? '/' + this.id : '');
+                return '/articles/53b1ce6bb92dc49e26ef335d/list' + ((this.id) ? '/' + this.id : '');
               }
             });
 
