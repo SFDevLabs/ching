@@ -45,8 +45,13 @@ var ArticleSchema = new Schema({
     cdnUri: String,
     files: []
   },
-  createdAt  : {type : Date, default : Date.now}
-})
+  createdAt  : {type : Date, default : Date.now},
+  todos: [{
+    title:{type : String, default : ''},
+    done:{type : Boolean, default : false},
+    createdAt: { type : Date, default : Date.now }
+  }]
+});
 
 /**
  * Validations

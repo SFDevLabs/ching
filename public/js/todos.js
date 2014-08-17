@@ -2,7 +2,7 @@
 
   "use strict";
 
-  var AppView, App;
+  var AppView, App, aId=window.location.pathname.split('/')[2];
 
 
   AppView = Backbone.View.extend({
@@ -90,7 +90,7 @@
               splice: hacked_splice,
 
               url: function () {
-                return '/articles/53b1ce6bb92dc49e26ef335d/list' + ((this.id) ? '/' + this.id : '');
+                return '/articles/'+aId+'/list' + ((this.id) ? '/' + this.id : '');
               }
             });
 

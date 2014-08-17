@@ -27,7 +27,8 @@
       //     res.send(errMsg(err));
       //   }
       // });
-      var result = req.article.todos? req.article.todos:[{title:'stuffy'}];
+      // 
+      var result = req.article.todos
       res.send(result);
     };
   }
@@ -38,14 +39,31 @@
   function getCreateController(model) {
     return function (req, res) {
       //console.log('create', req.body);
-      var m = new model(req.body);
-      m.save(function (err) {
-        if (!err) {
-          res.send(m);
-        } else {
-          res.send(errMsg(err));
-        }
+      // var m = new model(req.body);
+      // m.save(function (err) {
+      //   if (!err) {
+      //     res.send(m);
+      //   } else {
+      //     res.send(errMsg(err));
+      //   }
+      // });
+
+      var m = req.article.todos.push({
+        title:''
       });
+
+      //console.log(req.article.todos[m-1].toJSON())
+
+
+
+      req.article.save(function(err){
+          if (!err) {
+            res.send( req.article.todos[m-1].toJSON() );
+          } else {
+            res.send(errMsg(err));
+          }
+      })
+
     };
   }
 
@@ -70,26 +88,45 @@
   //
   function getUpdateController(model) {
     return function (req, res) {
-      //console.log('update', req.body);
-      console.log(req.params)
-      model.findById(req.params.idt, function (err, result) {
 
-        if (result===null){
-          res.send({'err':true, 'description':'no model'});
-          return
+      
+
+      var key;
+      for (key in req.body) {
+        if (key!=='_id'){
+          req.article.todos[req.todo][key] = req.body[key];
         }
-        var key;
-        for (key in req.body) {
-          result[key] = req.body[key];
-        }
-        result.save(function (err) {
+      }
+
+
+
+      req.article.save(function(err){
           if (!err) {
-            res.send(result);
+            res.send( req.article.todos[req.todo].toJSON() );
           } else {
             res.send(errMsg(err));
           }
-        });
-      });
+      })
+
+      
+      // model.findById(req.params.idt, function (err, result) {
+
+      //   if (result===null){
+      //     res.send({'err':true, 'description':'no model'});
+      //     return
+      //   }
+      //   var key;
+      //   for (key in req.body) {
+      //     result[key] = req.body[key];
+      //   }
+      //   result.save(function (err) {
+      //     if (!err) {
+      //       res.send(result);
+      //     } else {
+      //       res.send(errMsg(err));
+      //     }
+      //   });
+      // });
     };
   }
 
@@ -125,24 +162,28 @@
       return;
     }
 
-    // app.param('id', function(req, res, next, id){
-    //   var User = mongoose.model('User')
+    app.param('idt', function(req, res, next, idt){
+    //console.log(idt)   
+      model.findOne({'todos._id':idt},function (err, article){
+          if (err) return next(err)
+          if (!article) return next(new Error('not found'))
 
-    //   Article.load(id, function (err, article) {
-    //     if (err) return next(err)
-    //     if (!article) return next(new Error('not found'))
-    //     req.article = article
-    //     next()
-    //   })
-
-    // });
+          var index
+          var todo = article.todos.forEach(function(val,i){
+            if (String(val._id)===idt){
+              index=i
+            }
+          });
+          req.todo=index;
+          next()
+        })
+    });
 
     path = '/articles/:id'
     pathWithId = path + '/list/:idt';
 
-    console.log(pathWithId);
     app.get(path+'/list', getListController(model));
-    app.post(path, getCreateController(model));
+    app.post(path+'/list', getCreateController(model));
     app.get(pathWithId, getReadController(model));
     app.put(pathWithId, getUpdateController(model));
     app.del(pathWithId, getDeleteController(model));
