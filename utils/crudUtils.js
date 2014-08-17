@@ -17,17 +17,18 @@
   //------------------------------
   // List
   //
-  function getListController(model) {
-
+  function getListController(articleModel) {
     return function (req, res) {
-      console.log('list', req.body);
-      model.find({}, function (err, result) {
-        if (!err) {
-          res.send(result);
-        } else {
-          res.send(errMsg(err));
-        }
-      });
+      // console.log('list', req.article._id);
+      // articleModel.find({_id:}, function (err, result) {
+      //   if (!err) {
+      //     res.send(result);
+      //   } else {
+      //     res.send(errMsg(err));
+      //   }
+      // });
+      var result = req.article.todos? req.article.todos:[{title:'stuffy'}];
+      res.send(result);
     };
   }
 
@@ -123,6 +124,18 @@
     if (!app || !model) {
       return;
     }
+
+    // app.param('id', function(req, res, next, id){
+    //   var User = mongoose.model('User')
+
+    //   Article.load(id, function (err, article) {
+    //     if (err) return next(err)
+    //     if (!article) return next(new Error('not found'))
+    //     req.article = article
+    //     next()
+    //   })
+
+    // });
 
     path = '/articles/:id'
     pathWithId = path + '/list/:idt';
