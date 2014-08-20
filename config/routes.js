@@ -92,6 +92,7 @@ module.exports = function (app, passport) {
   app.param('userId', users.user)
 
   // article routes
+  app.get('/home', articles.home)
   app.param('id', articles.load)
   app.get('/articles', articles.index)
   app.get('/articles/new', auth.requiresLogin, articles.new)

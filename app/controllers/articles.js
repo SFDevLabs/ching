@@ -134,3 +134,12 @@ exports.destroy = function(req, res){
     res.redirect('/articles')
   })
 }
+/**
+ * Home page
+ */
+
+exports.home = function(req, res){
+  res.render('articles/home', {
+    title: 'Home',
+  })
+}

@@ -88,13 +88,12 @@
   //
   function getUpdateController(model) {
     return function (req, res) {
-
-      
-
-      var key;
+      var key,
+          todos=req.article.todos,
+          index=req.todoIndex;
       for (key in req.body) {
-        if (key!=='_id'){
-          req.article.todos[req.todo][key] = req.body[key];
+        if (key!=='_id' && key!=='createdAt'){
+          todos[index][key] = req.body[key];
         }
       }
 
@@ -102,7 +101,7 @@
 
       req.article.save(function(err){
           if (!err) {
-            res.send( req.article.todos[req.todo].toJSON() );
+            res.send( req.article.todos[index].toJSON() );
           } else {
             res.send(errMsg(err));
           }
@@ -153,6 +152,33 @@
     };
   }
 
+
+  function loadParams(model) {
+      return function(req, res, next, idt) {
+          model.findOne({
+              'todos._id': idt
+          }, function(err, article) {
+              if (err) return next(err)
+              if (!article) return next(new Error('not found'))
+
+              var index
+              article.todos.forEach(function(val, i) {
+                  if (String(val._id) === idt) {
+                      index = i
+                  }
+              });
+
+              if (!index) {
+                  res.send(500, errMsg('Item Does not Exist'))
+              } else {
+                  req.todoIndex = index;
+                  next();
+              }
+          })
+      }
+  }
+
+
   exports.initRoutesForModel = function (app) {
     var model = Article,
       path,
@@ -162,22 +188,7 @@
       return;
     }
 
-    app.param('idt', function(req, res, next, idt){
-    //console.log(idt)   
-      model.findOne({'todos._id':idt},function (err, article){
-          if (err) return next(err)
-          if (!article) return next(new Error('not found'))
-
-          var index
-          var todo = article.todos.forEach(function(val,i){
-            if (String(val._id)===idt){
-              index=i
-            }
-          });
-          req.todo=index;
-          next()
-        })
-    });
+    app.param('idt', loadParams(model));
 
     path = '/articles/:id'
     pathWithId = path + '/list/:idt';

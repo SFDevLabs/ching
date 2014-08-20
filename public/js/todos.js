@@ -30,12 +30,27 @@
       this.footer = this.$('footer');
       this.main = $('#main');
 
+
+
+
       cars.fetch();
     },
     remove: function () {
       $container.handsontable("render");
     },
     render: function () {
+      
+      // cars.colHead=['note','item']//_.keys( cars.first().toJSON() )
+
+      // // cars.colData=  _.map(cars.colHead,function(val){
+      // //   return attr(val,'text');
+      // // });
+
+
+      // cars.colData=[attr('note','text'),attr('item','text')]
+
+
+
       $container.handsontable("render");
     },
 
@@ -48,119 +63,93 @@
       todo.destroy();
     }
 
-    // createOnEnter: function (e) {
-    //   if (e.keyCode !== 13) { return; }
-    //   if (!this.input.val()) { return; }
-
-    //   Todos.create({title: 'stuff',done: false});
-    //   this.input.val('');
-    // },
-
-
-
   });
 
-             var CarModel = Backbone.Model.extend({
+   var CarModel = Backbone.Model.extend({
 
-                  idAttribute: "_id",
-                  initialize: function(){
-
-                    this.bind('change',this.saveIt);
-
-                  },
-
-                  defaults: {
-                      "title":  "",
-                      "done": false
-                  },
-                  saveIt:function(a,b,c){
-                    if (typeof this.get('done') !== 'boolean'){
-                      alert('bad type');
-                    } else{
-                      this.save();
-                    }
-                  }
+        idAttribute: "_id",
+        initialize: function(){          
+          this.bind('change',this.saveIt);
+        },
+        defaults: {
+            "title":  "",
+            "done": false
+        },
+        saveIt:function(a,b,c){
+          if (typeof this.get('done') !== 'boolean'){
+            alert('bad type');
+          } else if (!a.changed._id){//if the _id was updated it is a new record.  No need to save.
+            this.save();
+          }
+        }
 
 
-             });
+   });
 
-            var CarCollection = Backbone.Collection.extend({
-              model: CarModel,
-              // Backbone.Collection doesn't support `splice`, yet! Easy to add.
-              splice: hacked_splice,
+  var CarCollection = Backbone.Collection.extend({
+    model: CarModel,
+    // Backbone.Collection doesn't support `splice`, yet! Easy to add.
+    splice: hacked_splice,
 
-              url: function () {
-                return '/articles/'+aId+'/list' + ((this.id) ? '/' + this.id : '');
-              }
-            });
+    url: function () {
+      return '/articles/'+aId+'/list' + ((this.id) ? '/' + this.id : '');
+    },
+    // colHead:['',''],
+    // colData:[attr('note','text'),attr('item','text')]
+  });
 
-            var cars = new CarCollection();
+  var cars = new CarCollection();
+  //debugger
+  // cars.colData=[   ];
+  // cars.colHead = ['note','item'];
+  // 
+      var mmm=['note','item']
+      var mm=[attr('note','text'),attr('item','text')]
+  var $container = $("#example1");
+  $container.handsontable({
+    data: cars,
+    dataSchema: makeCar,
+    contextMenu: true,
+    columns: mm,
+    colHeaders: mmm
+    //minSpareRows: 1 //see notes on the left for `minSpareRows`
+  });
 
 
-            var $container = $("#example1");
-            $container.handsontable({
-              data: cars,
-              dataSchema: makeCar,
-              contextMenu: true,
-              columns: [
-                attr('done', 'checkbox'),
-                attr('title', 'text')
-              ],
-              colHeaders: ["done", "title"]
-              //minSpareRows: 1 //see notes on the left for `minSpareRows`
-            });
+  // normally, you'd get these from the server with .fetch()
+  function attr(attr, type) {
+    console.log(attr, type)
+    // this lets us remember `attr` for when when it is get/set
+    var setter = function (car, value) {
+      if (_.isUndefined(value)) {
+        return car.get(attr);
+      } 
+      car.set(attr, value);
+    } 
+    
+    return {data: setter, type:type};
+  }
 
 
-            // normally, you'd get these from the server with .fetch()
-            function attr(attr, type) {
-              // this lets us remember `attr` for when when it is get/set
-              var setter = function (car, value) {
-                if (_.isUndefined(value)) {
-                  return car.get(attr);
-                }
-                car.set(attr, value);
-              } 
-              
-              return {data: setter, type:type};
-            }
+  function makeCar() {
+    return new CarModel();
+  }
 
-            var setter = function (car, value) {
-              if (_.isUndefined(value)) {
-                return car.get(attr);
-              }
-              car.set(attr, value);
-            } 
+  // use the "good" Collection methods to emulate Array.splice
+  function hacked_splice(index, howMany /* model1, ... modelN */) {
+    var args = _.toArray(arguments).slice(2).concat({at: index}),
+      removed = this.models.slice(index, index + howMany);
+    this.remove(removed).add.apply(this, args);
+    return removed;
+  }
 
-            function makeCar() {
-              return new CarModel();
-            }
 
-            // use the "good" Collection methods to emulate Array.splice
-            function hacked_splice(index, howMany /* model1, ... modelN */) {
-              var args = _.toArray(arguments).slice(2).concat({at: index}),
-                removed = this.models.slice(index, index + howMany);
-              this.remove(removed).add.apply(this, args);
-              return removed;
-            }
 
-            // show a log of events getting fired
-            // function log_events(event, model) {
-            //   var now = new Date();
-            //   $("#example1_events").prepend(
-            //       $("<option/>").text([
-            //         ":", now.getSeconds(), ":", now.getMilliseconds(),
-            //         "[" + event + "]",
-            //         JSON.stringify(model)
-            //       ].join(" "))
-            //     )
-            //     .scrollTop(0);
-            // }
+  $("#add_car").click(function () {
+    cars.add();
+  })
 
-            $("#add_car").click(function () {
-              cars.add();
-            })
-
-            App = new AppView();
+  App = new AppView();
 
 
 //}(jQuery, _, Backbone));
