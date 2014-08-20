@@ -1,16 +1,6 @@
 [![Build Status](https://travis-ci.org/madhums/node-express-mongoose-demo.png)](https://travis-ci.org/madhums/node-express-mongoose-demo)
 
-# Nodejs Express Mongoose Demo
-
-This is a demo node.js application illustrating various features used in everyday web development, with a fine touch of best practices. The demo app is a blog application where users (signing up using facebook, twitter, github and simple registrations) can create an article, delete an article and add comments on the article.
-
-Read the [wiki](https://github.com/madhums/node-express-mongoose/wiki) (or the [old blog post](http://madhums.me/2012/07/19/breaking-down-app-js-file-nodejs-express-mongoose/)) for the application architecture.
-
-Want to build something from scratch? use the [boilerplate app](https://github.com/madhums/node-express-mongoose)
-
-Checkout the [apps that are built using this approach](https://github.com/madhums/node-express-mongoose/wiki/Apps-built-using-this-approach)
-
-## Install
+# Ching Project
 
 **NOTE:** You need to have node.js, mongodb and [imagemagick](http://www.imagemagick.org/script/index.php) installed and running.
 
@@ -57,14 +47,3 @@ Then visit [http://localhost:3000/](http://localhost:3000/)
 ```sh
 $ npm test
 ```
-
-## License
-(The MIT License)
-
-Copyright (c) 2012 Madhusudhan Srinivasa < [madhums8@gmail.com](mailto:madhums8@gmail.com) >
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
