@@ -47,9 +47,15 @@ var ArticleSchema = new Schema({
   },
   createdAt  : {type : Date, default : Date.now},
   todos: [{
-    title:{type : String, default : ''},
-    done:{type : Boolean, default : false},
-    createdAt: { type : Date, default : Date.now }
+    note:{type : String, default : ''},
+    item:{type : String, default : ''},
+    cost:{type : Number, default : 0},
+    qty:{type : Number, default : 0},
+    tax1:{type : String, default : ''},
+    tax2:{type : String, default : ''},
+    type:{type : String, default : ''},
+    total:{type : Number}
+
   }]
 });
 
