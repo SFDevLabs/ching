@@ -19,21 +19,14 @@
   //
   function getListController(articleModel) {
     return function (req, res) {
-      // console.log('list', req.article._id);
-      // articleModel.find({_id:}, function (err, result) {
-      //   if (!err) {
-      //     res.send(result);
-      //   } else {
-      //     res.send(errMsg(err));
-      //   }
-      // });
       var schema={},
           first = req.article.todos[0]
       if (first){
         var firstJSON = first.toJSON();
         for (var i in firstJSON) {
-          if (i==='_id')
-          schema[i] = typeof firstJSON[i]
+          if (i!=='_id'){
+            schema[i] = typeof firstJSON[i]
+          }
         };        
       }
 

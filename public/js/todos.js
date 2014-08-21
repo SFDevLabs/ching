@@ -30,16 +30,12 @@
       this.footer = this.$('footer');
       this.main = $('#main');
 
-
-
-
       cars.fetch();
     },
     remove: function () {
       $container.handsontable("render");
     },
     render: function () {
-
       this.setup();
     },
 
@@ -50,6 +46,13 @@
     },
     destroy: function(){
       todo.destroy();
+    },
+    handsonType:function(type){
+      if (type==='string'){
+        return 'text'
+      } else if (type==='number'){
+        return 'numeric'
+      }
     },
     handsonContainer:$("#example1"),
     setup:function(){
@@ -65,7 +68,7 @@
         if (i!=="_id"){
           var val=firstModelAttributes[i]
           colHeaders.push(i);
-          columns.push(attrObj(i,'text'));
+          columns.push(attrObj(i, this.handsonType( cars.schema[i]) ));
         }
       }
       //var mmm=['note','item']
@@ -90,16 +93,8 @@
         initialize: function(){          
           this.bind('change',this.saveIt);
         },
-        defaults: {
-            "title":  "",
-            "done": false
-        },
         saveIt:function(a,b,c){
-          if (typeof this.get('done') !== 'boolean'){
-            alert('bad type');
-          } else if (!a.changed._id){//if the _id was updated it is a new record.  No need to save.
             this.save();
-          }
         }
 
 
@@ -114,6 +109,7 @@
       return '/articles/'+aId+'/list' + ((this.id) ? '/' + this.id : '');
     },
     parse : function(response){
+      this.schema=response.schema;
       return response.data
     }
     // colHead:['',''],
