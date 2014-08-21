@@ -39,19 +39,8 @@
       $container.handsontable("render");
     },
     render: function () {
-      
-      // cars.colHead=['note','item']//_.keys( cars.first().toJSON() )
 
-      // // cars.colData=  _.map(cars.colHead,function(val){
-      // //   return attr(val,'text');
-      // // });
-
-
-      // cars.colData=[attr('note','text'),attr('item','text')]
-
-
-
-      $container.handsontable("render");
+      this.setup();
     },
 
     // Add a single todo item to the list by creating a view for it, and
@@ -61,6 +50,36 @@
     },
     destroy: function(){
       todo.destroy();
+    },
+    handsonContainer:$("#example1"),
+    setup:function(){
+
+      var first = cars.at(0)
+
+      if (!first){return false;}
+
+      var firstModelAttributes = first.attributes
+        , columns=[]
+        , colHeaders=[];
+      for (var i in firstModelAttributes){
+        if (i!=="_id"){
+          var val=firstModelAttributes[i]
+          colHeaders.push(i);
+          columns.push(attrObj(i,'text'));
+        }
+      }
+      //var mmm=['note','item']
+      //var mm=[attr('note','text'),attr('item','text')]
+      this.handsonContainer.handsontable({
+        data: cars,
+        dataSchema: function(){
+          return new CarModel();
+        },
+        contextMenu: true,
+        columns: columns,
+        colHeaders: colHeaders
+        //minSpareRows: 1 //see notes on the left for `minSpareRows`
+      });
     }
 
   });
@@ -94,6 +113,9 @@
     url: function () {
       return '/articles/'+aId+'/list' + ((this.id) ? '/' + this.id : '');
     },
+    parse : function(response){
+      return response.data
+    }
     // colHead:['',''],
     // colData:[attr('note','text'),attr('item','text')]
   });
@@ -103,22 +125,12 @@
   // cars.colData=[   ];
   // cars.colHead = ['note','item'];
   // 
-      var mmm=['note','item']
-      var mm=[attr('note','text'),attr('item','text')]
-  var $container = $("#example1");
-  $container.handsontable({
-    data: cars,
-    dataSchema: makeCar,
-    contextMenu: true,
-    columns: mm,
-    colHeaders: mmm
-    //minSpareRows: 1 //see notes on the left for `minSpareRows`
-  });
+
+
 
 
   // normally, you'd get these from the server with .fetch()
-  function attr(attr, type) {
-    console.log(attr, type)
+  function attrObj(attr, type) {
     // this lets us remember `attr` for when when it is get/set
     var setter = function (car, value) {
       if (_.isUndefined(value)) {
@@ -131,9 +143,9 @@
   }
 
 
-  function makeCar() {
-    return new CarModel();
-  }
+  // function makeCar() {
+  //   return new CarModel();
+  // }
 
   // use the "good" Collection methods to emulate Array.splice
   function hacked_splice(index, howMany /* model1, ... modelN */) {

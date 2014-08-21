@@ -27,8 +27,21 @@
       //     res.send(errMsg(err));
       //   }
       // });
-      // 
-      var result = req.article.todos
+      var schema={},
+          first = req.article.todos[0]
+      if (first){
+        var firstJSON = first.toJSON();
+        for (var i in firstJSON) {
+          if (i==='_id')
+          schema[i] = typeof firstJSON[i]
+        };        
+      }
+
+      var result = {
+        data: req.article.todos,
+        schema: schema,
+      }
+
       res.send(result);
     };
   }
@@ -160,15 +173,16 @@
           }, function(err, article) {
               if (err) return next(err)
               if (!article) return next(new Error('not found'))
-
+                console.log(article,idt)
               var index
               article.todos.forEach(function(val, i) {
+                console.log(String(val._id), idt,String(val._id)==idt, i)
                   if (String(val._id) === idt) {
                       index = i
                   }
               });
 
-              if (!index) {
+              if (index===undefined) {
                   res.send(500, errMsg('Item Does not Exist'))
               } else {
                   req.todoIndex = index;
