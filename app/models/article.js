@@ -51,9 +51,10 @@ var ArticleSchema = new Schema({
     item:{type : String, default : ''},
     cost:{type : Number, default : 0},
     qty:{type : Number, default : 0},
-    tax1:{type : String, default : ''},
-    tax2:{type : String, default : ''},
+    tax1:{type : Number, default : 0},
+    tax2:{type : Number, default : 0},
     type:{type : String, default : ''},
+    date: {type: Date, default : Date.now},
     total:{type : Number}
 
   }]

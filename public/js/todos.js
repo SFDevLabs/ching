@@ -68,7 +68,13 @@
         if (i!=="_id"){
           var val=firstModelAttributes[i]
           colHeaders.push(i);
-          columns.push(attrObj(i, this.handsonType( cars.schema[i]) ));
+          columns.push(
+            {
+              data:setterFactor(i), 
+              type:this.handsonType( cars.schema[i]),
+              //format:this.handsonType( cars.format[i])
+            }
+          )
         }
       }
       //var mmm=['note','item']
@@ -122,20 +128,33 @@
   // cars.colHead = ['note','item'];
   // 
 
-
-
+var setterFactor=function(attr){
+    var setter = function (car, value, format) {
+      if (_.isUndefined(value)) {
+        return car.get(attr);
+      } 
+      return car.set(attr, value);
+    } 
+    return setter
+}
+    var setter = function (car, value, format) {
+      if (_.isUndefined(value)) {
+        return car.get(attr);
+      } 
+      return car.set(attr, value);
+    } 
 
   // normally, you'd get these from the server with .fetch()
   function attrObj(attr, type) {
     // this lets us remember `attr` for when when it is get/set
-    var setter = function (car, value) {
+    var setter = function (car, value, format) {
       if (_.isUndefined(value)) {
         return car.get(attr);
       } 
       car.set(attr, value);
     } 
     
-    return {data: setter, type:type};
+    return {data: setter, type:type, format: format};
   }
 
 

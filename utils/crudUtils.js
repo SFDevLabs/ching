@@ -19,13 +19,17 @@
   //
   function getListController(articleModel) {
     return function (req, res) {
-      var schema={},
-          first = req.article.todos[0]
+      var schema = {},
+          format = {},
+          first  = req.article.todos[0]
       if (first){
         var firstJSON = first.toJSON();
         for (var i in firstJSON) {
           if (i!=='_id'){
             schema[i] = typeof firstJSON[i]
+
+            //['cost','qty','tax1','tax2'].indexOf('b')
+            //format[i] = switch
           }
         };        
       }
@@ -33,6 +37,7 @@
       var result = {
         data: req.article.todos,
         schema: schema,
+        format: format
       }
 
       res.send(result);
