@@ -25,7 +25,7 @@
 
       cars.bind('remove', this.addOne, this);
 
-      cars.bind('all', this.render, this);
+      cars.bind('reset', this.setup, this);
 
       this.footer = this.$('footer');
       this.main = $('#main');
@@ -33,7 +33,7 @@
       cars.fetch();
     },
     remove: function () {
-      $container.handsontable("render");
+      //$container.handsontable("render");
     },
     render: function () {
       this.setup();

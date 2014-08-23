@@ -4772,6 +4772,13 @@ Handsontable.helper.toString = function (obj) {
     var WRAPPER = clonableWRAPPER.cloneNode(true); //this is faster than createElement
     var ARROW = clonableARROW.cloneNode(true); //this is faster than createElement
 
+    //Added to formate date
+    if (cellProperties.type==='date'){
+      value=$.datepicker( 
+        'mm/dd/yy'
+        ,new Date(value)
+        );
+    };
     Handsontable.renderers.TextRenderer(instance, TD, row, col, prop, value, cellProperties);
 
     TD.appendChild(ARROW);
