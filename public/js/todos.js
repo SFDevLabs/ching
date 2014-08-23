@@ -52,6 +52,8 @@
         return 'text'
       } else if (type==='number'){
         return 'numeric'
+      } else if (type==='date'){
+          return 'date'
       }
     },
     handsonContainer:$("#example1"),
@@ -72,7 +74,8 @@
             {
               data:setterFactor(i), 
               type:this.handsonType( cars.schema[i]),
-              //format:this.handsonType( cars.format[i])
+              format:cars.format[i],
+              dateFormat:cars.format[i]
             }
           )
         }
@@ -99,7 +102,7 @@
         initialize: function(){          
           this.bind('change',this.saveIt);
         },
-        saveIt:function(a,b,c){
+        saveIt:function(){
             this.save();
         }
 
@@ -116,6 +119,7 @@
     },
     parse : function(response){
       this.schema=response.schema;
+      this.format=response.format;
       return response.data
     }
     // colHead:['',''],
@@ -123,7 +127,6 @@
   });
 
   var cars = new CarCollection();
-  //debugger
   // cars.colData=[   ];
   // cars.colHead = ['note','item'];
   // 
@@ -144,22 +147,17 @@ var setterFactor=function(attr){
       return car.set(attr, value);
     } 
 
-  // normally, you'd get these from the server with .fetch()
-  function attrObj(attr, type) {
-    // this lets us remember `attr` for when when it is get/set
-    var setter = function (car, value, format) {
-      if (_.isUndefined(value)) {
-        return car.get(attr);
-      } 
-      car.set(attr, value);
-    } 
+  // // normally, you'd get these from the server with .fetch()
+  // function attrObj(attr, type) {
+  //   // this lets us remember `attr` for when when it is get/set
+  //   var setter = function (car, value, format) {
+  //     if (_.isUndefined(value)) {
+  //       return car.get(attr);
+  //     } 
+  //     car.set(attr, value);
+  //   } 
     
-    return {data: setter, type:type, format: format};
-  }
-
-
-  // function makeCar() {
-  //   return new CarModel();
+  //   return {data: setter, type:type, format: format};
   // }
 
   // use the "good" Collection methods to emulate Array.splice

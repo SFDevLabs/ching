@@ -13,6 +13,26 @@
   function errMsg(msg) {
     return {'error': {'message': msg.toString()}};
   }
+  function getTypeOf(data){
+    if (data instanceof Date){
+      return 'date'
+    } else{
+      return typeof data
+    }
+  }
+  var formates = ['$0,0.00','0','%0.00','%0.00','','mm/dd/yy'],
+      formateKeys = ['cost','qty','tax1','tax2','type','date'];
+  function getFormate(data){
+    var i=formateKeys.indexOf(data);
+        console.log(data,i,formates[i])
+
+    if(i>0){
+      return formates[i]    
+    } else{
+      return ''
+    }
+    
+  }
 
   //------------------------------
   // List
@@ -26,10 +46,8 @@
         var firstJSON = first.toJSON();
         for (var i in firstJSON) {
           if (i!=='_id'){
-            schema[i] = typeof firstJSON[i]
-
-            //['cost','qty','tax1','tax2'].indexOf('b')
-            //format[i] = switch
+            schema[i] = getTypeOf(firstJSON[i])
+            format[i] = getFormate(i)
           }
         };        
       }

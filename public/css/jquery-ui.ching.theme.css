@@ -1,0 +1,14 @@
+/**
+ * This Stylus file will be compiled to todos.css automatically by node when
+ * the server is started and a todos.css file doesn't exist.  To regenerate
+ * todos.css, simply delete the file and reload the app in a browser window.
+ *
+ * To see how the css file is generated look at app.js.
+ */
+.htDatepickerHolder {
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.htDatepickerHolder .ui-icon {
+  text-indent: initial;
+}
