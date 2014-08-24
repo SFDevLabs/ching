@@ -101,9 +101,26 @@
         idAttribute: "_id",
         initialize: function(){          
           this.bind('change',this.saveIt);
+          this.on("invalid", function(model, error) {
+            alert(error);
+          });
         },
         saveIt:function(){
-            this.save();
+                this.save();
+        },
+        validate:function(attrs, options){
+          for (var i in attrs){
+            var schema = this.collection.schema[i],  //Stored BB collection
+                val    = attrs[i];
+            if (!schema){
+              //do nothing no schema
+            } else if (schema==='date'){// Nested logic.  First we see if it is a date.
+              if (isNaN(new Date(val).getTime())){return "Not a valid Date"};  //Then we check if the ISO date string is valid
+            } else if (schema!==typeof val){ //Check the type agains the schema API from the parse API stored in the BB collection.
+              return "Not a valid "+schema+'. Please enter a '+schema;
+            }
+          }
+
         }
 
 
