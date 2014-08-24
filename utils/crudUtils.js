@@ -24,9 +24,7 @@
       formateKeys = ['cost','qty','tax1','tax2','type','date'];
   function getFormate(data){
     var i=formateKeys.indexOf(data);
-        console.log(data,i,formates[i])
-
-    if(i>0){
+    if(i>=0){
       return formates[i]    
     } else{
       return ''
@@ -67,27 +65,10 @@
   //
   function getCreateController(model) {
     return function (req, res) {
-      //console.log('create', req.body);
-      // var m = new model(req.body);
-      // m.save(function (err) {
-      //   if (!err) {
-      //     res.send(m);
-      //   } else {
-      //     res.send(errMsg(err));
-      //   }
-      // });
-
-      var m = req.article.todos.push({
-        title:''
-      });
-
-      //console.log(req.article.todos[m-1].toJSON())
-
-
-
+      var newTodo = req.article.todos.push({});
       req.article.save(function(err){
           if (!err) {
-            res.send( req.article.todos[m-1].toJSON() );
+            res.send( req.article.todos[newTodo-1].toJSON() );
           } else {
             res.send(500,errMsg(err));
           }
@@ -101,7 +82,6 @@
   //
   function getReadController(model) {
     return function (req, res) {
-      console.log('read!!');
       model.findById(req.params.id, function (err, result) {
         if (!err) {
           res.send(result);
@@ -142,7 +122,6 @@
   //
   function getDeleteController(model) {
     return function (req, res) {
-      //console.log('delete', req.body);
       model.findById(req.params.id, function (err, result) {
         if (err) {
           res.send(errMsg(err));
@@ -168,15 +147,12 @@
           }, function(err, article) {
               if (err) return next(err)
               if (!article) return next(new Error('not found'))
-                console.log(article,idt)
               var index
               article.todos.forEach(function(val, i) {
-                console.log(String(val._id), idt,String(val._id)==idt, i)
                   if (String(val._id) === idt) {
                       index = i
                   }
               });
-
               if (index===undefined) {
                   res.send(500, errMsg('Item Does not Exist'))
               } else {
