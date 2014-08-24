@@ -27,6 +27,10 @@
 
       cars.bind('reset', this.setup, this);
 
+      //TODO add row http://handsontable.com/demo/prepopulate.html
+      //cars.bind('add', this.setup, this);
+
+
       this.footer = this.$('footer');
       this.main = $('#main');
 
