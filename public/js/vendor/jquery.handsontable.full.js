@@ -5409,8 +5409,9 @@ Handsontable.helper.toString = function (obj) {
       animate: false,
       extraSpace: 0
     });
-
-    this.textareaParentStyle.display = 'block';
+    if (this.cellProperties.type!=='date'){
+      this.textareaParentStyle.display = 'block';
+    }
   };
 
   TextEditor.prototype.bindEvents = function () {
@@ -5539,7 +5540,9 @@ Handsontable.helper.toString = function (obj) {
     $.extend(dateOptions, this.cellProperties);
     this.$datePicker.datepicker("option", dateOptions);
     if (this.originalValue) {
-      this.$datePicker.datepicker("setDate", this.originalValue);
+      var dateObj=new Date(this.originalValue),
+          dateInput= isNaN(dateObj.getTime() )?this.originalValue:dateObj;
+      this.$datePicker.datepicker("setDate", dateInput);
     }
     this.datePickerStyle.display = 'block';
   };
