@@ -89,7 +89,7 @@
           if (!err) {
             res.send( req.article.todos[m-1].toJSON() );
           } else {
-            res.send(errMsg(err));
+            res.send(500,errMsg(err));
           }
       })
 
@@ -106,7 +106,7 @@
         if (!err) {
           res.send(result);
         } else {
-          res.send(errMsg(err));
+          res.send(500,errMsg(err));
         }
       });
     };
@@ -126,35 +126,14 @@
         }
       }
 
-
-
       req.article.save(function(err){
           if (!err) {
             res.send( req.article.todos[index].toJSON() );
           } else {
-            res.send(errMsg(err));
+            res.send(500,errMsg(err));
           }
       })
 
-      
-      // model.findById(req.params.idt, function (err, result) {
-
-      //   if (result===null){
-      //     res.send({'err':true, 'description':'no model'});
-      //     return
-      //   }
-      //   var key;
-      //   for (key in req.body) {
-      //     result[key] = req.body[key];
-      //   }
-      //   result.save(function (err) {
-      //     if (!err) {
-      //       res.send(result);
-      //     } else {
-      //       res.send(errMsg(err));
-      //     }
-      //   });
-      // });
     };
   }
 
