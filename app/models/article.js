@@ -31,6 +31,21 @@ var setTags = function (tags) {
  * Article Schema
  */
 
+  var formates = [,,'%0.00','%0.00','','mm/dd/yy'],
+      formateKeys = ['cost','qty','tax1','tax2','type','date'];
+
+var itemsSchema = {
+    note:{type : String, default :  null, format: '', typeString:'string'},
+    item:{type : String, default : null, format: '', typeString:'string'},
+    cost:{type : Number, default : null, format: '$0,0.00', typeString:'number'},
+    qty:{type : Number, default : null, format: '0', typeString:'number'},
+    tax1:{type : Number, default : null, format: '%0.00', typeString:'number'},
+    tax2:{type : Number, default : null, format: '%0.00', typeString:'number'},
+    type:{type : String, default : null, format: '', typeString:'string'},
+    date: {type: Date, default : null, format: 'mm/dd/yy', typeString:'date'},
+    total:{type : Number, default : null, format: '', typeString:'number'}  }
+    exports.itemsSchema = itemsSchema;
+
 var ArticleSchema = new Schema({
   title: {type : String, default : '', trim : true},
   body: {type : String, default : '', trim : true},
@@ -46,18 +61,7 @@ var ArticleSchema = new Schema({
     files: []
   },
   createdAt  : {type : Date, default : Date.now},
-  todos: [{
-    note:{type : String, default : ''},
-    item:{type : String, default : ''},
-    cost:{type : Number, default : 0},
-    qty:{type : Number, default : 0},
-    tax1:{type : Number, default : 0},
-    tax2:{type : Number, default : 0},
-    type:{type : String, default : ''},
-    date: {type: Date, default : Date.now},
-    total:{type : Number}
-
-  }]
+  todos: [itemsSchema]
 });
 
 /**

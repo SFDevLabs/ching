@@ -23,30 +23,30 @@
 
       cars.bind('add', this.addOne, this);
 
-      cars.bind('remove', this.addOne, this);
+      cars.bind('remove', this.removeOne, this);
 
       cars.bind('reset', this.setup, this);
 
-      //TODO add row http://handsontable.com/demo/prepopulate.html
-      //cars.bind('add', this.setup, this);
-
+      cars.bind('sync', this.renderAfterSync, this);
 
       this.footer = this.$('footer');
       this.main = $('#main');
 
       cars.fetch();
     },
-    remove: function () {
-      //$container.handsontable("render");
+    renderAfterSync: function (todos, response) {
+        if (todos.get('_blank')){///detect is this is a collection
+          App.handsonContainer.handsontable("render");
+        }
     },
-    render: function () {
-      this.setup();
-    },
-
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
     addOne: function (todo) {
-      todo.save();
+        todo.save();
+    },
+    removeOne: function (todo) {
+      todo.destroy();
+      this.handsonContainer.handsontable("render");
     },
     destroy: function(){
       todo.destroy();
@@ -61,6 +61,9 @@
       }
     },
     handsonContainer:$("#example1"),
+    blankRender: function(instance, td, row, col, prop, value, cellProperties){
+      Handsontable.renderers.TextRenderer.apply(this, arguments);
+    },
     setup:function(){
 
       var first = cars.at(0)
@@ -84,12 +87,18 @@
           )
         }
       }
-      //var mmm=['note','item']
-      //var mm=[attr('note','text'),attr('item','text')]
+
+      Handsontable.renderers.registerRenderer('blank', this.blankRender); //maps function to lookup string
+
       this.handsonContainer.handsontable({
         data: cars,
         dataSchema: function(){
           return new CarModel();
+        },
+        cells:function (row, col, prop) {
+          return {
+            //renderer:'blank'
+          }
         },
         contextMenu: true,
         columns: columns,
@@ -103,18 +112,20 @@
    var CarModel = Backbone.Model.extend({
 
         idAttribute: "_id",
-        initialize: function(){          
+        initialize: function(){       
           this.bind('change',this.saveIt);
           this.on("invalid", function(model, error) {
             alert(error);
           });
         },
-        saveIt:function(){
-                this.save();
+        saveIt:function(todo,option){
+            if (!option.unset){
+              todo.save();
+            }
         },
         validate:function(attrs, options){
           for (var i in attrs){
-            var schema = this.collection.schema[i],  //Stored BB collection
+            var schema = cars.schema[i],  //Stored BB collection
                 val    = attrs[i];
             if (!schema){
               //do nothing no schema
@@ -192,8 +203,12 @@ var setterFactor=function(attr){
 
 
   $("#add_car").click(function () {
-    cars.add();
+    cars.add({_blank:true});
   })
+  $("#pop_car").click(function () {
+    cars.pop();
+  })
+
 
   App = new AppView();
 

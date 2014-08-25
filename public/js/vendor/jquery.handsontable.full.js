@@ -4769,11 +4769,11 @@ Handsontable.helper.toString = function (obj) {
    */
   var AutocompleteRenderer = function (instance, TD, row, col, prop, value, cellProperties) {
 
-    var WRAPPER = clonableWRAPPER.cloneNode(true); //this is faster than createElement
-    var ARROW = clonableARROW.cloneNode(true); //this is faster than createElement
-    
-    //Added to formate date
-    if (cellProperties.type==='date' && $ && $.datepicker){
+    var WRAPPER = clonableWRAPPER.cloneNode(true), //this is faster than createElement
+        ARROW = clonableARROW.cloneNode(true), //this is faster than createElement
+        isValidISODate = !isNaN(new Date(value).getTime());
+
+    if (isValidISODate && cellProperties.type==='date' && $.datepicker){
       value=$.datepicker.formatDate( 
         cellProperties.format?cellProperties.format:'mm/dd/yy'//check if we have a cell formate
         ,new Date(value)

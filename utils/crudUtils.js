@@ -8,17 +8,20 @@
   "use strict";
 
   var mongoose = require('mongoose')
-    , Article = mongoose.model('Article');
+    , Article = mongoose.model('Article')
+    , itemsSchema = require('../app/models/article').itemsSchema;
 
   function errMsg(msg) {
     return {'error': {'message': msg.toString()}};
   }
   function getTypeOf(data){
-    if (data instanceof Date){
-      return 'date'
-    } else{
-      return typeof data
-    }
+    console.log(itemsSchema[data])
+    return itemsSchema[data]
+    // if (data instanceof Date){
+    //   return 'date'
+    // } else{
+    //   return typeof data
+    // }
   }
   var formates = ['$0,0.00','0','%0.00','%0.00','','mm/dd/yy'],
       formateKeys = ['cost','qty','tax1','tax2','type','date'];
@@ -139,6 +142,24 @@
     };
   }
 
+  //------------------------------
+  // Delete Item in Invoice
+  //
+  function  getItemDeleteController(model) {
+    return function (req, res) {
+      var key,
+          todos=req.article.todos;
+      todos.pull(req.idt)
+      req.article.save(function(err){
+          if (!err) {
+            res.send(204);
+          } else {
+            res.send(500,errMsg(err));
+          }
+      })
+
+    };
+  }
 
   function loadParams(model) {
       return function(req, res, next, idt) {
@@ -156,7 +177,8 @@
               if (index===undefined) {
                   res.send(500, errMsg('Item Does not Exist'))
               } else {
-                  req.todoIndex = index;
+                  req.todoIndex = index,
+                  req.idt=idt;
                   next();
               }
           })
@@ -182,7 +204,8 @@
     app.post(path+'/list', getCreateController(model));
     app.get(pathWithId, getReadController(model));
     app.put(pathWithId, getUpdateController(model));
-    app.del(pathWithId, getDeleteController(model));
+    app.del(path, getDeleteController(model));
+    app.del(pathWithId, getItemDeleteController(model));
   };
 
 }(exports));
