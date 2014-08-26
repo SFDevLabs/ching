@@ -14,17 +14,7 @@
   function errMsg(msg) {
     return {'error': {'message': msg.toString()}};
   }
-  function getTypeOf(data){
-    console.log(itemsSchema[data])
-    return itemsSchema[data]
-    // if (data instanceof Date){
-    //   return 'date'
-    // } else{
-    //   return typeof data
-    // }
-  }
-  var formates = ['$0,0.00','0','%0.00','%0.00','','mm/dd/yy'],
-      formateKeys = ['cost','qty','tax1','tax2','type','date'];
+
   function getFormate(data){
     var i=formateKeys.indexOf(data);
     if(i>=0){
@@ -46,9 +36,9 @@
       if (first){
         var firstJSON = first.toJSON();
         for (var i in firstJSON) {
-          if (i!=='_id'){
-            schema[i] = getTypeOf(firstJSON[i])
-            format[i] = getFormate(i)
+          if (i!=='_id' && itemsSchema[i]){
+            schema[i] = itemsSchema[i].typeString? itemsSchema[i].typeString:'';
+            format[i] = itemsSchema[i].format? itemsSchema[i].format:'';
           }
         };        
       }

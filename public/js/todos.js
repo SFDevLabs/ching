@@ -127,7 +127,7 @@
           for (var i in attrs){
             var schema = cars.schema[i],  //Stored BB collection
                 val    = attrs[i];
-            if (!schema){
+            if (!schema || val===null){
               //do nothing no schema
             } else if (schema==='date'){// Nested logic.  First we see if it is a date.
               if (isNaN(new Date(val).getTime())){return "Not a valid Date"};  //Then we check if the ISO date string is valid
