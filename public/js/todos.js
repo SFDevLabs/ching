@@ -115,7 +115,7 @@
         initialize: function(){       
           this.bind('change',this.saveIt);
           this.on("invalid", function(model, error) {
-            alert(error);
+            console.log(error);
           });
         },
         saveIt:function(todo,option){
@@ -130,7 +130,7 @@
             if (!schema || val===null){
               //do nothing no schema
             } else if (schema==='date'){// Nested logic.  First we see if it is a date.
-              if (isNaN(new Date(val).getTime())){return "Not a valid Date"};  //Then we check if the ISO date string is valid
+              if (val!=='' && val!==null && isNaN(new Date(val).getTime())){return "Not a valid Date"};  //Then we check if the ISO date string is valid
             } else if (schema!==typeof val){ //Check the type agains the schema API from the parse API stored in the BB collection.
               return "Not a valid "+schema+'. Please enter a '+schema;
             }
