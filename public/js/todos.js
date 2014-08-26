@@ -66,25 +66,20 @@
     },
     setup:function(){
 
-      var first = cars.at(0)
-
-      if (!first){return false;}
-
-      var firstModelAttributes = first.attributes
-        , columns=[]
-        , colHeaders=[];
-      for (var i in firstModelAttributes){
+        var columns=[]
+          , colHeaders=[],
+            colPos = cars.columnPosition;
+      for (var i in colPos){
         if (i!=="_id"){
-          var val=firstModelAttributes[i]
-          colHeaders.push(i);
-          columns.push(
+          var pos = colPos[i]
+          colHeaders[pos] = i
+          columns[pos] =
             {
               data:setterFactor(i), 
               type:this.handsonType( cars.schema[i]),
               format:cars.format[i],
               dateFormat:cars.format[i]
             }
-          )
         }
       }
 
@@ -152,6 +147,7 @@
     parse : function(response){
       this.schema=response.schema;
       this.format=response.format;
+      this.columnPosition=response.columnPosition;
       return response.data
     }
     // colHead:['',''],

@@ -32,13 +32,15 @@
     return function (req, res) {
       var schema = {},
           format = {},
-          first  = req.article.todos[0]
+          first  = req.article.todos[0],
+          columnPosition = {};
       if (first){
         var firstJSON = first.toJSON();
         for (var i in firstJSON) {
           if (i!=='_id' && itemsSchema[i]){
             schema[i] = itemsSchema[i].typeString? itemsSchema[i].typeString:'';
             format[i] = itemsSchema[i].format? itemsSchema[i].format:'';
+            columnPosition[i] = typeof itemsSchema[i].columnPosition=='number'? itemsSchema[i].columnPosition:null;
           }
         };        
       }
@@ -46,7 +48,9 @@
       var result = {
         data: req.article.todos,
         schema: schema,
-        format: format
+        format: format,
+        columnPosition: columnPosition
+
       }
 
       res.send(result);

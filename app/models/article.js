@@ -35,15 +35,16 @@ var setTags = function (tags) {
       formateKeys = ['cost','qty','tax1','tax2','type','date'];
 
 var itemsSchema = {
-    note:{type : String, default :  null, format: '', typeString:'string'},
-    item:{type : String, default : null, format: '', typeString:'string'},
-    cost:{type : Number, default : null, format: '$0,0.00', typeString:'number'},
-    qty:{type : Number, default : null, format: '0', typeString:'number'},
-    tax1:{type : Number, default : null, format: '%0.00', typeString:'number'},
-    tax2:{type : Number, default : null, format: '%0.00', typeString:'number'},
-    type:{type : String, default : null, format: '', typeString:'string'},
-    date: {type: Date, default : null, format: 'mm/dd/yy', typeString:'date'},
-    total:{type : Number, default : null, format: '', typeString:'number'}  }
+    note:{type : String, default :  null, format: '', typeString:'string',columnPosition:0},
+    date: {type: Date, default : null, format: 'mm/dd/yy', typeString:'date',columnPosition:1},
+    cost:{type : Number, default : null, format: '$0,0.00', typeString:'number',columnPosition:2},
+    qty:{type : Number, default : null, format: '0', typeString:'number',columnPosition:3},
+    tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4},
+    tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5},
+    type:{type : String, default : null, format: '', typeString:'string',columnPosition:6},
+    item:{type : String, default : null, format: '', typeString:'string',columnPosition:7},
+    total:{type : Number, default : null, format: '', typeString:'number',columnPosition:8}
+  }
     exports.itemsSchema = itemsSchema;
 
 var ArticleSchema = new Schema({
