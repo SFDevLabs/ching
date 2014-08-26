@@ -43,7 +43,7 @@ var itemsSchema = {
     tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5},
     type:{type : String, default : null, format: '', typeString:'string',columnPosition:6},
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:7},
-    total:{type : Number, default : null, format: '', typeString:'number',columnPosition:8}
+    total:{type : Number, default : null, format: '$0,0.00', typeString:'number',columnPosition:8}
   }
     exports.itemsSchema = itemsSchema;
 

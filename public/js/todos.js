@@ -113,8 +113,20 @@
             console.log(error);
           });
         },
-        saveIt:function(todo,option){
-            if (!option.unset){
+        saveIt:function(todo, option){
+          ///caluclate the total
+          var cost = todo.get('cost'),
+              tax1 = todo.attributes.tax1==null?0:todo.attributes.tax1,
+              tax2 = todo.attributes.tax2==null?0:todo.attributes.tax2,
+              qty = todo.get('qty'),
+              total;
+              if ([cost, qty].indexOf('null')===-1){
+                total = cost * (1+tax1) * (1+tax2) * qty
+                todo.attributes.total=total;
+              }
+              
+            ///and Save
+            if (!option.unset){//this makes sure we are not killing the model
               todo.save();
             }
         },
