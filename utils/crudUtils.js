@@ -62,7 +62,14 @@
   //
   function getCreateController(model) {
     return function (req, res) {
-      var newTodo = req.article.todos.push({});
+      var todo={},
+          key;
+      for (key in req.body) {
+        if (key!=='_id' && key!=='createdAt'){
+          todo[key] = req.body[key];
+        }
+      }
+      var newTodo = req.article.todos.push(todo);
       req.article.save(function(err){
           if (!err) {
             res.send( req.article.todos[newTodo-1].toJSON() );

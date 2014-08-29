@@ -35,14 +35,14 @@
       cars.fetch();
     },
     renderAfterSync: function (todos, response) {
-        if (todos.get('_blank')){///detect is this is a collection
           App.handsonContainer.handsontable("render");
-        }
     },
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
     addOne: function (todo) {
-        todo.save();
+      //if (todo.get('_noSave')!==true){
+        todo.save(todo.toJSON());
+      //}
     },
     removeOne: function (todo) {
       todo.destroy();
@@ -100,6 +100,72 @@
         colHeaders: colHeaders
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
+      this.handsonObj = this.handsonContainer.data('handsontable')
+
+      App.addy=[];
+      this.handsonObj.addHook('beforePaste',function(input,cords){
+            var y = cords[0],
+                x = cords[1],
+                y2 = cords[2],
+                x2 = cords[3],
+                lastRowIndex = App.handsonObj.countRows()-1,
+                length = input.length,
+                lastPasteRowIndex = (length-1)+y,
+                overFlow = lastPasteRowIndex-lastRowIndex,
+                pasteInput = input.slice(length-overFlow)
+                var colhead = App.handsonObj.getColHeader().slice(x, (x2+1) )
+
+                for (var i = pasteInput.length - 1; i >= 0; i--) {
+                  var data = pasteInput[i],
+                      obj={};
+                  for (var y = data.length - 1; y >= 0; y--) {
+                        if (colhead[y]){
+                          
+                          var schema = cars.schema[ colhead[y] ];
+
+                          var typeObj = [Date, Number, String][ ['date', 'number', 'string'].indexOf(schema)]
+
+                          obj[ colhead[y] ]=typeObj(data[y])
+                        }
+                  };
+                  App.addy.push(obj);
+
+                };            
+      });
+      
+      // App.typeConvert = function(){
+      //   [Date, Number, String][ ['date', 'number', 'string'].indexOf('string')]
+      // }
+
+      //App.handsonObj.getColHeader()
+
+      this.handsonObj.addHook('afterChange',function(input,type){
+        if (type==='undo'){
+         // cars.pop();
+        }else{
+          cars.add(App.addy);
+        }
+        
+      });
+
+      // this.handsonObj.addHook('beforePaste',function(input,endIndex,type){
+
+      //   var rows = this.countRows()
+      //     , moreIndex = (endIndex.areaEnd.row+1)-rows
+      //     , adder=[];
+      //   for (var i = moreIndex - 1; i >= 0; i--) {
+      //         adder.push({})
+      //   }
+      //   // 
+      //   cars.add(adder)
+      //   var deserve = $.Deferred()
+      //   var cb = function(){
+      //     cars.off('sync', cb);
+      //     deserve.resolve();
+      //   }
+      //   cars.on('sync', cb);
+      //   return deserve
+      // })
     }
 
   });
@@ -116,17 +182,19 @@
         saveIt:function(todo, option){
           ///caluclate the total
           var cost = todo.get('cost'),
+              cost = cost===""?0:cost,
               tax1 = todo.attributes.tax1==null?0:todo.attributes.tax1,
               tax2 = todo.attributes.tax2==null?0:todo.attributes.tax2,
-              qty = todo.get('qty'),
+              qty = !todo.attributes.qty?0:todo.attributes.qty,
+
               total;
-              if ([cost, qty].indexOf('null')===-1){
+              if ([cost, qty].indexOf(null)===-1){
                 total = cost * (1+tax1) * (1+tax2) * qty
                 todo.attributes.total=total;
               }
               
             ///and Save
-            if (!option.unset){//this makes sure we are not killing the model
+            if (!option.unset && !option.xhr){//this makes sure we are not killing the model
               todo.save();
             }
         },
@@ -211,7 +279,9 @@ var setterFactor=function(attr){
 
 
   $("#add_car").click(function () {
-    cars.add({_blank:true});
+    //cars.add({_blank:true});
+    cars.add({cost:4});
+
   })
   $("#pop_car").click(function () {
     cars.pop();
