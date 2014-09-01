@@ -35,25 +35,15 @@
 
       cars.fetch();
     },
-    callback:function(){
-      if (App.cb && App.overFlow===0){
-        App.cb.resolve();
-        App.cb=null
-        cars.off("sync", App.callback);
-      } else if (App.cb){
-        App.overFlow=App.overFlow-1;
-      }
-    },
     renderAfterSync: function (todos, response) {  
       App.handsonContainer.handsontable("render");
     },
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
     addOne: function (todo) {
-      //if (todo.get('_noSave')!==true){
-        todo.save(todo.toJSON());
-
-      //}
+       if (!App.disableSave){
+          todo.save(todo.toJSON());
+       } 
     },
     removeOne: function (todo) {
       todo.destroy();
@@ -154,7 +144,7 @@
       this.handsonObj = this.handsonContainer.data('handsontable')
 
       App.itemsToAdd=[];
-      this.handsonObj.addHook('beforePaste',function(input, cords, type, cb){
+      this.handsonObj.addHook('beforePaste',function(input, cords, type){
             var y = cords[0],
                 x = cords[1],
                 y2 = cords[2],
@@ -169,17 +159,17 @@
                for (var i = overFlow - 1; i >= 0; i--) {
                   addList.push({});
                 };
+                App.disableSave=true;
                 cars.add(addList);
-                App.overFlow=overFlow-1;
-                App.cb=cb;
-                cars.bind('sync', App.callback);
-             }else{
-                cb.resolve();
-             }              
+                App.handsonContainer.handsontable("render");
+             }            
       });
-      // this.handsonObj.addHook('beforeChange',function(input, cords, type, cb){
-      //   debugger
-      // });
+      this.handsonObj.addHook('afterChange',function(input, type){
+        if (type==='paste'){
+          cars.sync();
+          App.disableSave=false;
+        }
+      });
 
 
       // this.handsonObj.addHook('beforeValidate',function(input,type){
@@ -241,13 +231,13 @@
               qty = !todo.attributes.qty?0:todo.attributes.qty,
               total;
 
-              if ([cost, qty].indexOf(null)===-1){
+              if ([cost, qty].indexOf(null)===-1 && [cost, qty].indexOf(undefined)){
                 total = cost * (1+tax1) * (1+tax2) * qty
                 todo.attributes.total=total;
               }
               
             ///and Save
-            if (!option.unset && !option.xhr){//this makes sure we are not killing the model
+            if (!option.unset && !option.xhr && !App.disableSave){//this makes sure we are not killing the model
               todo.save();
             }
         },
