@@ -42,7 +42,8 @@
     "async": "latest",
     "view-helpers": "latest",
     "forever": "latest",
-    "stylus":"latest"
+    "stylus":"latest",
+    "sendgrid":"latest"
   },
   "devDependencies": {
     "supertest": "latest",

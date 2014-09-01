@@ -2,7 +2,10 @@
  * Module dependencies.
  */
 
-var async = require('async')
+var async    = require('async'),
+    api_user = 'jeffj',
+    api_key = 'rambert',
+    sendgrid = require('sendgrid')(api_user, api_key);
 
 /**
  * Controllers
@@ -27,7 +30,6 @@ var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
  */
 
 module.exports = function (app, passport) {
-
 
   // user routes
   app.get('/login', users.login)
@@ -92,6 +94,8 @@ module.exports = function (app, passport) {
   app.param('userId', users.user)
 
   // article routes
+
+
   app.get('/home', articles.home)
   app.param('id', articles.load)
   app.get('/articles', articles.index)
@@ -101,6 +105,28 @@ module.exports = function (app, passport) {
   app.get('/articles/:id/edit', articleAuth, articles.edit)
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
+
+  app.get('/email', articles.stuff);
+
+  // function(req, res){
+    
+  //   sendgrid.send({
+  //     to:       'jeff@sfdevlabs.com',
+  //     from:     'other@example.com',
+  //     subject:  'Hello World',
+  //     text:     'My first email through SendGrid.'
+  //   }, function(err, json, b) {
+  //     if (err) { 
+  //       res.send(err)
+  //       return console.error(err); 
+  //     }
+
+  //     ////res.send(err)
+  //     res.send(json)
+
+  //   });
+
+  // }
 
   // home route
   app.get('/', articles.index)

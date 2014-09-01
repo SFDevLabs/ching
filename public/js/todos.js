@@ -29,19 +29,30 @@
 
       cars.bind('sync', this.renderAfterSync, this);
 
+
       this.footer = this.$('footer');
       this.main = $('#main');
 
       cars.fetch();
     },
-    renderAfterSync: function (todos, response) {
-          App.handsonContainer.handsontable("render");
+    callback:function(){
+      if (App.cb && App.overFlow===0){
+        App.cb.resolve();
+        App.cb=null
+        cars.off("sync", App.callback);
+      } else if (App.cb){
+        App.overFlow=App.overFlow-1;
+      }
+    },
+    renderAfterSync: function (todos, response) {  
+      App.handsonContainer.handsontable("render");
     },
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
     addOne: function (todo) {
       //if (todo.get('_noSave')!==true){
         todo.save(todo.toJSON());
+
       //}
     },
     removeOne: function (todo) {
@@ -61,8 +72,33 @@
       }
     },
     handsonContainer:$("#example1"),
+    pad:function pad (str, max) {
+      str = str.toString();
+      return str.length < max ? pad("0" + str, max) : str;
+    },
     blankRender: function(instance, td, row, col, prop, value, cellProperties){
-      Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+      var type = cars.at(row).get('type');
+      if (type && type.toLowerCase()==='time'){
+        cellProperties.valid=true;
+        
+        var totalSeconds = Number(value)*3600;
+
+        var hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+
+        arguments[5] = App.pad(hours,2)+':'+App.pad(minutes,2)
+        if (seconds>0){
+           arguments[5]+=( ':'+App.pad(seconds,2) );
+        }
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+      } else{
+        Handsontable.renderers.NumericRenderer.apply(this, arguments);
+      }
+
     },
     setup:function(){
 
@@ -73,13 +109,22 @@
         if (i!=="_id"){
           var pos = colPos[i]
           colHeaders[pos] = i
-          columns[pos] =
+          if (cars.format[i]==='dropdown'){
+            columns[pos] =
             {
               data:setterFactor(i), 
-              type:this.handsonType( cars.schema[i]),
-              format:cars.format[i],
-              dateFormat:cars.format[i]
+              type:cars.format[i],
+              source: cars.dropdownOptions[i]
             }
+          } else {
+            columns[pos] =
+              {
+                data:setterFactor(i), 
+                type:this.handsonType( cars.schema[i]),
+                format:cars.format[i],
+                dateFormat:cars.format[i],
+              }
+          }
         }
       }
 
@@ -91,9 +136,15 @@
           return new CarModel();
         },
         cells:function (row, col, prop) {
-          return {
-            //renderer:'blank'
+          var opt;
+          if (cars.columnPosition.qty===col){
+            opt = {
+             renderer:'blank'
+            }
+          } else{
+            opt = {};
           }
+          return opt;
         },
         contextMenu: true,
         columns: columns,
@@ -102,70 +153,49 @@
       });
       this.handsonObj = this.handsonContainer.data('handsontable')
 
-      App.addy=[];
-      this.handsonObj.addHook('beforePaste',function(input,cords){
+      App.itemsToAdd=[];
+      this.handsonObj.addHook('beforePaste',function(input, cords, type, cb){
             var y = cords[0],
                 x = cords[1],
                 y2 = cords[2],
                 x2 = cords[3],
                 lastRowIndex = App.handsonObj.countRows()-1,
-                length = input.length,
+                length = input.length,                
                 lastPasteRowIndex = (length-1)+y,
                 overFlow = lastPasteRowIndex-lastRowIndex,
-                pasteInput = input.slice(length-overFlow)
-                var colhead = App.handsonObj.getColHeader().slice(x, (x2+1) )
-
-                for (var i = pasteInput.length - 1; i >= 0; i--) {
-                  var data = pasteInput[i],
-                      obj={};
-                  for (var y = data.length - 1; y >= 0; y--) {
-                        if (colhead[y]){
-                          
-                          var schema = cars.schema[ colhead[y] ];
-
-                          var typeObj = [Date, Number, String][ ['date', 'number', 'string'].indexOf(schema)]
-
-                          obj[ colhead[y] ]=typeObj(data[y])
-                        }
-                  };
-                  App.addy.push(obj);
-
-                };            
+                addList=[],
+                defferObjFlag = true;
+             if (overFlow>0){
+               for (var i = overFlow - 1; i >= 0; i--) {
+                  addList.push({});
+                };
+                cars.add(addList);
+                App.overFlow=overFlow-1;
+                App.cb=cb;
+                cars.bind('sync', App.callback);
+             }else{
+                cb.resolve();
+             }              
       });
-      
-      // App.typeConvert = function(){
-      //   [Date, Number, String][ ['date', 'number', 'string'].indexOf('string')]
-      // }
+      // this.handsonObj.addHook('beforeChange',function(input, cords, type, cb){
+      //   debugger
+      // });
 
-      //App.handsonObj.getColHeader()
 
-      this.handsonObj.addHook('afterChange',function(input,type){
-        if (type==='undo'){
-         // cars.pop();
-        }else{
-          cars.add(App.addy);
-        }
+      // this.handsonObj.addHook('beforeValidate',function(input,type){
         
-      });
+      //   debugger
+      //   // var colhead = App.handsonObj.getColHeader().slice(x, (x2+1) )
 
-      // this.handsonObj.addHook('beforePaste',function(input,endIndex,type){
+      //   // var schema = cars.schema[ colhead[y] ];
 
-      //   var rows = this.countRows()
-      //     , moreIndex = (endIndex.areaEnd.row+1)-rows
-      //     , adder=[];
-      //   for (var i = moreIndex - 1; i >= 0; i--) {
-      //         adder.push({})
-      //   }
-      //   // 
-      //   cars.add(adder)
-      //   var deserve = $.Deferred()
-      //   var cb = function(){
-      //     cars.off('sync', cb);
-      //     deserve.resolve();
-      //   }
-      //   cars.on('sync', cb);
-      //   return deserve
-      // })
+      //   // var typeObj = [Date, Number, String][ ['date', 'number', 'string'].indexOf(schema)]
+
+      //   // for (var i = input.length - 1; i >= 0; i--) {
+      //   //   input[i][4]=Number(input[i][4])
+      //   // };
+
+      // });
     }
 
   });
@@ -178,6 +208,29 @@
           this.on("invalid", function(model, error) {
             console.log(error);
           });
+          this.on('change:tax1',this.tax1Formater);
+          this.on('change:tax2',this.tax2Formater);
+          this.on('change:qty',this.qtyFormater);
+
+        },
+        tax1Formater:function(todo,val){
+            if (typeof val === 'number'){
+              todo.attributes.tax1 = val/100;//Set the tax attr from the above calculation
+            }
+        },
+        tax2Formater:function(todo,val){
+            if (typeof val === 'number'){
+              todo.attributes.tax2 = val/100;//Set the tax attr from the above calculation
+            }
+        },
+        qtyFormater:function(todo,val){
+            if (typeof val === 'string' && val!==""){
+              var vals = val.split(':'),
+                  hour = vals[1]?Number(vals[0]):0,
+                  min = vals[1]?Number(vals[1]):0,
+                  sec = vals[2]?Number(vals[2]):0;
+              todo.set('qty', hour+(min/60)+(sec/3600));//Set the tax attr from the above calculation
+            }
         },
         saveIt:function(todo, option){
           ///caluclate the total
@@ -186,8 +239,8 @@
               tax1 = todo.attributes.tax1==null?0:todo.attributes.tax1,
               tax2 = todo.attributes.tax2==null?0:todo.attributes.tax2,
               qty = !todo.attributes.qty?0:todo.attributes.qty,
-
               total;
+
               if ([cost, qty].indexOf(null)===-1){
                 total = cost * (1+tax1) * (1+tax2) * qty
                 todo.attributes.total=total;
@@ -206,7 +259,9 @@
               //do nothing no schema
             } else if (schema==='date'){// Nested logic.  First we see if it is a date.
               if (val!=='' && val!==null && isNaN(new Date(val).getTime())){return "Not a valid Date"};  //Then we check if the ISO date string is valid
-            } else if (schema!==typeof val){ //Check the type agains the schema API from the parse API stored in the BB collection.
+            } else if (val === ""){//Empty Value from handsontable set to null
+              attrs[i]===null;
+            }else if (schema!==typeof val){ //Check the type agains the schema API from the parse API stored in the BB collection.
               return "Not a valid "+schema+'. Please enter a '+schema;
             }
           }
@@ -222,13 +277,24 @@
     splice: hacked_splice,
 
     url: function () {
-      return '/articles/'+aId+'/list' + ((this.id) ? '/' + this.id : '');
+      return '/articles/'+aId+'/api' + ((this.id) ? '/' + this.id : '');
+     // return '/articles/'+aId+'/api';
+
     },
     parse : function(response){
       this.schema=response.schema;
       this.format=response.format;
+      this.dropdownOptions=response.dropdownOptions;
       this.columnPosition=response.columnPosition;
       return response.data
+    },
+    sync:function(a,b,c){
+      
+      if (a==='read')
+        Backbone.sync('read',this, c)
+      else
+        Backbone.sync('update',this, c)
+
     }
     // colHead:['',''],
     // colData:[attr('note','text'),attr('item','text')]
@@ -280,7 +346,7 @@ var setterFactor=function(attr){
 
   $("#add_car").click(function () {
     //cars.add({_blank:true});
-    cars.add({cost:4});
+    cars.add();
 
   })
   $("#pop_car").click(function () {

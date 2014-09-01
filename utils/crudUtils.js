@@ -32,6 +32,7 @@
     return function (req, res) {
       var schema = {},
           format = {},
+          options = {},
           first  = req.article.todos[0],
           columnPosition = {};
       if (first){
@@ -40,17 +41,18 @@
           if (i!=='_id' && itemsSchema[i]){
             schema[i] = itemsSchema[i].typeString? itemsSchema[i].typeString:'';
             format[i] = itemsSchema[i].format? itemsSchema[i].format:'';
+            if (itemsSchema[i].dropdownOptions){options[i] = itemsSchema[i].dropdownOptions};
             columnPosition[i] = typeof itemsSchema[i].columnPosition=='number'? itemsSchema[i].columnPosition:null;
           }
         };        
       }
 
       var result = {
-        data: req.article.todos,
-        schema: schema,
-        format: format,
-        columnPosition: columnPosition
-
+        data : req.article.todos,
+        schema : schema,
+        format : format,
+        columnPosition : columnPosition,
+        dropdownOptions : options
       }
 
       res.send(result);
@@ -97,9 +99,32 @@
   }
 
   //------------------------------
-  // Update
+  // Update All
   //
   function getUpdateController(model) {
+    return function (req, res) {
+
+      for (var i = req.body.length - 1; i >= 0; i--) {
+        if (!req.body[i]._id)
+          req.article.todos.push(req.body[i]);
+      };
+      
+      console.log(req.article.todos);
+      req.article.save(function(err){
+          if (!err) {
+            res.send( req.article.toJSON() );
+          } else {
+            res.send(500,errMsg(err));
+          }
+      })
+
+    };
+  }
+
+  //------------------------------
+  // Update One Item
+  //
+  function getUpdateItemController(model) {
     return function (req, res) {
       var key,
           todos=req.article.todos,
@@ -199,12 +224,13 @@
     app.param('idt', loadParams(model));
 
     path = '/articles/:id'
-    pathWithId = path + '/list/:idt';
+    pathWithId = path + '/api/:idt';
 
-    app.get(path+'/list', getListController(model));
-    app.post(path+'/list', getCreateController(model));
+    app.get(path+'/api', getListController(model));
+    app.post(path+'/api', getCreateController(model));
     app.get(pathWithId, getReadController(model));
-    app.put(pathWithId, getUpdateController(model));
+    app.put(path+'/api', getUpdateController(model));
+    app.put(pathWithId, getUpdateItemController(model));
     app.del(path, getDeleteController(model));
     app.del(pathWithId, getItemDeleteController(model));
   };

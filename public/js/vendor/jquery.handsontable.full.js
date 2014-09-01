@@ -10751,8 +10751,18 @@ if (typeof Handsontable !== 'undefined') {
         }
       });
       //beforePaste
-      var newArray = Handsontable.hooks.execute(instance, "beforePaste", inputArray,[areaStart.row,areaStart.col,areaEnd.row,areaEnd.col], 'paste');
-      instance.populateFromArray(areaStart.row, areaStart.col, inputArray, areaEnd.row, areaEnd.col, 'paste', instance.getSettings().pasteMode);
+      var cb= function(){
+        instance.populateFromArray(areaStart.row, areaStart.col, inputArray, areaEnd.row, areaEnd.col, 'paste', instance.getSettings().pasteMode);
+      }
+
+      //We need a better system for deffered boj
+      var defferObj=$.Deferred().then(function(){
+          instance.populateFromArray(areaStart.row, areaStart.col, inputArray, areaEnd.row, areaEnd.col, 'paste', instance.getSettings().pasteMode);
+      });
+      var defferObjFlag = Handsontable.hooks.execute(instance, "beforePaste", inputArray,[areaStart.row,areaStart.col,areaEnd.row,areaEnd.col], 'paste', defferObj);
+      
+      //if (defferObjFlag!==true){defferObj.resolve()};
+
     };
 
     function onBeforeKeyDown (event) {
