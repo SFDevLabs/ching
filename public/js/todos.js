@@ -27,7 +27,9 @@
 
       cars.bind('reset', this.setup, this);
 
-      cars.bind('sync', this.renderAfterSync, this);
+      cars.bind('sync', this.renderAfterSync);
+      cars.bind('remove', this.renderAfterSync);
+      cars.bind('add', this.renderAfterSync);
 
 
       this.footer = this.$('footer');
@@ -37,6 +39,27 @@
     },
     renderAfterSync: function (todos, response) {  
       App.handsonContainer.handsontable("render");
+
+      var core = $('.htCore','.ht_master'),
+          sidebar = $('.remove-sidebar')
+
+          //sidebar.width(core.width());
+          App.handsonContainer.width(core.width()+60)
+
+          core.before(sidebar)
+
+      //App.handsonContainer.before($('.remove-sidebar'));
+      $('.remove-sidebar').html('');
+      cars.each(function(todo,i){
+            var tr = $('<tr><td><a href="">X</a></td></tr>')
+                .data('handsonPosition',i)
+                .on('click', function(e){
+                  event.preventDefault();
+                  var pos = $(this).data('handsonPosition');
+                  cars.remove(cars.at(pos));
+                 });
+          $('.remove-sidebar').append(tr)
+      })
     },
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
@@ -66,10 +89,10 @@
       str = str.toString();
       return str.length < max ? pad("0" + str, max) : str;
     },
-    blankRender: function(instance, td, row, col, prop, value, cellProperties){
+    qtyRender: function(instance, td, row, col, prop, value, cellProperties){
 
       var type = cars.at(row).get('type');
-      if (type && type.toLowerCase()==='time'){
+      if (type && type.toLowerCase()==='time' && value!==null){//Null changing and checking for time formating
         cellProperties.valid=true;
         
         var totalSeconds = Number(value)*3600;
@@ -84,7 +107,6 @@
            arguments[5]+=( ':'+App.pad(seconds,2) );
         }
         Handsontable.renderers.TextRenderer.apply(this, arguments);
-
       } else{
         Handsontable.renderers.NumericRenderer.apply(this, arguments);
       }
@@ -118,7 +140,7 @@
         }
       }
 
-      Handsontable.renderers.registerRenderer('blank', this.blankRender); //maps function to lookup string
+      Handsontable.renderers.registerRenderer('qtyRender', this.qtyRender); //maps function to lookup string
 
       this.handsonContainer.handsontable({
         data: cars,
@@ -129,7 +151,7 @@
           var opt;
           if (cars.columnPosition.qty===col){
             opt = {
-             renderer:'blank'
+             renderer:'qtyRender'
             }
           } else{
             opt = {};
@@ -142,6 +164,7 @@
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
       this.handsonObj = this.handsonContainer.data('handsontable')
+      App.handsonObj.contextMenu.disable();//get rid of the context meu
 
       App.itemsToAdd=[];
       this.handsonObj.addHook('beforePaste',function(input, cords, type){
@@ -159,33 +182,26 @@
                for (var i = overFlow - 1; i >= 0; i--) {
                   addList.push({});
                 };
-                App.disableSave=true;
+                App.disableSave=true; ///Turn off saving so we can save in a batch on "afterChange"
                 cars.add(addList);
                 App.handsonContainer.handsontable("render");
              }            
       });
+      this.handsonObj.addHook('beforeChange',function(input, type){
+        if (input.length>1){ ///Are we chaning more than 1 item.  Lets do it in a batch
+          App.disableSave=true;
+        }
+      });
       this.handsonObj.addHook('afterChange',function(input, type){
-        if (type==='paste'){
+        if (App.disableSave){
+          cars.each(function(model){
+            model.validate(model.attributes,{modelSet:model});
+          });
           cars.sync();
           App.disableSave=false;
         }
       });
 
-
-      // this.handsonObj.addHook('beforeValidate',function(input,type){
-        
-      //   debugger
-      //   // var colhead = App.handsonObj.getColHeader().slice(x, (x2+1) )
-
-      //   // var schema = cars.schema[ colhead[y] ];
-
-      //   // var typeObj = [Date, Number, String][ ['date', 'number', 'string'].indexOf(schema)]
-
-      //   // for (var i = input.length - 1; i >= 0; i--) {
-      //   //   input[i][4]=Number(input[i][4])
-      //   // };
-
-      // });
     }
 
   });
@@ -249,8 +265,9 @@
               //do nothing no schema
             } else if (schema==='date'){// Nested logic.  First we see if it is a date.
               if (val!=='' && val!==null && isNaN(new Date(val).getTime())){return "Not a valid Date"};  //Then we check if the ISO date string is valid
-            } else if (val === ""){//Empty Value from handsontable set to null
+            } else if (val === ""){//Empty Value from handsontable set to null.  Look for null hcking thoughout the app
               attrs[i]===null;
+              if (options.modelSet){options.modelSet.set(i,null)}
             }else if (schema!==typeof val){ //Check the type agains the schema API from the parse API stored in the BB collection.
               return "Not a valid "+schema+'. Please enter a '+schema;
             }
@@ -286,14 +303,10 @@
         Backbone.sync('update',this, c)
 
     }
-    // colHead:['',''],
-    // colData:[attr('note','text'),attr('item','text')]
+
   });
 
   var cars = new CarCollection();
-  // cars.colData=[   ];
-  // cars.colHead = ['note','item'];
-  // 
 
 var setterFactor=function(attr){
     var setter = function (car, value, format) {
@@ -310,19 +323,6 @@ var setterFactor=function(attr){
       } 
       return car.set(attr, value);
     } 
-
-  // // normally, you'd get these from the server with .fetch()
-  // function attrObj(attr, type) {
-  //   // this lets us remember `attr` for when when it is get/set
-  //   var setter = function (car, value, format) {
-  //     if (_.isUndefined(value)) {
-  //       return car.get(attr);
-  //     } 
-  //     car.set(attr, value);
-  //   } 
-    
-  //   return {data: setter, type:type, format: format};
-  // }
 
   // use the "good" Collection methods to emulate Array.splice
   function hacked_splice(index, howMany /* model1, ... modelN */) {

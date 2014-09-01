@@ -104,10 +104,7 @@
   function getUpdateController(model) {
     return function (req, res) {
 
-      for (var i = req.body.length - 1; i >= 0; i--) {
-        if (!req.body[i]._id)
-          req.article.todos.push(req.body[i]);
-      };
+      req.article.todos=req.body;
       
       console.log(req.article.todos);
       req.article.save(function(err){
