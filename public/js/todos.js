@@ -44,7 +44,7 @@
           sidebar = $('.remove-sidebar')
 
           //sidebar.width(core.width());
-          App.handsonContainer.width(core.width()+60)
+          App.handsonContainer.width(core.width()+65)
 
           core.before(sidebar)
 
