@@ -82,6 +82,8 @@ module.exports = function (app, config, passport) {
     // should be declared after session and flash
     app.use(helpers(pkg.name))
 
+    //CSRF tocken break AJAX calls in backbone.  Fox with below URL
+    //http://stackoverflow.com/questions/11200068/how-to-implement-csrf-protection-in-ajax-calls-using-express-js-looking-for-com
     // adds CSRF support
     // if (process.env.NODE_ENV !== 'test') {
     //   app.use(express.csrf())

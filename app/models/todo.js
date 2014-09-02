@@ -23,7 +23,9 @@ var UserSchema = new Schema({
   twitter: {},
   github: {},
   google: {},
-  linkedin: {}
+  linkedin: {},
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 })
 
 /**
@@ -95,6 +97,26 @@ UserSchema.pre('save', function(next) {
   else
     next()
 })
+
+
+UserSchema.statics = {
+
+    /**
+   * Get User email
+   */
+
+  userEmail: function (options, cb) {
+    var criteria = options.criteria || {}
+
+    this.findOne(criteria)
+      //.populate('user', 'name username')
+      //.sort({'createdAt': -1}) // sort by date
+      //.limit(options.perPage)
+      //.skip(options.perPage * options.page)
+      .exec(cb)
+  }
+
+}
 
 /**
  * Methods

@@ -4,8 +4,6 @@
  */
 
 exports.requiresLogin = function (req, res, next) {
-          console.log(4)
-
   if (req.isAuthenticated()) return next()
   if (req.method == 'GET') req.session.returnTo = req.originalUrl
   res.redirect('/login')
@@ -32,8 +30,6 @@ exports.user = {
 
 exports.article = {
   hasAuthorization: function (req, res, next) {
-        console.log(2)
-
     if (req.article.user.id != req.user.id) {
       req.flash('info', 'You are not authorized')
       return res.redirect('/articles/' + req.article.id)

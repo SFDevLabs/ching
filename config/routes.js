@@ -35,6 +35,16 @@ module.exports = function (app, passport) {
   app.get('/login', users.login)
   app.get('/signup', users.signup)
   app.get('/logout', users.logout)
+  app.get('/reset', users.resetpage)
+
+  app.param('pwResetID', users.loadreset)
+
+  app.get('/reset/:pwResetID', users.resetPWpage)
+  app.post('/reset/:pwResetID', users.resetPW)
+
+
+  app.post('/users/reset', users.reset)
+
   app.post('/users', users.create)
   app.post('/users/session',
     passport.authenticate('local', {
@@ -96,9 +106,9 @@ module.exports = function (app, passport) {
   // article routes
 
 
-  app.get('/home', articles.home)
+  app.get('/home', auth.requiresLogin ,articles.home)
   app.param('id', articles.load)
-  app.get('/articles', articles.index)
+  app.get('/articles', auth.requiresLogin, articles.index)
   app.get('/articles/new', auth.requiresLogin, articles.new)
   app.post('/articles', auth.requiresLogin, articles.create)
   app.get('/articles/:id', articles.show)
@@ -129,7 +139,7 @@ module.exports = function (app, passport) {
   // }
 
   // home route
-  app.get('/', articles.index)
+  app.get('/', auth.requiresLogin,  articles.index)
 
   // comment routes
   var comments = require('../app/controllers/comments')
