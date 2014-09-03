@@ -15,7 +15,6 @@ exports.requiresLogin = function (req, res, next) {
 
 exports.user = {
   hasAuthorization: function (req, res, next) {
-    console.log(1)
     if (req.profile.id != req.user.id) {
       req.flash('info', 'You are not authorized')
       return res.redirect('/users/' + req.profile.id)
@@ -44,8 +43,6 @@ exports.article = {
 
 exports.comment = {
   hasAuthorization: function (req, res, next) {
-        console.log(3)
-
     // if the current user is comment owner or article owner
     // give them authority to delete
     if (req.user.id === req.comment.user.id || req.user.id === req.article.user.id) {

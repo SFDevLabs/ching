@@ -45,8 +45,7 @@
 
           //sidebar.width(core.width());
           App.handsonContainer.width(core.width()+65)
-
-          core.before(sidebar)
+          App.handsonContainer.append(sidebar)
 
       //App.handsonContainer.before($('.remove-sidebar'));
       $('.remove-sidebar').html('');
@@ -54,7 +53,7 @@
             var tr = $('<tr><td><a href="">X</a></td></tr>')
                 .data('handsonPosition',i)
                 .on('click', function(e){
-                  event.preventDefault();
+                  e.preventDefault();
                   var pos = $(this).data('handsonPosition');
                   cars.remove(cars.at(pos));
                  });

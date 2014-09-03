@@ -116,7 +116,7 @@ exports.resetPW = function (req, res) {
       // ADD A SUCCESS MeSSAGE HERE
       sendEmail(req.user.email, 'Your password has been reset', function(err, json, b){
 
-      })
+      });
       req.logIn(req.user, function(err) {
         if (err) return next(err)
         return res.redirect('/')
