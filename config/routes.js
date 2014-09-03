@@ -36,6 +36,7 @@ module.exports = function (app, passport) {
   app.get('/signup', users.signup)
   app.get('/logout', users.logout)
   app.get('/reset', users.resetpage)
+  app.post('/reset', users.reset)
 
   app.param('pwResetID', users.loadreset)
 
@@ -43,7 +44,6 @@ module.exports = function (app, passport) {
   app.post('/reset/:pwResetID', users.resetPW)
 
 
-  app.post('/users/reset', users.reset)
 
   app.post('/users', users.create)
   app.post('/users/session',

@@ -64,18 +64,9 @@ exports.loadreset = function(req, res, next, resetid){
   var User = mongoose.model('User');
 
   User.findOne({resetPasswordToken:resetid}, function(err,user){
-
-
     req.user=user;
     next()
-
   })
-  // Article.load(id, function (err, article) {
-  //   if (err) return next(err)
-  //   if (!article) return next(new Error('not found'))
-  //   req.article = article
-  //   next()
-  // })
 }
 
 /**
@@ -83,14 +74,7 @@ exports.loadreset = function(req, res, next, resetid){
  */
 
 exports.resetPWpage = function (req, res) {
-
-  if (req.user){
-      expired = new Date(req.user.resetPasswordExpires) < Date.now()
-  }
-
-  //res.send(req.user+expired)
-  //
-
+  if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
   res.render('users/resetpage', {
     title: 'Reset Password',
     message: req.flash('error')
@@ -104,26 +88,22 @@ exports.resetPWpage = function (req, res) {
  */
 
 exports.resetPW = function (req, res) {
-
-  if (req.user){
-    expired = new Date(req.user.resetPasswordExpires) < Date.now()
-  }
+  if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
   req.user.resetPasswordExpires=undefined
   req.user.resetPasswordToken=undefined
   req.user.hashed_password=req.user.encryptPassword(req.body.password)
   req.user.save(function (err) {
-      // manually login the user once successfully signed up
-      // ADD A SUCCESS MeSSAGE HERE
-      sendEmail(req.user.email, 'Your password has been reset', function(err, json, b){
-
-      });
-      req.logIn(req.user, function(err) {
-        if (err) return next(err)
-        return res.redirect('/')
-      })
-
-    })
-}
+      sendEmail({
+        email:req.user.email,
+        message: 'Your password has been reset'
+      }, function(err, json, b){
+        req.logIn(req.user, function(err) {
+          if (err) return next(err)
+          return res.redirect('/')
+        });//render
+      });//email
+  });//save
+};
 
 
 /**
@@ -138,7 +118,7 @@ exports.reset = function (req, res) {
       }
   User.userEmail(options,function(err, user){
 
-      if (!user){ res.send(err); return}
+     // if (!user){return next(err);}
 
         var email = user.email
        
@@ -151,17 +131,16 @@ exports.reset = function (req, res) {
           user.resetPasswordToken=token;
           user.resetPasswordExpires=Date.now() + 3600000;
           user.save(function (err) {
+            //hard coded I know clean up! (localhost:4000)
+            sendEmail({email:email, message: 'http://localhost:4000/reset/'+token}, function(err, json, b){
+
+                res.render('users/reset', {
+                          title: 'Reset',
+                          success: ['Check Your Email for a Reset Link']
+                })
 
 
-            sendEmail(email, token, function(err, json, b){
-
-               // res.render('users/reset', {
-               //            title: 'Reset',
-               //            message: req.flash('error')
-               //          })
-              res.send(err+' '+token);
-
-                        
+                      
             
             });//Email Sent
 
@@ -178,23 +157,23 @@ exports.reset = function (req, res) {
 
 //move to utility
 var sendEmail;
-exports.sendEmail = sendEmail= function(email, message, cb){
+exports.sendEmail = sendEmail= function(obj, cb){
 
-  if (!email || typeof email !=='string'){cb('No Valid Email')}
+  if (!obj.email && typeof obj.email !=='string'){cb('No Valid Email')}
+
+                   // console.log(obj)
+
      sendgrid.send({
-      to:       email,
-      from:     'other@example.com',
-      subject:  'Hello World',
-      text:     message
+      to:       obj.email,
+      from:     obj.from?obj.from:"None",
+      subject:  obj.subject?obj.subject:"None",
+      text:     obj.message?obj.message:"None"
     }, function(err, json, b) {
-      if (err) { 
-        cb(err)
-      }
+      // if (err) { 
+      //   cb(err)
+      // }
+
       cb(null, json, b)
-
-      ////res.send(err)
-      //res.send(json)
-
     });
      
 }
