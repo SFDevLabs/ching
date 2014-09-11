@@ -28,11 +28,11 @@ exports.create = function (req, res) {
   var article = req.article
   var user = req.user
 
-  if (!req.body.body) return res.redirect('/articles/'+ article.id)
+  //if (!req.body.body) return res.redirect('/articles/'+ article.id)
 
   article.addViewer(user, req.body, function (err) {
     if (err) return res.render('500')
-    res.redirect('/articles/'+ article.id)
+    res.redirect('/articles/'+ article.id+'/share')
   })
 }
 
@@ -49,6 +49,6 @@ exports.destroy = function (req, res) {
     } else {
       req.flash('info', 'Removed viewer')
     }
-    res.redirect('/viewers/' + article.id)
+    res.redirect('/articles/' + article.id+'/share')
   })
 }

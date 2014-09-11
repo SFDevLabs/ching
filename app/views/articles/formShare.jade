@@ -19,7 +19,7 @@ block content
 
   .row
     .col-md-8
-      form.form-horizontal(method="post", action='/articles/' + article.id + '/share', enctype="multipart/form-data", role="form")
+      form.form-horizontal(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
 
         input(type="hidden", name="_csrf", value="#{csrf_token}")
 
