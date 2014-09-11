@@ -127,15 +127,38 @@ exports.share = function (req, res) {
 exports.updateShare = function(req, res){
   var article = req.article
 
-  if (req.body.viewers)
-  article = extend(article, req.body);
-  else
-  article.viewers.pop();
+  console.log(req.body.viewers)
+  console.log(article.viewers)
 
-  article.uploadAndSave(req.files.image, function(err) {
+
+//  article.viewers.push(req.body.email);
+
+  //var viewers = req.body.viewers.split(',');
+
+  // for (var i = viewers.length - 1; i >= 0; i--) {
+  //   var index=article.viewers.indexOf(viewers[i])
+
+  //   if (index==-1){
+  //       article.viewers.push(viewers[i]);
+  //   } 
+  // };
+
+  // for (var i = article.viewers.length - 1; i >= 0; i--) {
+  //   var index=viewers.indexOf( String(article.viewers[i]) )
+
+  //   if (index==-1){
+  //       console.log(typeof article.viewers[i],article.viewers[i])
+
+  //       // article.viewers.splice(i,i);
+  //   } 
+  // };
+  
+  article.save(function(err){
+  //article.uploadAndSave(req.files.image, function(err) {
     // if (!err) {
     //   return res.redirect('/articles/' + article._id)
     // }
+    console.log(err)
 
     res.render('articles/share', {
       title: 'Edit ' + req.article.title,

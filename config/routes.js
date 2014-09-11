@@ -24,6 +24,7 @@ var users = require('../app/controllers/users')
 
 var articleAuth = [auth.requiresLogin, auth.article.hasAuthorization]
 var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
+var viewerAuth = [auth.requiresLogin, auth.article.hasAuthorization]
 
 /**
  * Expose routes
@@ -104,8 +105,6 @@ module.exports = function (app, passport) {
   app.param('userId', users.user)
 
   // article routes
-
-
   app.get('/home', auth.requiresLogin ,articles.home)
   app.param('id', articles.load)
   app.get('/articles', auth.requiresLogin, articles.index)
@@ -116,10 +115,16 @@ module.exports = function (app, passport) {
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
 
-  app.get('/articles/:id/share', articleAuth, articles.share)
-  app.put('/articles/:id/share', articleAuth, articles.updateShare)
+   app.get('/articles/:id/share', articleAuth, articles.share)
+  // app.put('/articles/:id/share', articleAuth, articles.updateShare)
+  // app.post('/email', articles.stuff);
 
-  app.post('/email', articles.stuff);
+  // viewer routes
+  var viewers = require('../app/controllers/viewers')
+  app.param('viewerId', viewers.load)
+  app.post('/articles/:id/viewer', auth.requiresLogin, viewers.create)
+  app.get('/articles/:id/viewer', auth.requiresLogin, viewers.create)
+  app.del('/articles/:id/viewer/:viewerId', viewerAuth, viewers.destroy)
 
   // function(req, res){
     

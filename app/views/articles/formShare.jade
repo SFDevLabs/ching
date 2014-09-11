@@ -8,23 +8,31 @@ block content
   - var action = '/articles'
   - action += article.isNew? '' : '/' + article.id
 
-  .love=article.viewers
+  - each viewer, i in article.viewers
+    ul
+      li
+        form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
+          span.viewer= viewer.user
+          input(type='hidden', name='_csrf', value="#{csrf_token}")
+          input(type="hidden", name="_method", value="DELETE")
+          button.btn.btn-danger.btn-link.error(type="submit") delete
+
   .row
     .col-md-8
       form.form-horizontal(method="post", action='/articles/' + article.id + '/share', enctype="multipart/form-data", role="form")
 
         input(type="hidden", name="_csrf", value="#{csrf_token}")
 
-        input(type="hidden", name="_method", value="PUT")
+        input(type="hidden", name="_method", value="POST")
 
         .form-group
-          label.col-sm-2.control-label(for='tags') Tags
+          label.col-sm-2.control-label(for='title') Title
           .col-sm-10
-            input.form-control#tags(type='text', name="viewers", value=article.viewers, placeholder='Enter the tags')
+            input.form-control#title(type='text', name="email", placeholder='Enter a new email')
 
         .form-group
           .col-sm-offset-2.col-sm-10
-            button.btn.btn-primary(type='submit') Save
+            button.btn.btn-primary(type='submit') Add
             | &nbsp;
             a.btn(href='/articles', title="cancel") Cancel
 

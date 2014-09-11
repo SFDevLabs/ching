@@ -48,9 +48,10 @@ var itemsSchema = {
     exports.itemsSchema = itemsSchema;
 
 var ArticleSchema = new Schema({
-  viewers:[
-    {type : Schema.ObjectId, ref : 'User'}
-  ],
+  viewers:[{
+    user: {type : Schema.ObjectId, ref : 'User'},
+    createdAt: { type : Date, default : Date.now }
+  }],
   title: {type : String, default : '', trim : true},
   body: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
@@ -161,6 +162,49 @@ ArticleSchema.methods = {
   removeComment: function (commentId, cb) {
     var index = utils.indexof(this.comments, { id: commentId })
     if (~index) this.comments.splice(index, 1)
+    else return cb('not found')
+    this.save(cb)
+  },
+
+
+  /**
+   * Add viewer
+   *
+   * @param {User} user
+   * @param {Object} comment
+   * @param {Function} cb
+   * @api private
+   */
+
+  addViewer: function (user, comment, cb) {
+    var notify = require('../mailer')
+
+    this.comments.push({
+      body: comment.body,
+      user: user._id
+    })
+
+    if (!this.user.email) this.user.email = 'email@product.com'
+    notify.comment({
+      article: this,
+      currentUser: user,
+      comment: comment.body
+    })
+
+    this.save(cb)
+  },
+
+  /**
+   * Remove viewer
+   *
+   * @param {commentId} String
+   * @param {Function} cb
+   * @api private
+   */
+
+  removeViewer: function (viewerId, cb) {
+    var index = utils.indexof(this.viewers, { id: viewerId })
+    if (~index) this.viewers.splice(index, 1)
     else return cb('not found')
     this.save(cb)
   }
