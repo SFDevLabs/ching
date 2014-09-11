@@ -116,7 +116,10 @@ module.exports = function (app, passport) {
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
 
-  app.get('/email', articles.stuff);
+  app.get('/articles/:id/share', articleAuth, articles.share)
+  app.put('/articles/:id/share', articleAuth, articles.updateShare)
+
+  app.post('/email', articles.stuff);
 
   // function(req, res){
     

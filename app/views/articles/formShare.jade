@@ -1,0 +1,33 @@
+extends ../layouts/default
+
+block main
+  h1= title
+  hr
+
+block content
+  - var action = '/articles'
+  - action += article.isNew? '' : '/' + article.id
+
+  .love=article.viewers
+  .row
+    .col-md-8
+      form.form-horizontal(method="post", action='/articles/' + article.id + '/share', enctype="multipart/form-data", role="form")
+
+        input(type="hidden", name="_csrf", value="#{csrf_token}")
+
+        input(type="hidden", name="_method", value="PUT")
+
+        .form-group
+          label.col-sm-2.control-label(for='tags') Tags
+          .col-sm-10
+            input.form-control#tags(type='text', name="viewers", value=article.viewers, placeholder='Enter the tags')
+
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            button.btn.btn-primary(type='submit') Save
+            | &nbsp;
+            a.btn(href='/articles', title="cancel") Cancel
+
+    .col-md-4
+      - if (!article.isNew && article.image && article.image.files && article.image.files.length)
+        img(src=article.image.cdnUri + "/mini_" + article.image.files[0])

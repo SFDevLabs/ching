@@ -48,6 +48,9 @@ var itemsSchema = {
     exports.itemsSchema = itemsSchema;
 
 var ArticleSchema = new Schema({
+  viewers:[
+    {type : Schema.ObjectId, ref : 'User'}
+  ],
   title: {type : String, default : '', trim : true},
   body: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
@@ -195,7 +198,13 @@ ArticleSchema.statics = {
   list: function (options, cb) {
     var criteria = options.criteria || {}
 
-    this.find(criteria)
+    this.find()
+      .or([
+          options.criteria
+        ,{$in:{'viewers':[options.criteria.user]}}
+      ])
+      // .where('viewers')
+      // .in([options.criteria.user])
       .populate('user', 'name username')
       .sort({'createdAt': -1}) // sort by date
       .limit(options.perPage)

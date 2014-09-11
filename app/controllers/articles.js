@@ -13,6 +13,11 @@ var mongoose = require('mongoose')
  * Load
  */
 
+var validateEmail = function(email) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+} 
+
 exports.load = function(req, res, next, id){
   var User = mongoose.model('User')
   Article.load(id, function (err, article) {
@@ -56,13 +61,20 @@ exports.stuff = function(req, res){
 
 exports.index = function(req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
-  var perPage = 30
+  var perPage = 30,
+      userID=req.user?req.user._id:null;
   var options = {
     perPage: perPage,
-    page: page
+    page: page,
+  }
+  options.criteria={
+    user: userID
   }
 
+  console.log(userID)
+
   Article.list(options, function(err, articles) {
+    console.log(err)
     if (err) return res.render('500')
     Article.count().exec(function (err, count) {
       res.render('articles/index', {
@@ -83,6 +95,53 @@ exports.new = function(req, res){
   res.render('articles/new', {
     title: 'New Article',
     article: new Article({})
+  })
+}
+
+
+/**
+ * Share article
+ */
+
+// exports.share = function(req, res){
+
+//   var emailVal = validateEmail(req.body.email);
+
+//   req.article.
+
+//   res.redirect('ping'+emailVal)
+// }
+
+
+exports.share = function (req, res) {
+  res.render('articles/share', {
+    title: 'Edit ' + req.article.title,
+    article: req.article
+  })
+}
+
+/**
+ * Update article
+ */
+
+exports.updateShare = function(req, res){
+  var article = req.article
+
+  if (req.body.viewers)
+  article = extend(article, req.body);
+  else
+  article.viewers.pop();
+
+  article.uploadAndSave(req.files.image, function(err) {
+    // if (!err) {
+    //   return res.redirect('/articles/' + article._id)
+    // }
+
+    res.render('articles/share', {
+      title: 'Edit ' + req.article.title,
+      article: article,
+      error: err?utils.errors(err.errors || err):null
+    })
   })
 }
 
@@ -125,6 +184,8 @@ exports.edit = function (req, res) {
 
 exports.update = function(req, res){
   var article = req.article
+  console.log(req.body,article)
+
   article = extend(article, req.body)
 
   article.uploadAndSave(req.files.image, function(err) {
