@@ -32,7 +32,7 @@ exports.create = function (req, res) {
 
   article.addViewer(user, req.body, function (err) {
     if (err) return res.render('500')
-    res.redirect('/articles/'+ article.id+'/share')
+    res.redirect('/articles/'+ article.id+'/viewer')
   })
 }
 
@@ -49,6 +49,19 @@ exports.destroy = function (req, res) {
     } else {
       req.flash('info', 'Removed viewer')
     }
-    res.redirect('/articles/' + article.id+'/share')
+    res.redirect('/articles/' + article.id+'/viewer')
+  })
+}
+
+
+/**
+ * Share article
+ */
+
+
+exports.share = function (req, res) {
+  res.render('articles/share', {
+    title: 'Edit ' + req.article.title,
+    article: req.article
   })
 }

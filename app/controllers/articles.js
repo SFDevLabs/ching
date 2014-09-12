@@ -98,28 +98,6 @@ exports.new = function(req, res){
   })
 }
 
-
-/**
- * Share article
- */
-
-// exports.share = function(req, res){
-
-//   var emailVal = validateEmail(req.body.email);
-
-//   req.article.
-
-//   res.redirect('ping'+emailVal)
-// }
-
-
-exports.share = function (req, res) {
-  res.render('articles/share', {
-    title: 'Edit ' + req.article.title,
-    article: req.article
-  })
-}
-
 /**
  * Update article
  */

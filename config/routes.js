@@ -115,7 +115,6 @@ module.exports = function (app, passport) {
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
 
-   app.get('/articles/:id/share', articleAuth, articles.share)
   // app.put('/articles/:id/share', articleAuth, articles.updateShare)
   // app.post('/email', articles.stuff);
 
@@ -123,8 +122,8 @@ module.exports = function (app, passport) {
   var viewers = require('../app/controllers/viewers')
   app.param('viewerId', viewers.load)
   app.post('/articles/:id/viewer', auth.requiresLogin, viewers.create)
-  app.get('/articles/:id/viewer', auth.requiresLogin, viewers.create)
   app.del('/articles/:id/viewer/:viewerId', viewerAuth, viewers.destroy)
+  app.get('/articles/:id/viewer', articleAuth, viewers.share)
 
   // function(req, res){
     

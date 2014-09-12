@@ -12,7 +12,7 @@ block content
     ul
       li
         form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
-          span.viewer= viewer.user
+          span.viewer= viewer
           input(type='hidden', name='_csrf', value="#{csrf_token}")
           input(type="hidden", name="_method", value="DELETE")
           button.btn.btn-danger.btn-link.error(type="submit") delete
