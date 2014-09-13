@@ -6,7 +6,8 @@
 var mongoose = require('mongoose')
   , User = mongoose.model('User')
   , utils = require('../../lib/utils')
-  , crypto = require('crypto');
+  , crypto = require('crypto')
+  , User = mongoose.model('User');
 
 var login = function (req, res) {
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/'
@@ -61,7 +62,6 @@ exports.resetpage = function (req, res) {
  */
 
 exports.loadreset = function(req, res, next, resetid){
-  var User = mongoose.model('User');
 
   User.findOne({resetPasswordToken:resetid}, function(err,user){
     req.user=user;

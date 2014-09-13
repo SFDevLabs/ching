@@ -177,10 +177,10 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  addViewer: function (comment, cb) {
+  addViewer: function (user, cb) {
     //var notify = require('../mailer')
 
-    this.viewers.addToSet(comment)
+    this.viewers.addToSet(user)
 
     // if (!this.user.email) this.user.email = 'email@product.com'
     // notify.comment({

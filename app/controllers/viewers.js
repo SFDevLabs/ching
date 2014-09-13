@@ -4,7 +4,8 @@
  */
 
 var mongoose = require('mongoose')
-var utils = require('../../lib/utils')
+  , utils = require('../../lib/utils')
+  , User = mongoose.model('User');
 
 /**
  * Load viewers
@@ -29,22 +30,33 @@ exports.create = function (req, res) {
       user = req.user,
       duplicate;
 
-  req.article.viewers.every(function(val,i){
-    if (String(req.body.user)===String(val.user._id)){
-      duplicate=true
-    }
+    console.log(req.body.email.replace(/\.(?=[^@]*\@)/g, '') )
+
+  User.findOne({email:req.body.email.replace(/\.(?=[^@]*\@)/g, '') }, function(err, user){
+
+    req.article.viewers.every(function(val,i){
+      if (String(user._id)===String(val.user._id)){
+          duplicate=true
+        }
+      });
+    
+      if (duplicate){
+        req.flash('error', 'Duplicate viewer')
+        res.redirect('/articles/' + article.id+'/viewer')
+      } else{
+        article.addViewer({user:user._id}, function (err) {
+          if (err) return res.render('500')
+          req.flash('success', 'New Viewer Added!')
+          res.redirect('/articles/'+ article.id+'/viewer')
+        })
+      }
+
   });
 
-  if (duplicate){
-    req.flash('error', 'Duplicate viewer')
-    res.redirect('/articles/' + article.id+'/viewer')
-  } else{
-    article.addViewer(req.body, function (err) {
-      if (err) return res.render('500')
-      req.flash('success', 'New Viewer Added!')
-      res.redirect('/articles/'+ article.id+'/viewer')
-    })
-  }
+
+
+
+
 }
 
 /**
