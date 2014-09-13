@@ -45,13 +45,14 @@ var itemsSchema = {
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:7},
     total:{type : Number, default : null, format: '$0,0.00', typeString:'number',columnPosition:8}
   }
-    exports.itemsSchema = itemsSchema;
+  var viewersSchema = new Schema({
+    user: {type : Schema.ObjectId, ref : 'User'},
+    createdAt: { type : Date, default : Date.now },
+  })
+  exports.itemsSchema = itemsSchema;
 
 var ArticleSchema = new Schema({
-  viewers:[{
-    user: {type : Schema.ObjectId, ref : 'User'},
-    createdAt: { type : Date, default : Date.now }
-  }],
+  viewers:[viewersSchema],
   title: {type : String, default : '', trim : true},
   body: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
@@ -106,23 +107,23 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  uploadAndSave: function (images, cb) {
-    if (!images || !images.length) return this.save(cb)
+  // uploadAndSave: function (images, cb) {
+  //   if (!images || !images.length) return this.save(cb)
 
-    var imager = new Imager(imagerConfig, 'S3')
-    var self = this
+  //   var imager = new Imager(imagerConfig, 'S3')
+  //   var self = this
 
-    this.validate(function (err) {
-      if (err) return cb(err);
-      imager.upload(images, function (err, cdnUri, files) {
-        if (err) return cb(err)
-        if (files.length) {
-          self.image = { cdnUri : cdnUri, files : files }
-        }
-        self.save(cb)
-      }, 'article')
-    })
-  },
+  //   this.validate(function (err) {
+  //     if (err) return cb(err);
+  //     imager.upload(images, function (err, cdnUri, files) {
+  //       if (err) return cb(err)
+  //       if (files.length) {
+  //         self.image = { cdnUri : cdnUri, files : files }
+  //       }
+  //       self.save(cb)
+  //     }, 'article')
+  //   })
+  // },
 
   /**
    * Add comment
@@ -176,13 +177,10 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  addViewer: function (user, comment, cb) {
+  addViewer: function (comment, cb) {
     //var notify = require('../mailer')
 
-    this.viewers.push({
-      body: comment.body,
-      user: user._id
-    })
+    this.viewers.addToSet(comment)
 
     // if (!this.user.email) this.user.email = 'email@product.com'
     // notify.comment({
@@ -228,6 +226,7 @@ ArticleSchema.statics = {
     this.findOne({ _id : id })
       .populate('user', 'name email username')
       .populate('comments.user')
+      .populate('viewers.user', 'name email username')
       .exec(cb)
   },
 

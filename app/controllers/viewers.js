@@ -25,15 +25,26 @@ exports.load = function (req, res, next, id) {
  */
 
 exports.create = function (req, res) {
-  var article = req.article
-  var user = req.user
+  var article = req.article,
+      user = req.user,
+      duplicate;
 
-  //if (!req.body.body) return res.redirect('/articles/'+ article.id)
+  req.article.viewers.every(function(val,i){
+    if (String(req.body.user)===String(val.user._id)){
+      duplicate=true
+    }
+  });
 
-  article.addViewer(user, req.body, function (err) {
-    if (err) return res.render('500')
-    res.redirect('/articles/'+ article.id+'/viewer')
-  })
+  if (duplicate){
+    req.flash('error', 'Duplicate viewer')
+    res.redirect('/articles/' + article.id+'/viewer')
+  } else{
+    article.addViewer(req.body, function (err) {
+      if (err) return res.render('500')
+      req.flash('success', 'New Viewer Added!')
+      res.redirect('/articles/'+ article.id+'/viewer')
+    })
+  }
 }
 
 /**
@@ -44,10 +55,11 @@ exports.destroy = function (req, res) {
   var article = req.article
   console.log(req.param('viewerId'))
   article.removeViewer(req.param('viewerId'), function (err) {
+    console.log(err)
     if (err) {
       req.flash('error', 'Oops! The viewer was not found')
     } else {
-      req.flash('info', 'Removed viewer')
+      req.flash('success', 'Removed viewer')
     }
     res.redirect('/articles/' + article.id+'/viewer')
   })

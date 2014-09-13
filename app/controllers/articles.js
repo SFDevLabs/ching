@@ -33,27 +33,27 @@ exports.load = function(req, res, next, id){
  * Stuff
  */
 
-exports.stuff = function(req, res){
-  // res.render('articles/home', {
-  //   title: 'Home',
-  // })
+// exports.stuff = function(req, res){
+//   // res.render('articles/home', {
+//   //   title: 'Home',
+//   // })
 
-    sendgrid.send({
-      to:       'jeff@sfdevlabs.com',
-      from:     'other@example.com',
-      subject:  'Hello World',
-      text:     'My first email through SendGrid.'
-    }, function(err, json, b) {
-      if (err) { 
-        res.send(err)
-        return console.error(err); 
-      }
+//     sendgrid.send({
+//       to:       'jeff@sfdevlabs.com',
+//       from:     'other@example.com',
+//       subject:  'Hello World',
+//       text:     'My first email through SendGrid.'
+//     }, function(err, json, b) {
+//       if (err) { 
+//         res.send(err)
+//         return console.error(err); 
+//       }
 
-      ////res.send(err)
-      res.send(json)
+//       ////res.send(err)
+//       res.send(json)
 
-    });
-}
+//     });
+// }
 
 /**
  * List
@@ -102,49 +102,49 @@ exports.new = function(req, res){
  * Update article
  */
 
-exports.updateShare = function(req, res){
-  var article = req.article
+// exports.updateShare = function(req, res){
+//   var article = req.article
 
-  console.log(req.body.viewers)
-  console.log(article.viewers)
+//   console.log(req.body.viewers)
+//   console.log(article.viewers)
 
 
-//  article.viewers.push(req.body.email);
+// //  article.viewers.push(req.body.email);
 
-  //var viewers = req.body.viewers.split(',');
+//   //var viewers = req.body.viewers.split(',');
 
-  // for (var i = viewers.length - 1; i >= 0; i--) {
-  //   var index=article.viewers.indexOf(viewers[i])
+//   // for (var i = viewers.length - 1; i >= 0; i--) {
+//   //   var index=article.viewers.indexOf(viewers[i])
 
-  //   if (index==-1){
-  //       article.viewers.push(viewers[i]);
-  //   } 
-  // };
+//   //   if (index==-1){
+//   //       article.viewers.push(viewers[i]);
+//   //   } 
+//   // };
 
-  // for (var i = article.viewers.length - 1; i >= 0; i--) {
-  //   var index=viewers.indexOf( String(article.viewers[i]) )
+//   // for (var i = article.viewers.length - 1; i >= 0; i--) {
+//   //   var index=viewers.indexOf( String(article.viewers[i]) )
 
-  //   if (index==-1){
-  //       console.log(typeof article.viewers[i],article.viewers[i])
+//   //   if (index==-1){
+//   //       console.log(typeof article.viewers[i],article.viewers[i])
 
-  //       // article.viewers.splice(i,i);
-  //   } 
-  // };
+//   //       // article.viewers.splice(i,i);
+//   //   } 
+//   // };
   
-  article.save(function(err){
-  //article.uploadAndSave(req.files.image, function(err) {
-    // if (!err) {
-    //   return res.redirect('/articles/' + article._id)
-    // }
-    console.log(err)
+//   article.save(function(err){
+//   //article.uploadAndSave(req.files.image, function(err) {
+//     // if (!err) {
+//     //   return res.redirect('/articles/' + article._id)
+//     // }
+//     console.log(err)
 
-    res.render('articles/share', {
-      title: 'Edit ' + req.article.title,
-      article: article,
-      error: err?utils.errors(err.errors || err):null
-    })
-  })
-}
+//     res.render('articles/share', {
+//       title: 'Edit ' + req.article.title,
+//       article: article,
+//       error: err?utils.errors(err.errors || err):null
+//     })
+//   })
+// }
 
 /**
  * Create an article
@@ -154,7 +154,8 @@ exports.create = function (req, res) {
   var article = new Article(req.body)
   article.user = req.user
 
-  article.uploadAndSave(req.files.image, function (err) {
+  article.save(function (err) {
+    console.log(err)
     if (!err) {
       req.flash('success', 'Successfully created article!')
       return res.redirect('/articles/'+article._id)
@@ -189,7 +190,7 @@ exports.update = function(req, res){
 
   article = extend(article, req.body)
 
-  article.uploadAndSave(req.files.image, function(err) {
+  article.save(function(err) {
     if (!err) {
       return res.redirect('/articles/' + article._id)
     }

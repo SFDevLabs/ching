@@ -115,9 +115,6 @@ module.exports = function (app, passport) {
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
 
-  // app.put('/articles/:id/share', articleAuth, articles.updateShare)
-  // app.post('/email', articles.stuff);
-
   // viewer routes
   var viewers = require('../app/controllers/viewers')
   app.param('viewerId', viewers.load)
@@ -125,25 +122,7 @@ module.exports = function (app, passport) {
   app.del('/articles/:id/viewer/:viewerId', viewerAuth, viewers.destroy)
   app.get('/articles/:id/viewer', articleAuth, viewers.share)
 
-  // function(req, res){
-    
-  //   sendgrid.send({
-  //     to:       'jeff@sfdevlabs.com',
-  //     from:     'other@example.com',
-  //     subject:  'Hello World',
-  //     text:     'My first email through SendGrid.'
-  //   }, function(err, json, b) {
-  //     if (err) { 
-  //       res.send(err)
-  //       return console.error(err); 
-  //     }
 
-  //     ////res.send(err)
-  //     res.send(json)
-
-  //   });
-
-  // }
 
   // home route
   app.get('/', auth.requiresLogin,  articles.index)
