@@ -30,15 +30,10 @@ exports.create = function (req, res) {
       user = req.user,
       duplicate,
       user;
-
-   // console.log(req.body.email.replace(/\.(?=[^@]*\@)/g, '') )
-
   User.findOne({email:req.body.email.replace(/\.(?=[^@]*\@)/g, '') }, function(err, user){
-
        if (!user){
          user = new User({email:req.body.email, placeholderFromShare:true});
          user.save()
-//         console.log(user)  //validation errors.
        } else {
         duplicate = req.article.viewers.some(function(val,i){
           console.log(val)
@@ -47,8 +42,6 @@ exports.create = function (req, res) {
           } 
         })
       }
-
-
       if (duplicate){
         req.flash('error', 'Duplicate viewer')
         res.redirect('/articles/' + article.id+'/viewer')
@@ -59,14 +52,7 @@ exports.create = function (req, res) {
           res.redirect('/articles/'+ article.id+'/viewer')
         })
       }
-
-
   });
-
-
-
-
-
 }
 
 /**
