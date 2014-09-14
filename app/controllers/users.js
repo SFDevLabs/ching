@@ -7,7 +7,8 @@ var mongoose = require('mongoose')
   , User = mongoose.model('User')
   , utils = require('../../lib/utils')
   , crypto = require('crypto')
-  , User = mongoose.model('User');
+  , User = mongoose.model('User')
+  , extend = require('util')._extend;
 
 var login = function (req, res) {
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/'
@@ -205,19 +206,19 @@ exports.create = function (req, res) {
   // Check only when it is a new user or when email field is modified
   User.findOne({ email: req.body.email }).exec(function (err, user) {
       var newUser
-      if (!err && user && user.placeholderFromShare){
-         newUser = user
-         newUser.placeholderFromShare=false;
-      } else if (!err && user){
+      if (!err && user && user.placeholderFromShare){ //Save over the placeholder
+         newUser = extend(user, req.body) //Combine the objects
+         newUser.placeholderFromShare=false; //Remove placeholder flag
+      } else if (!err && user){  //Already existis and not a placeholder
           return res.render('users/signup', {
             errors: utils.errors([{ message: 'Email already exists'}]),
             user: user,
             title: 'Sign up'
           })
-      } else {
+      } else { //Brand spankin new so we make a new user
           newUser = new User(req.body)
       }
-      newUser.provider = 'local'
+      newUser.provider = 'local' //Set as local auth
       newUser.save(function (err) {
         if (err){
           return res.render('users/signup', {
