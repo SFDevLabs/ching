@@ -244,7 +244,7 @@ ArticleSchema.statics = {
     this.find()
       .or([
           options.criteria
-        ,{$in:{'viewers':[options.criteria.user]}}
+        ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
       ])
       // .where('viewers')
       // .in([options.criteria.user])
