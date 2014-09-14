@@ -28,28 +28,38 @@ exports.load = function (req, res, next, id) {
 exports.create = function (req, res) {
   var article = req.article,
       user = req.user,
-      duplicate;
+      duplicate,
+      user;
 
-    console.log(req.body.email.replace(/\.(?=[^@]*\@)/g, '') )
+   // console.log(req.body.email.replace(/\.(?=[^@]*\@)/g, '') )
 
   User.findOne({email:req.body.email.replace(/\.(?=[^@]*\@)/g, '') }, function(err, user){
 
-    req.article.viewers.every(function(val,i){
-      if (String(user._id)===String(val.user._id)){
-          duplicate=true
-        }
-      });
-    
+       if (!user){
+         user = new User({email:req.body.email, placeholderFromShare:true});
+         user.save()
+//         console.log(user)  //validation errors.
+       } else {
+        duplicate = req.article.viewers.some(function(val,i){
+          console.log(val)
+          if (String(user._id)===String(val.user._id)){
+            return true
+          } 
+        })
+      }
+
+
       if (duplicate){
         req.flash('error', 'Duplicate viewer')
         res.redirect('/articles/' + article.id+'/viewer')
-      } else{
+      } else {
         article.addViewer({user:user._id}, function (err) {
           if (err) return res.render('500')
           req.flash('success', 'New Viewer Added!')
           res.redirect('/articles/'+ article.id+'/viewer')
         })
       }
+
 
   });
 
@@ -71,7 +81,7 @@ exports.destroy = function (req, res) {
     if (err) {
       req.flash('error', 'Oops! The viewer was not found')
     } else {
-      req.flash('success', 'Removed viewer')
+      req.flash('success', 'Viewer Removed')
     }
     res.redirect('/articles/' + article.id+'/viewer')
   })

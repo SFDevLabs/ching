@@ -199,24 +199,45 @@ exports.session = login
  */
 
 exports.create = function (req, res) {
-  var user = new User(req.body)
-  user.provider = 'local'
-  user.save(function (err) {
-    console.log(err)
-    if (err) {
-      return res.render('users/signup', {
-        errors: utils.errors(err.errors),
-        user: user,
-        title: 'Sign up'
-      })
-    }
 
-    // manually login the user once successfully signed up
-    req.logIn(user, function(err) {
-      if (err) return next(err)
-      return res.redirect('/')
-    })
-  })
+
+
+  // Check only when it is a new user or when email field is modified
+  User.findOne({ email: req.body.email }).exec(function (err, user) {
+      var newUser
+      if (!err && user && user.placeholderFromShare){
+         newUser = user
+         newUser.placeholderFromShare=false;
+      } else if (!err && user){
+          return res.render('users/signup', {
+            errors: utils.errors([{ message: 'Email already exists'}]),
+            user: user,
+            title: 'Sign up'
+          })
+      } else {
+          newUser = new User(req.body)
+      }
+      newUser.provider = 'local'
+      newUser.save(function (err) {
+        if (err){
+          return res.render('users/signup', {
+            errors: utils.errors(err.errors),
+            user: user,
+            title: 'Sign up'
+          })
+        }
+
+        // manually login the user once successfully signed up
+        req.logIn(user, function(err) {
+          if (err) return next(err)
+          return res.redirect('/')
+        })
+
+
+      })//save function
+      
+  });//findone function
+
 }
 
 /**

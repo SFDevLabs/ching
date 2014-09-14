@@ -25,7 +25,8 @@ var UserSchema = new Schema({
   google: {},
   linkedin: {},
   resetPasswordToken: String,
-  resetPasswordExpires: Date
+  resetPasswordExpires: Date,
+  placeholderFromShare: { type: Boolean, default: false },
 })
 
 /**
@@ -52,34 +53,23 @@ var validatePresenceOf = function (value) {
 // the below 5 validations only apply if you are signing up traditionally
 
 UserSchema.path('name').validate(function (name) {
-  if (this.doesNotRequireValidation()) return true
+  if (this.doesNotRequireValidation() || this.placeholderFromShare) return true
   return name.length
 }, 'Name cannot be blank')
 
 UserSchema.path('email').validate(function (email) {
-  if (this.doesNotRequireValidation()) return true
+  if (this.doesNotRequireValidation() || this.placeholderFromShare) return true
   return email.length
 }, 'Email cannot be blank')
 
-UserSchema.path('email').validate(function (email, fn) {
-  var User = mongoose.model('User')
-  if (this.doesNotRequireValidation()) fn(true)
-
-  // Check only when it is a new user or when email field is modified
-  if (this.isNew || this.isModified('email')) {
-    User.find({ email: email }).exec(function (err, users) {
-      fn(!err && users.length === 0)
-    })
-  } else fn(true)
-}, 'Email already exists')
 
 UserSchema.path('username').validate(function (username) {
-  if (this.doesNotRequireValidation()) return true
+  if (this.doesNotRequireValidation() || this.placeholderFromShare) return true
   return username.length
 }, 'Username cannot be blank')
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-  if (this.doesNotRequireValidation()) return true
+  if (this.doesNotRequireValidation() || this.placeholderFromShare ) return true
   return hashed_password.length
 }, 'Password cannot be blank')
 
@@ -89,7 +79,7 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
  */
 
 UserSchema.pre('save', function(next) {
-  if (!this.isNew) return next()
+  if (!this.isNew || this.placeholderFromShare) return next()
 
   if (!validatePresenceOf(this.password)
     && !this.doesNotRequireValidation())
