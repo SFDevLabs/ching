@@ -227,13 +227,11 @@ exports.create = function (req, res) {
             title: 'Sign up'
           })
         }
-
         // manually login the user once successfully signed up
         req.logIn(user, function(err) {
           if (err) return next(err)
           return res.redirect('/')
         })
-
 
       })//save function
       
