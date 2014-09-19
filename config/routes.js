@@ -22,9 +22,9 @@ var users = require('../app/controllers/users')
  * Route middlewares
  */
 
-var articleAuth = [auth.requiresLogin, auth.article.hasAuthorization]
+var articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
 var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
-var viewerAuth = [auth.requiresLogin, auth.article.hasAuthorization]
+var viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization] //this needs to be
 
 /**
  * Expose routes
@@ -110,7 +110,7 @@ module.exports = function (app, passport) {
   app.get('/articles', auth.requiresLogin, articles.index)
   app.get('/articles/new', auth.requiresLogin, articles.new)
   app.post('/articles', auth.requiresLogin, articles.create)
-  app.get('/articles/:id', articles.show)
+  app.get('/articles/:id', viewerAuth, articles.show)
   app.get('/articles/:id/edit', articleAuth, articles.edit)
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
@@ -118,8 +118,8 @@ module.exports = function (app, passport) {
   // viewer routes
   var viewers = require('../app/controllers/viewers')
   app.param('viewerId', viewers.load)
-  app.post('/articles/:id/viewer', auth.requiresLogin, viewers.create)
-  app.del('/articles/:id/viewer/:viewerId', viewerAuth, viewers.destroy)
+  app.post('/articles/:id/viewer', articleAuth, viewers.create)
+  app.del('/articles/:id/viewer/:viewerId', articleAuth, viewers.destroy)
   app.get('/articles/:id/viewer', articleAuth, viewers.share)
 
 
@@ -134,7 +134,7 @@ module.exports = function (app, passport) {
   app.get('/articles/:id/comments', auth.requiresLogin, comments.create)
   app.del('/articles/:id/comments/:commentId', commentAuth, comments.destroy)
 
-  crudUtils.initRoutesForModel(app);
+  crudUtils.initRoutesForModel(app, auth);
 
   // tag routes
   var tags = require('../app/controllers/tags')

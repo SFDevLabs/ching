@@ -28,10 +28,25 @@ exports.user = {
  */
 
 exports.article = {
-  hasAuthorization: function (req, res, next) {
+  hasEditAuthorization: function (req, res, next) {
     if (req.article.user.id != req.user.id) {
       req.flash('info', 'You are not authorized')
       return res.redirect('/articles/' + req.article.id)
+    }
+    next()
+  },
+  hasViewAuthorization: function (req, res, next) {
+    var auth;
+    auth = req.article.user.id !== req.user.id;
+
+    auth = req.article.viewers.some(function(val, i){
+      console.log(val.user.id)
+        return val.user.id === req.user.id
+    });
+
+    if (auth) {
+      req.flash('info', 'You are not authorized')
+      return res.redirect('/login')
     }
     next()
   }
