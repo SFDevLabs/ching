@@ -8,7 +8,9 @@ var mongoose = require('mongoose')
   , utils = require('../../lib/utils')
   , crypto = require('crypto')
   , User = mongoose.model('User')
-  , extend = require('util')._extend;
+  , extend = require('util')._extend
+  , sendEmail = utils.sendEmail;
+
 
 var login = function (req, res) {
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/'
@@ -155,30 +157,6 @@ exports.reset = function (req, res) {
 
   })
 }
-
-//move to utility
-var sendEmail;
-exports.sendEmail = sendEmail= function(obj, cb){
-
-  if (!obj.email && typeof obj.email !=='string'){cb('No Valid Email')}
-
-                   // console.log(obj)
-
-     sendgrid.send({
-      to:       obj.email,
-      from:     obj.from?obj.from:"None",
-      subject:  obj.subject?obj.subject:"None",
-      text:     obj.message?obj.message:"None"
-    }, function(err, json, b) {
-      // if (err) { 
-      //   cb(err)
-      // }
-
-      cb(null, json, b)
-    });
-     
-}
-
 
 /**
  * Logout

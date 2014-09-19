@@ -2,10 +2,7 @@
  * Module dependencies.
  */
 
-var async    = require('async'),
-    api_user = 'jeffj',
-    api_key = 'rambert',
-    sendgrid = require('sendgrid')(api_user, api_key);
+var async    = require('async');
 
 /**
  * Controllers
@@ -24,7 +21,7 @@ var users = require('../app/controllers/users')
 
 var articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
 var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
-var viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization] //this needs to be
+var viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization]
 
 /**
  * Expose routes

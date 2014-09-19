@@ -209,10 +209,12 @@
   }
 
 
-  exports.initRoutesForModel = function (app) {
-    var model = Article,
-      path,
-      pathWithId;
+  exports.initRoutesForModel = function (app, auth) {
+    var model = Article
+      , path
+      , pathWithId
+      , articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
+      , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization];
 
     if (!app || !model) {
       return;
@@ -223,13 +225,13 @@
     path = '/articles/:id'
     pathWithId = path + '/api/:idt';
 
-    app.get(path+'/api', getListController(model));
-    app.post(path+'/api', getCreateController(model));
-    app.get(pathWithId, getReadController(model));
-    app.put(path+'/api', getUpdateController(model));
-    app.put(pathWithId, getUpdateItemController(model));
-    app.del(path, getDeleteController(model));
-    app.del(pathWithId, getItemDeleteController(model));
+    app.get(path+'/api', viewerAuth, getListController(model));
+    app.post(path+'/api', articleAuth, getCreateController(model));
+    app.get(pathWithId, articleAuth, getReadController(model));
+    app.put(path+'/api', articleAuth, getUpdateController(model));
+    app.put(pathWithId, articleAuth, getUpdateItemController(model));
+    app.del(path, articleAuth, getDeleteController(model));
+    app.del(pathWithId, articleAuth, getItemDeleteController(model));
   };
 
 }(exports));

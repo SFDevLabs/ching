@@ -5,10 +5,7 @@
 var mongoose = require('mongoose')
   , Article = mongoose.model('Article')
   , utils = require('../../lib/utils')
-  , extend = require('util')._extend
-  , api_user = 'jeffj'
-  , api_key = 'rambert'
-    sendgrid = require('sendgrid')(api_user, api_key);
+  , extend = require('util')._extend;
 /**
  * Load
  */
@@ -28,32 +25,6 @@ exports.load = function(req, res, next, id){
   })
 }
 
-
-/**
- * Stuff
- */
-
-// exports.stuff = function(req, res){
-//   // res.render('articles/home', {
-//   //   title: 'Home',
-//   // })
-
-//     sendgrid.send({
-//       to:       'jeff@sfdevlabs.com',
-//       from:     'other@example.com',
-//       subject:  'Hello World',
-//       text:     'My first email through SendGrid.'
-//     }, function(err, json, b) {
-//       if (err) { 
-//         res.send(err)
-//         return console.error(err); 
-//       }
-
-//       ////res.send(err)
-//       res.send(json)
-
-//     });
-// }
 
 /**
  * List
