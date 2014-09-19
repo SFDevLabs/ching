@@ -104,7 +104,7 @@ module.exports = function (app, passport) {
   // article routes
   app.get('/home', auth.requiresLogin ,articles.home)
   app.param('id', articles.load)
-  app.get('/articles', auth.requiresLogin, articles.index)
+  app.get('/articles', auth.requiresLogin, articles.indexSent)
   app.get('/articles/new', auth.requiresLogin, articles.new)
   app.post('/articles', auth.requiresLogin, articles.create)
   app.get('/articles/:id', viewerAuth, articles.show)
@@ -122,7 +122,11 @@ module.exports = function (app, passport) {
 
 
   // home route
-  app.get('/', auth.requiresLogin,  articles.index)
+  app.get('/', auth.requiresLogin,  articles.indexSent)
+
+  app.get('/recieved', auth.requiresLogin,  articles.indexRecieved)
+  app.get('/sent', auth.requiresLogin,  articles.indexSent)
+
 
   // comment routes
   var comments = require('../app/controllers/comments')
