@@ -30,7 +30,39 @@ exports.load = function(req, res, next, id){
  * List
  */
 
-exports.index = function(req, res){
+exports.indexRecieved = function(req, res){
+  var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
+  var perPage = 30,
+      userID=req.user?req.user._id:null;
+  var options = {
+    perPage: perPage,
+    page: page,
+  }
+  options.criteria={
+    'viewers':{$elemMatch: {user:userID}} 
+  }
+
+  console.log(userID)
+
+  Article.list(options, function(err, articles) {
+    console.log(err)
+    if (err) return res.render('500')
+    Article.count().exec(function (err, count) {
+      res.render('articles/index', {
+        title: 'Articles',
+        articles: articles,
+        page: page + 1,
+        pages: Math.ceil(count / perPage)
+      })
+    })
+  })
+}
+
+/**
+ * List
+ */
+
+exports.indexSent = function(req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
   var perPage = 30,
       userID=req.user?req.user._id:null;

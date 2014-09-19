@@ -241,11 +241,11 @@ ArticleSchema.statics = {
   list: function (options, cb) {
     var criteria = options.criteria || {}
 
-    this.find()
-      .or([
-          options.criteria
-        ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
-      ])
+    this.find(options.criteria)
+      // .or([
+      //     options.criteria
+      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
+      // ])
       // .where('viewers')
       // .in([options.criteria.user])
       .populate('user', 'name username')

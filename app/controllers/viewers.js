@@ -5,8 +5,9 @@
 
 var mongoose = require('mongoose')
   , utils = require('../../lib/utils')
-  , User = mongoose.model('User');
-
+  , User = mongoose.model('User')
+  , utils = require('../../lib/utils')
+  , sendEmail = utils.sendEmail;
 /**
  * Load viewers
  */
@@ -26,17 +27,28 @@ exports.load = function (req, res, next, id) {
  */
 
 exports.create = function (req, res) {
+  console.log(req.body.email)
+
+
   var article = req.article,
       user = req.user,
       duplicate,
-      user;
-  User.findOne({email:req.body.email.replace(/\.(?=[^@]*\@)/g, '') }, function(err, user){
+      user,
+      validatedEmail = req.body.email.replace(/\.(?=[^@]*\@)/g, '');
+
+      console.log(req.body.email)
+
+  if (!req.body.email || req.body.email.length===0){
+        req.flash('error', 'No email')
+        return res.redirect('/articles/' + article.id+'/viewer')
+  }
+
+  User.findOne({email: validatedEmail}, function(err, user){
        if (!user){
          user = new User({email:req.body.email, placeholderFromShare:true});
          user.save()
        } else {
         duplicate = req.article.viewers.some(function(val,i){
-          console.log(val)
           if (String(user._id)===String(val.user._id)){
             return true
           } 
