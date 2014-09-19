@@ -19,6 +19,13 @@ body {
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
 }
+.remove-sidebar {
+  float: right;
+  background: #f4fce8;
+}
+.remove-sidebar tr {
+  height: 22px;
+}
 #todoapp {
   background: #fff;
   padding: 20px;

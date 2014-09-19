@@ -43,6 +43,7 @@
     "view-helpers": "latest",
     "forever": "latest",
     "stylus":"latest",
+    "node-sass":"latest",
     "sendgrid":"latest"
   },
   "devDependencies": {
