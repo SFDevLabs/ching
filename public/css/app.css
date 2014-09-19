@@ -1,4 +1,3 @@
-/*Ching.io - 2014*/
 html, body {
   height: 100%; }
 
@@ -69,6 +68,9 @@ button.error {
 
 .alert {
   margin-top: 10px; }
+
+.navbar {
+  background-color: pink; }
 
 .navbar-brand {
   font-size: 14px;
