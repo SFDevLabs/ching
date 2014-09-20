@@ -42,10 +42,11 @@ exports.indexRecieved = function(req, res){
     'viewers':{$elemMatch: {user:userID}} 
   }
 
-  console.log(userID)
 
   Article.list(options, function(err, articles) {
-    console.log(err)
+
+      console.log(articles.length)
+
     if (err) return res.render('500')
     Article.count().exec(function (err, count) {
       res.render('articles/index', {

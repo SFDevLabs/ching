@@ -213,7 +213,7 @@
     var model = Article
       , path
       , pathWithId
-      , articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
+      , articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorizationAPI]
       , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization];
 
     if (!app || !model) {

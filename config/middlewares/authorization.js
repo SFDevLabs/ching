@@ -35,16 +35,26 @@ exports.article = {
     }
     next()
   },
+  hasEditAuthorizationAPI: function (req, res, next) {
+    if (req.article.user.id != req.user.id) {
+      return res.send(401,'{"status":"Not Authroized"}')
+    }
+    next()
+  },
   hasViewAuthorization: function (req, res, next) {
-    var auth;
-    auth = req.article.user.id !== req.user.id;
+    var viewerAuth
+      , authorAuth;
+    // auth = req.article.user.id !== req.user.id;
 
-    auth = req.article.viewers.some(function(val, i){
-      console.log(val.user.id)
+    viewerAuth = req.article.viewers.some(function(val, i){
+
+        console.log(typeof val.user.id)
+        console.log(typeof req.user.id)
+
         return val.user.id === req.user.id
     });
-
-    if (auth) {
+    authorAuth = req.article.user.id === req.user.id
+    if (!viewerAuth && !authorAuth) {
       req.flash('info', 'You are not authorized')
       return res.redirect('/login')
     }
