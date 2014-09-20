@@ -47,10 +47,6 @@ exports.article = {
     // auth = req.article.user.id !== req.user.id;
 
     viewerAuth = req.article.viewers.some(function(val, i){
-
-        console.log(typeof val.user.id)
-        console.log(typeof req.user.id)
-
         return val.user.id === req.user.id
     });
     authorAuth = req.article.user.id === req.user.id
@@ -59,6 +55,19 @@ exports.article = {
       return res.redirect('/login')
     }
     next()
+  },
+  hasViewAuthorizationToken:function(req, res, next){
+    var auth = req.article.viewers.some(function(user,i){//iterate through the viewers with 'some' and return true if we have a valid token to view the invoice
+      if (req.token===user.id){
+        req.articleViewer=user;
+        return true
+      };
+    });
+    if (!auth) {
+      req.flash('info', 'You are not authorized')
+      return res.redirect('/login')
+    }
+    next();
   }
 }
 

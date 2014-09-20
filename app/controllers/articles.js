@@ -5,15 +5,15 @@
 var mongoose = require('mongoose')
   , Article = mongoose.model('Article')
   , utils = require('../../lib/utils')
+  , validateEmail = utils.validateEmail
   , extend = require('util')._extend;
+
+
+
+
 /**
  * Load
  */
-
-var validateEmail = function(email) { 
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-} 
 
 exports.load = function(req, res, next, id){
   var User = mongoose.model('User')
@@ -23,6 +23,16 @@ exports.load = function(req, res, next, id){
     req.article = article
     next()
   })
+}
+
+/**
+ * Token
+ */
+
+exports.token  = function(req, res, next, token){
+  var User = mongoose.model('User')
+  req.token=token;
+  next();
 }
 
 
@@ -44,8 +54,6 @@ exports.indexRecieved = function(req, res){
 
 
   Article.list(options, function(err, articles) {
-
-      console.log(articles.length)
 
     if (err) return res.render('500')
     Article.count().exec(function (err, count) {
@@ -211,12 +219,40 @@ exports.update = function(req, res){
  * Show
  */
 
-exports.show = function(req, res){
+exports.show = function(req, res, next){
   res.render('articles/show', {
     title: req.article.title,
     article: req.article
   })
 }
+
+/**
+ * Show
+ */
+
+exports.record = function(req, res, next){
+  var article = req.article
+    , viewer  = req.articleViewer;
+
+
+    article.addPageView({user:viewer._id}, function (err, obj, newViewer) {
+      if (err) return res.render('500')
+      next()
+    });
+
+
+  // res.render('articles/show', {
+  //   title: req.article.title,
+  //   article: req.article
+  // })
+}
+
+/**
+ * recordView
+ */
+
+
+
 
 /**
  * Delete an article

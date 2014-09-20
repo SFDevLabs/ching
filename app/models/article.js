@@ -49,10 +49,15 @@ var itemsSchema = {
     user: {type : Schema.ObjectId, ref : 'User'},
     createdAt: { type : Date, default : Date.now },
   })
+  var viewsSchema = new Schema({
+    user: {type : Schema.ObjectId, ref : 'User'},
+    viewedAt: { type : Date, default : Date.now },
+  })
   exports.itemsSchema = itemsSchema;
 
 var ArticleSchema = new Schema({
   viewers:[viewersSchema],
+  views: [viewsSchema],
   title: {type : String, default : '', trim : true},
   body: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
@@ -67,7 +72,7 @@ var ArticleSchema = new Schema({
     files: []
   },
   createdAt  : {type : Date, default : Date.now},
-  todos: [itemsSchema]
+  todos: [itemsSchema],
 });
 
 /**
@@ -168,19 +173,16 @@ ArticleSchema.methods = {
   },
 
 
-  /**
-   * Add viewer
-   *
-   * @param {User} user
-   * @param {Object} comment
-   * @param {Function} cb
-   * @api private
-   */
 
+   /**
+    * addViewer to article,  Get viewer token
+    * @param {[type]}   user mongoobj
+    * @param {Function} cb   error,savedDocument,addedViewerObj
+    */
   addViewer: function (user, cb) {
     //var notify = require('../mailer')
 
-    this.viewers.addToSet(user)
+    var newViewer = this.viewers.addToSet(user);
 
     // if (!this.user.email) this.user.email = 'email@product.com'
     // notify.comment({
@@ -189,7 +191,9 @@ ArticleSchema.methods = {
     //   comment: comment.body
     // })
 
-    this.save(cb)
+    this.save(function(err,obj){
+      cb(err,obj,newViewer)
+    })
   },
 
   /**
@@ -205,7 +209,29 @@ ArticleSchema.methods = {
     if (~index) this.viewers.splice(index, 1)
     else return cb('not found')
     this.save(cb)
-  }
+  },
+
+   /**
+    * addViewer to article,  Get viewer token
+    * @param {[type]}   user mongoobj
+    * @param {Function} cb   error,savedDocument,addedViewerObj
+    */
+  addPageView: function (user, cb) {
+    //var notify = require('../mailer')
+
+    var newViewer = this.views.addToSet(user);
+
+    // if (!this.user.email) this.user.email = 'email@product.com'
+    // notify.comment({
+    //   article: this,
+    //   currentUser: user,
+    //   comment: comment.body
+    // })
+
+    this.save(function(err,obj){
+      cb(err,obj,newViewer)
+    })
+  },
 }
 
 /**

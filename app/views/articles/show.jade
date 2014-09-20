@@ -18,6 +18,8 @@ block content
           - var name = article.user.name ? article.user.name : article.user.username
           p Author :&nbsp;
             a(href="/users/"+article.user._id)= name
+          p Views :&nbsp;
+            div=article.views
 
         - if (article.tags)
           p Tags &nbsp;

@@ -13,15 +13,14 @@ var users = require('../app/controllers/users')
   , auth = require('./middlewares/authorization')
   , crudUtils = require('../utils/crudUtils')
   , mongoose = require('mongoose')
-  , Todo = mongoose.model('Todo');
-
+  , Todo = mongoose.model('Todo')
 /**
- * Route middlewares
- */
-
-var articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
-var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
-var viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization]
+  * Route middlewares
+*/
+  , articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
+  , commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
+  , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization]
+  , viewerAuthToken = [auth.article.hasViewAuthorizationToken];
 
 /**
  * Expose routes
@@ -107,6 +106,9 @@ module.exports = function (app, passport) {
   app.get('/articles', auth.requiresLogin, articles.indexSent)
   app.get('/articles/new', auth.requiresLogin, articles.new)
   app.post('/articles', auth.requiresLogin, articles.create)
+
+  app.param('token', articles.token)
+  app.get('/articles/:id/token/:token', viewerAuthToken, articles.record, articles.show)
   app.get('/articles/:id', viewerAuth, articles.show)
   app.get('/articles/:id/edit', articleAuth, articles.edit)
   app.put('/articles/:id', articleAuth, articles.update)
