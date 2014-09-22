@@ -115,7 +115,7 @@ module.exports = function (app, passport) {
 
   app.param('token', articles.token)
   app.get('/articles/:id/token/:token', viewerAuthToken, articles.record, articles.show)
-  app.get('/articles/:id', viewerAuth, articles.show)
+  app.get('/articles/:id', viewerAuth, articles.record, articles.show)
   app.get('/articles/:id/edit', articleAuth, articles.edit)
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)

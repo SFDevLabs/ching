@@ -227,32 +227,24 @@ exports.show = function(req, res, next){
 }
 
 /**
- * Show
+ * Record View
  */
 
 exports.record = function(req, res, next){
   var article = req.article
-    , viewer  = req.articleViewer;
+    , viewer  = req.articleViewer
+    , user = req.user
+    , userId = viewer && viewer.user.id? viewer.user._id:user.id;
 
+    if (user && article.user.id===user.id){
+      return next();
+    }
 
-    article.addPageView({user:viewer._id}, function (err, obj, newViewer) {
+    article.addPageView({user:userId}, function (err, obj, newViewer) {
       if (err) return res.render('500')
       next()
     });
-
-
-  // res.render('articles/show', {
-  //   title: req.article.title,
-  //   article: req.article
-  // })
 }
-
-/**
- * recordView
- */
-
-
-
 
 /**
  * Delete an article

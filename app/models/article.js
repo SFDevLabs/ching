@@ -253,6 +253,7 @@ ArticleSchema.statics = {
       .populate('user', 'firstname email lastname, organization')
       .populate('comments.user')
       .populate('viewers.user', 'lastname email firstname organization')
+      .populate('views.user', 'lastname email firstname organization')
       .exec(cb)
   },
 

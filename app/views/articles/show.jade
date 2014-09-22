@@ -64,12 +64,24 @@ block content
       #example1
       table.remove-sidebar
         tbody
-  br
+
   - if (req.user && req.article.user.id===req.user.id)
     .row
       .col-md-8
         p Views :&nbsp;
-          div=article.views
+          - each view in article.views
+            - if (view.user!=null)
+              .view
+                span.firstname=view.user.firstname
+                | &nbsp;
+                span.lastname=view.user.lastname
+                | &nbsp; with &nbsp;
+                span.organization=view.user.organization
+                | &nbsp;
+                span.email.muted=view.user.email
+                | &nbsp; at &nbsp;
+                span.time.muted= formatDatetime(view.viewedAt, "%b %d, %Y at %I:%M %p")
+
 
 
   br
