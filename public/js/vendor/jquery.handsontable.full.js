@@ -14220,8 +14220,12 @@ WalkontableScrollbars.prototype.registerListeners = function () {
       oldBoxHeight = that.box.height;
       that.instance.draw(true);
     }*/
+    //if (false){
 
-    if (that.vertical.windowScrollPosition !== oldVerticalScrollPosition || that.horizontal.windowScrollPosition !== oldHorizontalScrollPosition || that.box.top !== oldBoxTop || that.box.left !== oldBoxLeft) {
+    //check tot see we are not beyond the margins
+    if (that.vertical.windowScrollPosition+$(window).height() > $(document).height() || that.vertical.windowScrollPosition<0){return false}
+
+    if ( that.vertical.windowScrollPosition+screen.height && that.vertical.windowScrollPosition !== oldVerticalScrollPosition  || that.horizontal.windowScrollPosition !== oldHorizontalScrollPosition || that.box.top !== oldBoxTop || that.box.left !== oldBoxLeft) {
       that.vertical.onScroll();
       that.horizontal.onScroll(); //it's done here to make sure that all onScroll's are executed before changing styles
       that.corner.onScroll();

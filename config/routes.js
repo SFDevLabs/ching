@@ -13,14 +13,15 @@ var users = require('../app/controllers/users')
   , auth = require('./middlewares/authorization')
   , crudUtils = require('../utils/crudUtils')
   , mongoose = require('mongoose')
-  , Todo = mongoose.model('Todo')
 /**
   * Route middlewares
 */
   , articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
   , commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
   , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization]
-  , viewerAuthToken = [auth.article.hasViewAuthorizationToken];
+  , viewerAuthToken = [auth.article.hasViewAuthorizationToken]
+  , userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
+
 
 /**
  * Expose routes
@@ -49,6 +50,11 @@ module.exports = function (app, passport) {
       failureFlash: 'Invalid email or password.'
     }), users.session)
   app.get('/users/:userId', users.show)
+  app.get('/users/:userId/edit', users.edit)
+  app.put('/users/:userId', users.update)
+
+
+
   app.get('/auth/facebook',
     passport.authenticate('facebook', {
       scope: [ 'email', 'user_about_me'],
@@ -118,8 +124,11 @@ module.exports = function (app, passport) {
   var viewers = require('../app/controllers/viewers')
   app.param('viewerId', viewers.load)
   app.post('/articles/:id/viewer', articleAuth, viewers.create)
+  app.post('/articles/:id/send', articleAuth, viewers.sendInvoice)
   app.del('/articles/:id/viewer/:viewerId', articleAuth, viewers.destroy)
   app.get('/articles/:id/viewer', articleAuth, viewers.share)
+
+
 
 
 

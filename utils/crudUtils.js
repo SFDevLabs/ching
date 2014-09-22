@@ -9,7 +9,8 @@
 
   var mongoose = require('mongoose')
     , Article = mongoose.model('Article')
-    , itemsSchema = require('../app/models/article').itemsSchema;
+    , itemsSchema = require('../app/models/article').itemsSchema
+    , articles = require('../app/controllers/articles');
 
   function errMsg(msg) {
     return {'error': {'message': msg.toString()}};
@@ -211,18 +212,23 @@
       , path
       , pathWithId
       , articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorizationAPI]
-      , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization];
+      , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization]
+      , viewerAuthToken = [auth.article.hasViewAuthorizationToken];
 
     if (!app || !model) {
       return;
     }
 
+    app.param('token', articles.token);
     app.param('idt', loadParams(model));
 
     path = '/articles/:id'
     pathWithId = path + '/api/:idt';
 
+
+
     app.get(path+'/api', viewerAuth, getListController(model));
+    app.get(path+'/api/token/:token', viewerAuthToken, getListController(model));
     app.post(path+'/api', articleAuth, getCreateController(model));
     app.get(pathWithId, articleAuth, getReadController(model));
     app.put(path+'/api', articleAuth, getUpdateController(model));

@@ -53,27 +53,47 @@ exports.create = function (req, res) {
         })
       }
       if (duplicate){
-        req.flash('error', 'Duplicate viewer')
-        res.redirect('/articles/' + article.id+'/viewer')
+          req.flash('warning', 'This email address is already on the invoice.')
+          res.redirect('/articles/' + article.id+'/viewer')
       } else {
-
       article.addViewer({user:user._id}, function (err, obj, newViewer) {
         if (err) return res.render('500')
-
-        sendEmail({
-          email:user.email
-          , message: 'You invoice can be viewed at http://localhost:4000/articles/'+article.id+'/token/'+newViewer[0].id
-          , subject: 'You have a new Invoice'
-        }, function(err, json){
-          if (err) return res.render('500')
           req.flash('success', 'New Viewer Added!')
           res.redirect('/articles/'+ article.id+'/viewer/')
-        });//email
-
       });//viewer added
 
-
       }
+  });
+}
+
+exports.sendInvoice=function(req, res){
+  var   article= req.article
+      , articleJSON = article.toJSON()
+      , user = req.user
+      , sent  = [];
+      
+  articleJSON.viewers.forEach(function(viewer, i){
+
+      console.log(viewer.user.email,'ss')
+        sendEmail({
+            to:viewer.user.email
+          , fromname: user.organization
+          , from: 'noreply@ching.io'
+          , subject: 'You have a new Invoice from '+user.organization
+          , html : '<h1>Invoice From '+user.organization+'</h1> <p>You invoice can be viewed at http://localhost:4000/articles/'+article.id+'/token/'+viewer._id+'</p><img src="">'
+          , message: 'You invoice can be viewed at http://localhost:4000/articles/'+article.id+'/token/'+viewer._id
+        }, function(err, json){
+          if (err){   
+             req.flash('error', 'Oops! The invoices could not be sent');
+             return res.redirect('/articles/' + article.id)
+          };
+          sent.push(json)
+          if (sent.length===2){
+            req.flash('success', 'Invoice Sent to '+articleJSON.viewers.length+' people.')
+            res.redirect('/articles/'+ article.id)            
+          }
+        });//email
+
   });
 }
 

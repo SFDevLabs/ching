@@ -17,7 +17,7 @@ block content
 
         - var name = article.user.name ? article.user.name : article.user.username
 
-        a(href="/users/"+article.user._id)= name
+        a(href="/users/"+article.user._id)= article.user.email
         &nbsp; - &nbsp;
         - if (article.tags)
           - each tag in article.tags.split(',')

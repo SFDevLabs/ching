@@ -5,19 +5,24 @@ block auth
     input(type='hidden', name='_csrf', value="#{csrf_token}")
 
     .form-group
-      label.col-sm-2.control-label(for='name') Full name
+      label.col-sm-2.control-label(for='name') First name 
       .col-sm-10
-        input#name.form-control(type='text', name="name", placeholder='Full name', value=user.name)
+        input#name.form-control(type='text', name="firstname", placeholder='First name (optinal)', value=user.name)
+
+    .form-group
+      label.col-sm-2.control-label(for='name') Last name 
+      .col-sm-10
+        input#name.form-control(type='text', name="lastname", placeholder='Last name (optinal)', value=user.name)
+
+    .form-group
+      label.col-sm-2.control-label(for='name') Organization
+      .col-sm-10
+        input#name.form-control(type='text', name="organization", placeholder='organization (optinal)', value=user.name)
 
     .form-group
       label.col-sm-2.control-label(for='email') Email
       .col-sm-10
         input#email.form-control(type='text', name="email", placeholder='Email', value=user.email)
-
-    .form-group
-      label.col-sm-2.control-label(for='username') Username
-      .col-sm-10
-        input#username.form-control(type='text', name="username", placeholder='Username', value=user.username)
 
     .form-group
       label.col-sm-2.control-label(for='password') Password
@@ -29,3 +34,5 @@ block auth
         button.btn.btn-primary(type='submit') Sign up
         | &nbsp; or &nbsp;
         a.show-login(href="/login") Log in
+        | &nbsp; or &nbsp;
+        a.show-login(href="/reset") Reset

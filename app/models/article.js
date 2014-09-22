@@ -250,9 +250,9 @@ ArticleSchema.statics = {
 
   load: function (id, cb) {
     this.findOne({ _id : id })
-      .populate('user', 'name email username')
+      .populate('user', 'firstname email lastname, organization')
       .populate('comments.user')
-      .populate('viewers.user', 'name email username')
+      .populate('viewers.user', 'lastname email firstname organization')
       .exec(cb)
   },
 
@@ -274,7 +274,7 @@ ArticleSchema.statics = {
       // ])
       // .where('viewers')
       // .in([options.criteria.user])
-      .populate('user', 'name username')
+      .populate('user', 'firstname email lastname organization')
       .sort({'createdAt': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)

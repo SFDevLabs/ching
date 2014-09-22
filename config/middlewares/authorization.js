@@ -41,6 +41,12 @@ exports.article = {
     }
     next()
   },
+  hasUserAuthorization:function (req, res, next) {
+    if (req.article.user.id != req.user.id) {
+      return res.send(401,'{"status":"Not Authroized"}')
+    }
+    next()
+  },
   hasViewAuthorization: function (req, res, next) {
     var viewerAuth
       , authorAuth;

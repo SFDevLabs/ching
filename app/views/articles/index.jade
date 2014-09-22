@@ -18,10 +18,10 @@ block content
             | &nbsp; - &nbsp;
             span Author &nbsp;
 
-            - var name = article.user.name ? article.user.name : article.user.username
+            - var name = article.user.organization ? article.user.organization : article.user.email
 
             a(href="/users/"+article.user._id)= name
-
+            
           - if (article.tags)
             | &nbsp; - &nbsp;
             span Tags &nbsp;

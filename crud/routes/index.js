@@ -3,9 +3,7 @@
   "use strict";
 
   var mongoose = require('mongoose')
-    , crudUtils = require('../utils/crudUtils')
-    , Todo = mongoose.model('Todo');
-
+    , crudUtils = require('../utils/crudUtils');
   function index(req, res) {
     res.render('index', { 'title': 'Backbone.js, Node.js, MongoDB Todos' });
   }

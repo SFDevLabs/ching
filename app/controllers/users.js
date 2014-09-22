@@ -113,47 +113,44 @@ exports.resetPW = function (req, res) {
  * Reset Passwors
  */
 
-exports.reset = function (req, res) {
+exports.reset = function (req, res, next) {
 
   var email = req.body.email,
-      options = {
-        crtieria : { email: email }
-      }
+      options = { email: email }
   User.userEmail(options,function(err, user){
 
-     // if (!user){return next(err);}
-
+      console.log(err, user)
+        if (!user){
+          req.flash('error', 'No email found.')
+          return res.redirect('/reset')    
+        }
         var email = user.email
-       
         //move to utility
         crypto.randomBytes(20, function(err, buf) {
-        var token = buf.toString('hex');
-        
-
-          
+          var token = buf.toString('hex');
           user.resetPasswordToken=token;
           user.resetPasswordExpires=Date.now() + 3600000;
           user.save(function (err) {
             //hard coded I know clean up! (localhost:4000)
-            sendEmail({email:email, message: 'http://localhost:4000/reset/'+token}, function(err, json, b){
+        
 
-                res.render('users/reset', {
-                          title: 'Reset',
-                          success: ['Check Your Email for a Reset Link']
-                })
-
-
-                      
-            
+            sendEmail({
+                to:email
+              , from: 'noreply@ching.io'
+              , message: 'http://localhost:4000/reset/'+token
+              , subject:'Reser your Ching.io Password'
+              , fromname:'Ching.io'
+              , html : 'http://localhost:4000/reset/'+token
+            }
+              , function(err, json){
+                if (err){ return next(err)};
+                req.flash('success', 'Check Your Email for a Reset Link.')
+                res.redirect('/reset')            
             });//Email Sent
 
           });//User Saved
         
         });//Token Made
-
-
-
-        
 
   })
 }
@@ -224,7 +221,7 @@ exports.create = function (req, res) {
 exports.show = function (req, res) {
   var user = req.profile
   res.render('users/show', {
-    title: user.name,
+    title: 'Profile',
     user: user
   })
 }
@@ -242,4 +239,33 @@ exports.user = function (req, res, next, id) {
       req.profile = user
       next()
     })
+}
+
+
+
+/**
+ * Show edit
+ */
+
+exports.edit = function (req, res) {
+  var user = req.profile
+  res.render('users/edit', {
+    title: 'Edit Profile',
+    user: user
+  })
+}
+
+/**
+ * Show edit
+ */
+
+exports.update = function (req, res, next) {
+  var user = req.profile
+  extend(user, req.body);
+  user.save(function(err){
+    if (err) return next(err)
+      req.flash('success', 'Successfully Updated Your Profile!')
+      return res.redirect('/users/'+user.id)
+  })
+
 }

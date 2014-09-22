@@ -18,8 +18,6 @@ block content
           - var name = article.user.name ? article.user.name : article.user.username
           p Author :&nbsp;
             a(href="/users/"+article.user._id)= name
-          p Views :&nbsp;
-            div=article.views
 
         - if (article.tags)
           p Tags &nbsp;
@@ -33,17 +31,26 @@ block content
     .col-md-4
       - if (!article.isNew && article.image && article.image.files && article.image.files.length)
         img(src=article.image.cdnUri + '/mini_' + article.image.files[0])
+  .row
+    .col-md-4
+        a.btn.btn-default(href='/articles/'+article._id+'/edit', title="edit") Edit
+        | &nbsp;
+        a.btn.btn-default(href='/articles/'+article._id+'/viewer', title="edit") Share
+        | &nbsp;
+  .row
+    .col-md-4
+      form(action="/articles/"+article.id, method="post")
+        input(type='hidden', name='_csrf', value="#{csrf_token}")
 
+        input(type="hidden", name="_method", value="DELETE")
+        
+        button.btn.btn-danger(type="submit") Delete
 
-  form(action="/articles/"+article.id, method="post")
-    input(type='hidden', name='_csrf', value="#{csrf_token}")
-    a.btn.btn-default(href='/articles/'+article._id+'/edit', title="edit") Edit
-    | &nbsp;
-    a.btn.btn-default(href='/articles/'+article._id+'/viewer', title="edit") Share
-    | &nbsp;
-    input(type="hidden", name="_method", value="DELETE")
-    
-    button.btn.btn-danger(type="submit") Delete
+      form(action="/articles/"+article.id+'/send', method="post")
+        input(type='hidden', name='_csrf', value="#{csrf_token}")
+        input(type="hidden", name="_method", value="POST")
+        button.btn.btn-info(type="submit") Send
+
   br
   .row
     .col-md-8
@@ -57,7 +64,12 @@ block content
       #example1
       table.remove-sidebar
         tbody
-
+  br
+  - if (req.user && req.article.user.id===req.user.id)
+    .row
+      .col-md-8
+        p Views :&nbsp;
+          div=article.views
 
 
   br
@@ -71,4 +83,4 @@ block subfoot
   script(type="text/javascript", src="/js/vendor/underscore-min.js")
   script(type="text/javascript", src="/js/vendor/backbone-min.js")
   script(type="text/javascript", src="/js/vendor/jquery.handsontable.full.js")
-  script(type="text/javascript", src="../js/todos.js")
+  script(type="text/javascript", src="/js/todos.js")

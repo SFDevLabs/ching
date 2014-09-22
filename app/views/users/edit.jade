@@ -1,0 +1,39 @@
+extends ../layouts/default
+
+block main
+  h1= title
+
+block content
+  - var action = '/users/' + user.id
+  .row
+    .col-md-8
+      form.form-horizontal(action=action, method="post", role="form", autocomplete="off")
+        input(type='hidden', name='_csrf', value="#{csrf_token}")
+
+        input(type="hidden", name="_method", value="PUT")
+
+        .form-group
+          label.col-sm-2.control-label(for='name') First name 
+          .col-sm-10
+            input#name.form-control(type='text', name="firstname", placeholder='First name (optinal)', value=user.firstname)
+
+        .form-group
+          label.col-sm-2.control-label(for='name') Last name 
+          .col-sm-10
+            input#name.form-control(type='text', name="lastname", placeholder='Last name (optinal)', value=user.lastname)
+
+        .form-group
+          label.col-sm-2.control-label(for='name') Organization
+          .col-sm-10
+            input#name.form-control(type='text', name="organization", placeholder='organization (optinal)', value=user.organization)
+
+        .form-group
+          label.col-sm-2.control-label(for='email') Email
+          .col-sm-10
+            input#email.form-control(type='text', name="email", placeholder='Email', value=user.email)
+
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            button.btn.btn-primary(type='submit') Save
+            | &nbsp;
+            a.btn(href='/articles', title="cancel") Cancel
