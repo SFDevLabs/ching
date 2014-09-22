@@ -88,7 +88,7 @@ exports.sendInvoice=function(req, res){
              return res.redirect('/articles/' + article.id)
           };
           sent.push(json)
-          if (sent.length===2){
+          if (sent.length===articleJSON.viewers.length){
             req.flash('success', 'Invoice Sent to '+articleJSON.viewers.length+' people.')
             res.redirect('/articles/'+ article.id)            
           }
