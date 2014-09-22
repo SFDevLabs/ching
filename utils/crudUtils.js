@@ -32,27 +32,24 @@
     return function (req, res) {
       var schema = {},
           format = {},
-          options = {},
+          dropdownOptions = {},
           first  = req.article.todos[0],
           columnPosition = {};
-      if (first){
-        var firstJSON = first.toJSON();
-        for (var i in firstJSON) {
-          if (i!=='_id' && itemsSchema[i]){
-            schema[i] = itemsSchema[i].typeString? itemsSchema[i].typeString:'';
-            format[i] = itemsSchema[i].format? itemsSchema[i].format:'';
-            if (itemsSchema[i].dropdownOptions){options[i] = itemsSchema[i].dropdownOptions};
-            columnPosition[i] = typeof itemsSchema[i].columnPosition=='number'? itemsSchema[i].columnPosition:null;
-          }
-        };        
-      }
+      
+      Object.keys(itemsSchema).map(function(value, index) { //iterag over object keys
+        schema[value]=itemsSchema[value].typeString
+        format[value]=itemsSchema[value].format
+        if (itemsSchema[value].dropdownOptions)
+          dropdownOptions[value]=itemsSchema[value].dropdownOptions;
+        columnPosition[value]=itemsSchema[value].columnPosition
+      });
 
       var result = {
         data : req.article.todos,
         schema : schema,
         format : format,
         columnPosition : columnPosition,
-        dropdownOptions : options
+        dropdownOptions : dropdownOptions
       }
 
       res.send(result);
