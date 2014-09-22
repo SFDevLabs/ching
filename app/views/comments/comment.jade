@@ -1,7 +1,7 @@
 
 - if (comment && comment.user)
   .comment
-    - var name = comment.user.name ? comment.user.name : comment.user.username
+    - var name = comment.user.organization ? comment.user.organization : comment.user.firstname+' '+comment.user.lastname
     p
       a(href="/users/"+comment.user._id)= name
       |  :&nbsp;

@@ -147,12 +147,12 @@ ArticleSchema.methods = {
       user: user._id
     })
 
-    if (!this.user.email) this.user.email = 'email@product.com'
-    notify.comment({
-      article: this,
-      currentUser: user,
-      comment: comment.body
-    })
+    //if (!this.user.email) this.user.email = 'email@product.com'
+    // notify.comment({
+    //   article: this,
+    //   currentUser: user,
+    //   comment: comment.body
+    // })
 
     this.save(cb)
   },

@@ -25,13 +25,17 @@ exports.load = function (req, res, next, id) {
 
 exports.create = function (req, res) {
   var article = req.article
-  var user = req.user
-
+    , user = req.user?req.user:req.articleViewer.user
+    , redirect;
   if (!req.body.body) return res.redirect('/articles/'+ article.id)
 
+    console.log(user,'user')
+
   article.addComment(user, req.body, function (err) {
+    //hacky logic
+    redirect=req.token?'/articles/'+ article.id+'/token/'+req.token:'/articles/'+ article.id;
     if (err) return res.render('500')
-    res.redirect('/articles/'+ article.id)
+    res.redirect(redirect)
   })
 }
 

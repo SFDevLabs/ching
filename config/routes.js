@@ -143,6 +143,7 @@ module.exports = function (app, passport) {
   var comments = require('../app/controllers/comments')
   app.param('commentId', comments.load)
   app.post('/articles/:id/comments', auth.requiresLogin, comments.create)
+  app.post('/articles/:id/comments/:token', viewerAuthToken, comments.create)
   app.get('/articles/:id/comments', auth.requiresLogin, comments.create)
   app.del('/articles/:id/comments/:commentId', commentAuth, comments.destroy)
 

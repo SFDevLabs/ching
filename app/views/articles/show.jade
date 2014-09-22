@@ -33,23 +33,22 @@ block content
         img(src=article.image.cdnUri + '/mini_' + article.image.files[0])
   .row
     .col-md-4
-        a.btn.btn-default(href='/articles/'+article._id+'/edit', title="edit") Edit
-        | &nbsp;
-        a.btn.btn-default(href='/articles/'+article._id+'/viewer', title="edit") Share
-        | &nbsp;
-  .row
-    .col-md-4
-      form(action="/articles/"+article.id, method="post")
-        input(type='hidden', name='_csrf', value="#{csrf_token}")
+        - if (req.user && req.article.user.id===req.user.id)
+          a.btn.btn-default(href='/articles/'+article._id+'/edit', title="edit") Edit
+          | &nbsp;
+          a.btn.btn-default(href='/articles/'+article._id+'/viewer', title="edit") Share
+          | &nbsp;
+          form(action="/articles/"+article.id, method="post")
+            input(type='hidden', name='_csrf', value="#{csrf_token}")
 
-        input(type="hidden", name="_method", value="DELETE")
-        
-        button.btn.btn-danger(type="submit") Delete
+            input(type="hidden", name="_method", value="DELETE")
+            
+            button.btn.btn-danger(type="submit") Delete
 
-      form(action="/articles/"+article.id+'/send', method="post")
-        input(type='hidden', name='_csrf', value="#{csrf_token}")
-        input(type="hidden", name="_method", value="POST")
-        button.btn.btn-info(type="submit") Send
+          form(action="/articles/"+article.id+'/send', method="post")
+            input(type='hidden', name='_csrf', value="#{csrf_token}")
+            input(type="hidden", name="_method", value="POST")
+            button.btn.btn-info(type="submit") Send
 
   br
   .row
@@ -77,9 +76,9 @@ block content
                 span.lastname=view.user.lastname
                 | &nbsp; with &nbsp;
                 span.organization=view.user.organization
-                | &nbsp;
+                | &nbsp;(
                 span.email.muted=view.user.email
-                | &nbsp; at &nbsp;
+                | )&nbsp; at &nbsp;
                 span.time.muted= formatDatetime(view.viewedAt, "%b %d, %Y at %I:%M %p")
 
 

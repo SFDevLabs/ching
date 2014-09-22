@@ -1,4 +1,7 @@
-form(method="post", action="/articles/#{article._id}/comments", role="form")
+ 
+- var action = "/articles/"+article._id+"/comments"
+-if(req.token){action+= '/'+req.token}
+form(method="post", action=action, role="form")
   input(type='hidden', name='_csrf', value="#{csrf_token}")
   .form-group
     textarea.form-control(type='text', rows="6", name="body", placeholder='Add your comment')
