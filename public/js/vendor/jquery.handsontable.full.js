@@ -7377,6 +7377,7 @@ Handsontable.PluginHookClass = (function () {
       beforeSetRangeEnd: [],
       beforeDrawBorders: [],
       beforeChange: [],
+      beforePaste: [],
       beforeChangeRender: [],
       beforeRemoveCol: [],
       beforeRemoveRow: [],
@@ -10969,6 +10970,9 @@ if (typeof Handsontable !== 'undefined') {
           this.selectCell(areaStart.row, areaStart.col, areaEnd.row, areaEnd.col);
         }
       });
+
+      //beforePaste
+      Handsontable.hooks.execute(instance, "beforePaste", inputArray,[areaStart.row,areaStart.col,areaEnd.row,areaEnd.col], 'paste');
 
       instance.populateFromArray(areaStart.row, areaStart.col, inputArray, areaEnd.row, areaEnd.col, 'paste', instance.getSettings().pasteMode);
     };
