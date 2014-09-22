@@ -4903,11 +4903,10 @@ Handsontable.helper.toString = function (obj) {
    */
   var AutocompleteRenderer = function (instance, TD, row, col, prop, value, cellProperties) {
 
-    var WRAPPER = clonableWRAPPER.cloneNode(true); //this is faster than createElement
-    var ARROW = clonableARROW.cloneNode(true); //this is faster than createElement
-    
-    //Added to formate date
-    if (cellProperties.type==='date' && $ && $.datepicker){
+    var WRAPPER = clonableWRAPPER.cloneNode(true), //this is faster than createElement
+        ARROW = clonableARROW.cloneNode(true), //this is faster than createElement
+        isValidISODate = value!==null && !isNaN(new Date(value).getTime());
+    if (isValidISODate && cellProperties.type==='date' && $.datepicker){ //We only et the cell if it is a valid ISO date
       value=$.datepicker.formatDate( 
         cellProperties.format?cellProperties.format:'mm/dd/yy'//check if we have a cell formate
         ,new Date(value)
@@ -5605,7 +5604,9 @@ Handsontable.helper.toString = function (obj) {
       maxWidth: maxWidth //TEXTAREA should never be wider than visible part of the viewport (should not cover the scrollbar)
     });
 
-    this.textareaParentStyle.display = 'block';
+    if (this.cellProperties.type!=='date'){  //We dont want the text area to be a block if it is a datepicker
+      this.textareaParentStyle.display = 'block';
+    }
   };
 
   TextEditor.prototype.bindEvents = function () {
@@ -5741,8 +5742,11 @@ Handsontable.helper.toString = function (obj) {
     $.extend(dateOptions, this.cellProperties);
     this.$datePicker.datepicker("option", dateOptions);
     if (this.originalValue) {
-      this.$datePicker.datepicker("setDate", this.originalValue);
+      var dateObj=new Date(this.originalValue),
+          dateInput= isNaN(dateObj.getTime() )?this.originalValue:dateObj;
+      this.$datePicker.datepicker("setDate", dateInput);
     }
+
     this.datePickerStyle.display = 'block';
   };
 
