@@ -53,8 +53,6 @@ block content
   br
   .row
     .col-md-8
-      button#add_car.btn.btn-default
-        | add
       button#pop_car.btn.btn-default
         | pop
   br
@@ -63,6 +61,8 @@ block content
       #example1
       table.remove-sidebar
         tbody
+      button#add_car.btn.btn-default
+        | add
 
   - if (req.user && req.article.user.id===req.user.id)
     .row

@@ -31,11 +31,26 @@
       cars.bind('remove', this.renderAfterSync);
       cars.bind('add', this.renderAfterSync);
 
+      cars.bind('change:cost change:qty change:tax1 change:tax2 remove add',this.totalCalculation)
+
 
       this.footer = this.$('footer');
       this.main = $('#main');
 
       cars.fetch();
+    },
+    totalCalculation: function(todo, response){
+
+
+      cars.reduceRight(function(a,b){
+        console.log(a.get('cost'),b.get('cost'))
+
+        var aVal= a.get('cost')?a.get('cost'):0;
+        var bVal= b.get('cost')?b.get('cost'):0;
+
+        return aVal+bVal;
+      })
+
     },
     renderAfterSync: function (todos, response) {  
       App.handsonContainer.handsontable("render");
@@ -159,7 +174,9 @@
         },
         contextMenu: true,
         columns: columns,
-        colHeaders: colHeaders
+        colHeaders: colHeaders,
+        colWidths: [180, 100, 80, 80, 80, 80, 80, 80, 80, 80],
+
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
       this.handsonObj = this.handsonContainer.data('handsontable')
