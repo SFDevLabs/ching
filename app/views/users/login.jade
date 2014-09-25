@@ -9,12 +9,12 @@ block auth
     .form-group
       label.col-sm-2.control-label(for="email") Email
       .col-sm-10
-        input#email.form-control(type="email", placeholder="Email", name="email")
+        input#email.form-control(type="email", placeholder="Email", name="email" value='#{email}')
 
     .form-group
       label.col-sm-2.control-label(for="password") Password
       .col-sm-10
-        input#password.form-control(type="password", placeholder="Password", name="password")
+        input#password.form-control(type="password", placeholder="Password", name="password", value='#{password}')
 
     .form-group
       .col-sm-offset-2.col-sm-10

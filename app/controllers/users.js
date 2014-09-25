@@ -26,14 +26,30 @@ exports.signin = function (req, res) {}
 
 exports.authCallback = login
 
+
+/**
+ * Save pw in cookie and show in browser again.
+ */
+exports.savepw = function (req, res, next) {
+    req.flash('savedbody',req.body);
+    next()
+}
+
 /**
  * Show login form
  */
 
 exports.login = function (req, res) {
+ 
+  var savedbody = req.flash('savedbody'),
+      password = savedbody.length && savedbody[0].password?savedbody[0].password:'',
+      email = savedbody.length && savedbody[0].email?savedbody[0].email:'';
+
   res.render('users/login', {
     title: 'Login',
-    message: req.flash('error')
+    message: req.flash('error'),
+    password: password,
+    email: email
   })
 }
 

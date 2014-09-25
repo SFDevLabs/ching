@@ -41,10 +41,8 @@ module.exports = function (app, passport) {
   app.get('/reset/:pwResetID', users.resetPWpage)
   app.post('/reset/:pwResetID', users.resetPW)
 
-
-
   app.post('/users', users.create)
-  app.post('/users/session',
+  app.post('/users/session', users.savepw,
     passport.authenticate('local', {
       failureRedirect: '/login',
       failureFlash: 'Invalid email or password.'
