@@ -1,11 +1,10 @@
 html, body {
   height: 100%;
-  background-color: pink;//!Working Sass for Christine.
 }
 
 .remove-sidebar {
   top: 0px;
-  margin-top: 26px;
+  margin-top: 30px;
   position: absolute;
   right: 0px;
   tr {
@@ -40,6 +39,10 @@ html, body {
     padding-left: 15px;
     padding-right: 15px;
   }
+}
+
+#total{
+  float:right;
 }
 
 .container .text-muted {
@@ -98,4 +101,11 @@ button.error {
 
 .navbar-nav > li > a.travis {
   padding-top: 13px;
+}
+
+
+#grid .htDimmed{
+  
+  color: inherit;
+  
 }

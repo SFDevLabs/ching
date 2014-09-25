@@ -1,10 +1,9 @@
 html, body {
-  height: 100%;
-  background-color: pink; }
+  height: 100%; }
 
 .remove-sidebar {
   top: 0px;
-  margin-top: 26px;
+  margin-top: 30px;
   position: absolute;
   right: 0px; }
   .remove-sidebar tr {
@@ -32,6 +31,9 @@ html, body {
   #footer > .container {
     padding-left: 15px;
     padding-right: 15px; }
+
+#total {
+  float: right; }
 
 .container .text-muted {
   margin: 20px 0; }
@@ -76,3 +78,6 @@ button.error {
 
 .navbar-nav > li > a.travis {
   padding-top: 13px; }
+
+#grid .htDimmed {
+  color: inherit; }

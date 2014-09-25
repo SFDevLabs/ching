@@ -31,26 +31,18 @@
       cars.bind('remove', this.renderAfterSync);
       cars.bind('add', this.renderAfterSync);
 
-      cars.bind('change:cost change:qty change:tax1 change:tax2 remove add',this.totalCalculation)
+      cars.bind('reset change:cost change:qty change:tax1 change:tax2 remove add',this.totalCalculation)
 
 
       this.footer = this.$('footer');
       this.main = $('#main');
+      this.total = $("#total");
 
       cars.fetch();
     },
     totalCalculation: function(todo, response){
-
-
-      cars.reduceRight(function(a,b){
-        console.log(a.get('cost'),b.get('cost'))
-
-        var aVal= a.get('cost')?a.get('cost'):0;
-        var bVal= b.get('cost')?b.get('cost'):0;
-
-        return aVal+bVal;
-      })
-
+      var total = cars.pluck('total').reduce(function(a,b){ return a+b});
+      App.total.html(total);
     },
     renderAfterSync: function (todos, response) {  
       App.handsonContainer.handsontable("render");
@@ -65,13 +57,16 @@
       //App.handsonContainer.before($('.remove-sidebar'));
       $('.remove-sidebar').html('');
       cars.each(function(todo,i){
+            var car = App.handsonObj.getCell(i,0)
+            if (!car){return}
             var tr = $('<tr><td><a href="">X</a></td></tr>')
-                .data('handsonPosition',i)
-                .on('click', function(e){
-                  e.preventDefault();
-                  var pos = $(this).data('handsonPosition');
-                  cars.remove(cars.at(pos));
-                 });
+                  .height(car.offsetHeight)
+                  .data('handsonPosition',i)
+                  .on('click', function(e){
+                    e.preventDefault();
+                    var pos = $(this).data('handsonPosition');
+                    cars.remove(cars.at(pos));
+                });
           $('.remove-sidebar').append(tr)
       })
     },
@@ -98,7 +93,7 @@
           return 'date'
       }
     },
-    handsonContainer:$("#example1"),
+    handsonContainer:$("#grid"),
     pad:function pad (str, max) {
       str = str.toString();
       return str.length < max ? pad("0" + str, max) : str;
@@ -128,29 +123,32 @@
     },
     setup:function(){
 
-        var columns=[]
+      var columns=[]
           , colHeaders=[],
             colPos = cars.columnPosition;
       for (var i in colPos){
+        console.log(i, colPos)
         if (i!=="_id"){
-          var pos = colPos[i]
-          colHeaders[pos] = i
+          var pos = colPos[i];
+          colHeaders[pos] = i;
           if (cars.format[i]==='dropdown'){
             columns[pos] =
             {
-              data:setterFactor(i), 
-              type:cars.format[i],
-              source: cars.dropdownOptions[i]
+              data:setterFactor(i) 
+              , type:cars.format[i]
+              , source: cars.dropdownOptions[i]
             }
-          } else {
+         } else {
             columns[pos] =
               {
-                data:setterFactor(i), 
-                type:this.handsonType( cars.schema[i]),
-                format:cars.format[i],
-                dateFormat:cars.format[i],
+                data:setterFactor(i)
+                , type:this.handsonType( cars.schema[i])
+                , format:cars.format[i]
+                , dateFormat:cars.format[i]
+                , source: cars.dropdownOptions[i]
               }
           }
+          if(i==='total'){columns[pos].readOnly=true};
         }
       }
 
@@ -180,9 +178,9 @@
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
       this.handsonObj = this.handsonContainer.data('handsontable')
-      App.handsonObj.contextMenu.disable();//get rid of the context meu
+      this.handsonObj.contextMenu.disable();//get rid of the context meu
 
-      App.itemsToAdd=[];
+      //this.itemsToAdd=[];
       this.handsonObj.addHook('beforePaste',function(input, cords, type){
             var y = cords[0],
                 x = cords[1],
