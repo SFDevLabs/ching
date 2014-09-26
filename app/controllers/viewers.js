@@ -74,9 +74,14 @@ exports.sendInvoice=function(req, res){
       , user = req.user
       , sent  = [];
       
-  articleJSON.viewers.forEach(function(viewer, i){
+    console.log(articleJSON.viewers.length)
 
-      console.log(viewer.user.email,'ss')
+  if (!articleJSON.viewers.length){
+     req.flash('error', 'Oops! Please add at least ONE recipient to your invoice.');
+     return res.redirect('/articles/' + article.id);
+  }
+
+  articleJSON.viewers.forEach(function(viewer, i){
         sendEmail({
             to:viewer.user.email
           , fromname: user.organization
