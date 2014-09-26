@@ -47,7 +47,11 @@
       },
     totalCalculation: function(todo, response){
 
-      var total = cars.pluck('total').reduce(function(a,b){ return a+b});
+      var total = cars.pluck('total').reduce(function(a,b){ 
+        var A = (isNaN(a) || typeof a!=='number')?0:a
+          , B = (isNaN(b) || typeof b!=='number')?0:b;
+        return A+B;
+      });
           total = App.formatCurrency(total);
       App.total.html(total);
     },
@@ -285,9 +289,11 @@
               qty = !todo.attributes.qty?0:todo.attributes.qty,
               total;
 
-              if ([cost, qty].indexOf(null)===-1 && [cost, qty].indexOf(undefined)){
+              if ([cost, qty].indexOf(null)===-1 && [cost, qty].indexOf(undefined) && ![cost, qty].some(function(a){ return isNaN(a)})){
                 total = cost * (1+tax1) * (1+tax2) * qty
                 todo.attributes.total=total;
+              }else{
+                todo.attributes.total=null;
               }
               
             ///and Save
