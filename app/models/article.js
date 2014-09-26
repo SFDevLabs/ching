@@ -41,7 +41,7 @@ var itemsSchema = {
     qty:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:3},
     tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4},
     tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5},
-    type:{type : String, default : null, format: 'dropdown', dropdownOptions: ['iime','Item'], typeString:'string',columnPosition:6},
+    type:{type : String, default : 'Time', format: 'dropdown', dropdownOptions: ['Time','Item'], typeString:'string',columnPosition:6},
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:7},
     total:{type : Number, default : null, format: '$0,0.00', typeString:'number',columnPosition:8}
   }
