@@ -222,9 +222,26 @@
           App.disableSave=false;
         }
       });
+      this.scrollPasteHack();
 
+    },
+    //scrollPasteHack Found at: http://stackoverflow.com/questions/24593357/handsontable-disable-auto-scroll-up-when-pasting-into-a-cell
+    scrollPasteHack:function(){
+           var position_Y_before = null
+             , position_X_before = null;
+      App.handsonObj.addHook('beforeKeyDown',function(e) {
+              position_Y_before = window.pageYOffset || 0;
+              position_X_before = window.pageXOffset || 0;
+          });
+      //Here we prevent from scrolling to top of page after pasting to handsontable with cmd+v or ctrl+v
+      $(window).scroll(function(){
+          if(position_Y_before != null){
+              window.scrollTo(position_X_before, position_Y_before);
+              position_Y_before = null;
+              position_X_before = null;
+          }
+      });
     }
-
   });
 
    var CarModel = Backbone.Model.extend({
