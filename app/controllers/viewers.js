@@ -74,8 +74,6 @@ exports.sendInvoice=function(req, res){
       , user = req.user
       , sent  = [];
       
-    console.log(articleJSON.viewers.length)
-
   if (!articleJSON.viewers.length){
      req.flash('error', 'Oops! Please add at least ONE recipient to your invoice.');
      return res.redirect('/articles/' + article.id);
