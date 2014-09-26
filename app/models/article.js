@@ -72,7 +72,7 @@ var ArticleSchema = new Schema({
     files: []
   },
   createdAt  : {type : Date, default : Date.now},
-  todos: [itemsSchema],
+  items: [itemsSchema],
   status: {type : String, default : 'draft', trim : true},
 });
 
@@ -85,8 +85,8 @@ ArticleSchema
   // })
   .get(function() { 
     var val
-    if (this.todos.length){
-      val = this.todos.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+    if (this.items.length){
+      val = this.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
     }else{
       val = null;
     }

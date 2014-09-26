@@ -34,7 +34,7 @@
       var schema = {},
           format = {},
           dropdownOptions = {},
-          first  = req.article.todos[0],
+          first  = req.article.items[0],
           columnPosition = {};
       
       Object.keys(itemsSchema).map(function(value, index) { //iterag over object keys
@@ -46,7 +46,7 @@
       });
 
       var result = {
-        data : req.article.todos,
+        data : req.article.items,
         schema : schema,
         format : format,
         columnPosition : columnPosition,
@@ -62,17 +62,17 @@
   //
   function getCreateController(model) {
     return function (req, res) {
-      var todo={},
+      var item={},
           key;
       for (key in req.body) {
         if (key!=='_id' && key!=='createdAt'){
-          todo[key] = req.body[key];
+          item[key] = req.body[key];
         }
       }
-      var newTodo = req.article.todos.push(todo);
+      var newItem = req.article.items.push(item);
       req.article.save(function(err){
           if (!err) {
-            res.send( req.article.todos[newTodo-1].toJSON() );
+            res.send( req.article.items[newItem-1].toJSON() );
           } else {
             res.send(500,errMsg(err));
           }
@@ -102,9 +102,9 @@
   function getUpdateController(model) {
     return function (req, res) {
 
-      req.article.todos=req.body;
+      req.article.items=req.body;
       
-      console.log(req.article.todos);
+      console.log(req.article.items);
       req.article.save(function(err){
           if (!err) {
             res.send( req.article.toJSON() );
@@ -122,17 +122,17 @@
   function getUpdateItemController(model) {
     return function (req, res) {
       var key,
-          todos=req.article.todos,
-          index=req.todoIndex;
+          items=req.article.items,
+          index=req.itemIndex;
       for (key in req.body) {
         if (key!=='_id' && key!=='createdAt'){
-          todos[index][key] = req.body[key];
+          items[index][key] = req.body[key];
         }
       }
 
       req.article.save(function(err){
           if (!err) {
-            res.send( req.article.todos[index].toJSON() );
+            res.send( req.article.items[index].toJSON() );
           } else {
             res.send(500,errMsg(err));
           }
@@ -169,8 +169,8 @@
   function  getItemDeleteController(model) {
     return function (req, res) {
       var key,
-          todos=req.article.todos;
-      todos.pull(req.idt)
+          items=req.article.items;
+      items.pull(req.idt)
       req.article.save(function(err){
           if (!err) {
             res.send(204);
@@ -185,12 +185,12 @@
   function loadParams(model) {
       return function(req, res, next, idt) {
           model.findOne({
-              'todos._id': idt
+              'items._id': idt
           }, function(err, article) {
               if (err) return next(err)
               if (!article) return next(new Error('not found'))
               var index
-              article.todos.forEach(function(val, i) {
+              article.items.forEach(function(val, i) {
                   if (String(val._id) === idt) {
                       index = i
                   }
@@ -198,7 +198,7 @@
               if (index===undefined) {
                   res.send(500, errMsg('Item Does not Exist'))
               } else {
-                  req.todoIndex = index,
+                  req.itemIndex = index,
                   req.idt=idt;
                   next();
               }
