@@ -112,7 +112,7 @@
     qtyRender: function(instance, td, row, col, prop, value, cellProperties){
 
       var type = cars.at(row).get('type');
-      if (type && type.toLowerCase()==='time' && value!==null){//Null changing and checking for time formating
+      if (type && type.toLowerCase()==='time' && value!==null && value!==undefined){//Null changing and checking for time formating
         cellProperties.valid=true;
         
         var totalSeconds = Number(value)*3600;
