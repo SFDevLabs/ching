@@ -31,17 +31,24 @@
       cars.bind('remove', this.renderAfterSync);
       cars.bind('add', this.renderAfterSync);
 
-      cars.bind('reset change:cost change:qty change:tax1 change:tax2 remove add',this.totalCalculation)
+      cars.bind('change reset',this.totalCalculation)
 
 
       this.footer = this.$('footer');
       this.main = $('#main');
-      this.total = $("#total");
+      this.total = $("#total .amount");
 
       cars.fetch();
-    },
+    },formatCurrency: function(num) {
+        var p = num.toFixed(2).split(".");
+        return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
+            return  num + (i && !(i % 3) ? "," : "") + acc;
+        }, "") + "." + p[1];
+      },
     totalCalculation: function(todo, response){
+
       var total = cars.pluck('total').reduce(function(a,b){ return a+b});
+          total = App.formatCurrency(total);
       App.total.html(total);
     },
     renderAfterSync: function (todos, response) {  
@@ -109,12 +116,12 @@
         var hours = Math.floor(totalSeconds / 3600);
         totalSeconds %= 3600;
         var minutes = Math.floor(totalSeconds / 60);
-        var seconds = totalSeconds % 60;
+        //var seconds = totalSeconds % 60;
 
-        arguments[5] = App.pad(hours,2)+':'+App.pad(minutes,2)
-        if (seconds>0){
-           arguments[5]+=( ':'+App.pad(seconds,2) );
-        }
+        arguments[5] = App.pad(hours,2)+'h '+App.pad(minutes,2)+'m'
+        // if (seconds>0){
+        //    arguments[5]+=( ':'+App.pad(seconds,2) );
+        // }
         Handsontable.renderers.TextRenderer.apply(this, arguments);
       } else{
         Handsontable.renderers.NumericRenderer.apply(this, arguments);
@@ -173,7 +180,7 @@
         contextMenu: true,
         columns: columns,
         colHeaders: colHeaders,
-        colWidths: [180, 100, 80, 80, 80, 80, 80, 80, 80, 80],
+        colWidths: [180, 100, 160, 160, 80, 80, 80, 80, 180],  //TODO add to api
 
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
@@ -352,9 +359,14 @@ var setterFactor=function(attr){
 
 
 
-  $("#add_car").click(function () {
+  $("#add_car_time").click(function () {
     //cars.add({_blank:true});
-    cars.add();
+    cars.add({type:'Time'});
+
+  })
+  $("#add_car_item").click(function () {
+    //cars.add({_blank:true});
+    cars.add({type:'Item'});
 
   })
   $("#pop_car").click(function () {

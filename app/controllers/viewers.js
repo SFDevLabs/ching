@@ -43,10 +43,12 @@ exports.create = function (req, res) {
 
   User.findOne({email: validatedEmail}, function(err, user){
        if (!user){
-         user = new User({email:req.body.email, placeholderFromShare:true});
+         req.body.placeholderFromShare=true
+         user = new User(req.body);
          user.save();//create a new user
        } else {
-        duplicate = req.article.viewers.some(function(val,i){
+        req.flash('info', 'We found ching user with this email!'); ///inform the use that 
+        duplicate = req.article.viewers.some(function(val,i){//Check to see if we have already shared with this person
           if (String(user._id)===String(val.user._id)){
             return true
           } 

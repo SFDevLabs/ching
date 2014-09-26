@@ -31,10 +31,26 @@ block content
             input.form-control#title(type='text', name="email", placeholder='Enter a new email')
 
         .form-group
+          label.col-sm-2.control-label(for='title') Organization
+          .col-sm-10
+            input.form-control#title(type='text', name="organization", placeholder='Enter an Organization Name')
+        .form-group
+          label.col-sm-2.control-label(for='title') Firstname
+          .col-sm-10
+            input.form-control#title(type='text', name="firstname", placeholder='Firstname')
+
+        .form-group
+          label.col-sm-2.control-label(for='title') Lastname
+          .col-sm-10
+            input.form-control#title(type='text', name="lastname", placeholder='Lastname')
+
+
+
+        .form-group
           .col-sm-offset-2.col-sm-10
             button.btn.btn-primary(type='submit') Add
             | &nbsp;
-            a.btn(href='/articles', title="cancel") Cancel
+            a.btn(href='/articles/'+article.id, title="cancel") Back
 
     .col-md-4
       - if (!article.isNew && article.image && article.image.files && article.image.files.length)

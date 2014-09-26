@@ -83,10 +83,8 @@ exports.indexSent = function(req, res){
     user: userID
   }
 
-  console.log(userID)
 
   Article.list(options, function(err, articles) {
-    console.log(err)
     if (err) return res.render('500')
     Article.count().exec(function (err, count) {
       res.render('articles/index', {
@@ -104,10 +102,12 @@ exports.indexSent = function(req, res){
  */
 
 exports.new = function(req, res){
-  res.render('articles/new', {
-    title: 'New Article',
-    article: new Article({})
+  var article = new Article({user:req.user.id});
+  req.article = article;
+  article.save(function(){
+      return res.redirect('/articles/' + article._id)
   })
+
 }
 
 /**

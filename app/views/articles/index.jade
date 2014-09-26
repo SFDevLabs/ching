@@ -6,21 +6,19 @@ block main
 block content
   - if (articles.length)
     - each article in articles
+      - var viewer = article.viewers[0]? article.viewers[0].user.organization:'TBD...';
       .article
-        h3
-          a(href='/articles/'+article._id, title=article.title) #{article.title}
+        span.muted clients:
+        h4
+          a(href='/articles/'+article._id, title=viewer)=viewer
         p= article.body
 
         .meta
-          span.muted= formatDate(article.createdAt)
-
-          - if (article.user)
+          span.muted= formatDatetime(article.createdAt)
+          if (article.total)
             | &nbsp; - &nbsp;
-            span Author &nbsp;
-
-            - var name = article.user.organization ? article.user.organization : article.user.email
-
-            a(href="/users/"+article.user._id)= name
+            span Total &nbsp;
+            span(href="/users/"+article.user._id)= formatCurrency(article.total)
             
           - if (article.tags)
             | &nbsp; - &nbsp;

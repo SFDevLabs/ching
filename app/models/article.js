@@ -41,7 +41,7 @@ var itemsSchema = {
     qty:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:3},
     tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4},
     tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5},
-    type:{type : String, default : null, format: 'dropdown', dropdownOptions: ['Time','Item'], typeString:'string',columnPosition:6},
+    type:{type : String, default : null, format: 'dropdown', dropdownOptions: ['iime','Item'], typeString:'string',columnPosition:6},
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:7},
     total:{type : Number, default : null, format: '$0,0.00', typeString:'number',columnPosition:8}
   }
@@ -59,7 +59,7 @@ var ArticleSchema = new Schema({
   viewers:[viewersSchema],
   views: [viewsSchema],
   title: {type : String, default : '', trim : true},
-  body: {type : String, default : '', trim : true},
+  description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
   comments: [{
     body: { type : String, default : '' },
@@ -73,14 +73,35 @@ var ArticleSchema = new Schema({
   },
   createdAt  : {type : Date, default : Date.now},
   todos: [itemsSchema],
+  status: {type : String, default : 'draft', trim : true},
 });
+
+ArticleSchema
+  .virtual('total')
+  // .set(function(password) {
+  //   this._password = password
+  //   this.salt = this.makeSalt()
+  //   this.hashed_password = this.encryptPassword(password)
+  // })
+  .get(function() { 
+    var val
+    if (this.todos.length){
+      val = this.todos.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+    }else{
+      val = null;
+    }
+    console.log(val
+      )
+    return val
+
+  })
 
 /**
  * Validations
  */
 
-ArticleSchema.path('title').required(true, 'Article title cannot be blank');
-ArticleSchema.path('body').required(true, 'Article body cannot be blank');
+// ArticleSchema.path('title').required(true, 'Article title cannot be blank');
+// ArticleSchema.path('body').required(true, 'Article body cannot be blank');
 
 /**
  * Pre-remove hook
@@ -276,6 +297,7 @@ ArticleSchema.statics = {
       // .where('viewers')
       // .in([options.criteria.user])
       .populate('user', 'firstname email lastname organization')
+      .populate('viewers.user', 'firstname email lastname organization')
       .sort({'createdAt': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)

@@ -16,8 +16,31 @@ block content
       .meta
         - if (article.user)
           - var name = article.user.name ? article.user.name : article.user.username
-          p Author :&nbsp;
+          p To: :&nbsp;
             a(href="/users/"+article.user._id)= name
+            hr
+          - each viewer, i in article.viewers
+            p.muted='organization:'
+            p=viewer.user.organization
+            p.muted='email:'
+            p=viewer.user.email
+            p.muted='Name:'
+            span=viewer.user.lastname
+            span ,&nbsp;
+            span=viewer.user.firstname
+
+          .row
+            .col-md-4
+              br
+              a.btn.btn-default(href='/articles/'+article._id+'/viewer', title="edit") Add Recipient
+              | &nbsp;
+          hr
+          p From: :&nbsp;
+            p.muted='organization:'
+            p=article.user.organization
+            p=article.user.email
+            span=article.user.lastname
+            span=article.user.firstname
 
         - if (article.tags)
           p Tags &nbsp;
@@ -25,19 +48,23 @@ block content
               i.muted.fa.fa-tag &nbsp;
               a.tag(href="/tags/"+tag)= tag
               | &nbsp;&nbsp;
-
-        p.muted= formatDate(article.createdAt, "%b %d, %Y at %I:%M %p")
+        hr
+        p 
+          |created:
+          span.muted= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
+        p 
+          |status:
+          span.muted= article.status
 
     .col-md-4
       - if (!article.isNew && article.image && article.image.files && article.image.files.length)
         img(src=article.image.cdnUri + '/mini_' + article.image.files[0])
   .row
     .col-md-4
-        - if (req.user && req.article.user.id===req.user.id)
+        - if (req.user && req.article && req.article.user.id===req.user.id)
           a.btn.btn-default(href='/articles/'+article._id+'/edit', title="edit") Edit
           | &nbsp;
-          a.btn.btn-default(href='/articles/'+article._id+'/viewer', title="edit") Share
-          | &nbsp;
+
           form(action="/articles/"+article.id, method="post")
             input(type='hidden', name='_csrf', value="#{csrf_token}")
 
@@ -61,8 +88,14 @@ block content
       #grid
       table.remove-sidebar
         tbody
-      button#add_car.btn.btn-default
-        | add
+      button#add_car_time.btn.btn-default
+        | add Time
+      button#add_car_item.btn.btn-default
+        | add Item
+      div#total
+        span
+          |Total:&nbsp;
+        span.amount
 
   - if (req.user && req.article.user.id===req.user.id)
     .row
