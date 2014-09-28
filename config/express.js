@@ -28,7 +28,6 @@ module.exports = function (app, config, passport) {
   app.use(require('stylus').middleware({ src: config.root + '/public' }));
   app.use(require('node-sass').middleware({src: config.root  + '/public' }));
   app.use(express.static(config.root + '/public'))
-
   // Logging
   // Use winston on production
   var log

@@ -96,6 +96,14 @@ block content
         span
           |Total:&nbsp;
         span.amount
+      input(id="fileupload", type="file", name="files[]", multiple)
+      div(id="files", class="files")
+      textarea#csv-ajax
+      #exampleAfter
+      #example
+
+
+  hr
 
   - if (req.user && req.article.user.id===req.user.id)
     .row
@@ -127,4 +135,7 @@ block subfoot
   script(type="text/javascript", src="/js/vendor/underscore-min.js")
   script(type="text/javascript", src="/js/vendor/backbone-min.js")
   script(type="text/javascript", src="/js/vendor/jquery.handsontable.full.js")
+  script(type="text/javascript", src="/js/vendor/jquery.ui.widget.js")
+  script(type="text/javascript", src="/js/vendor/jquery.iframe-transport.js")
+  script(type="text/javascript", src="/js/vendor/jquery.fileupload.js")
   script(type="text/javascript", src="/js/todos.js")

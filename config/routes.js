@@ -2,7 +2,8 @@
  * Module dependencies.
  */
 
-var async    = require('async');
+var async    = require('async'),
+    fs    = require('fs');
 
 /**
  * Controllers
@@ -35,6 +36,43 @@ module.exports = function (app, passport) {
   app.get('/logout', users.logout)
   app.get('/reset', users.resetpage)
   app.post('/reset', users.reset)
+
+
+  var Converter=require("csvtojson").core.Converter;
+
+  app.post('/upload', function(req, res){
+
+    //console.log(req.body.csv)
+    if (!req.files){
+
+      var csvConverter=new Converter({});
+          csvConverter.fromString(req.body.csv,function(err, jsonObj){
+
+              return res.send({
+                       data:jsonObj
+                      ,status: 'raw data'
+                    });
+
+          });
+
+    }else{
+  
+      fs.readFile(req.files.files[0].path, {encoding: 'utf-8'}, function(err,data){
+        var csvConverter=new Converter({});
+            csvConverter.fromString(data,function(err, jsonObj){
+              return res.send({
+                 data:jsonObj
+                ,status: 'raw data'
+              });
+            });//CSV convert
+            fs.unlinkSync(req.files.files[0].path);
+      });//file read
+
+
+    }
+
+  });//upload 
+
 
   app.param('pwResetID', users.loadreset)
 

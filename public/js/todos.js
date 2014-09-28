@@ -59,7 +59,8 @@
       App.handsonContainer.handsontable("render");
 
       var core = $('.htCore','.ht_master'),
-          sidebar = $('.remove-sidebar')
+          sidebar = $('.remove-sidebar'),
+          trs=[];
 
           //sidebar.width(core.width());
           App.handsonContainer.width(core.width()+65)
@@ -68,18 +69,18 @@
       //App.handsonContainer.before($('.remove-sidebar'));
       $('.remove-sidebar').html('');
       cars.each(function(todo,i){
-            var car = App.handsonObj.getCell(i,0)
-            if (!car){return}
-            var tr = $('<tr><td><a href="">X</a></td></tr>')
-                  .height(car.offsetHeight)
+            var height = App.handsonObj.getRowHeight(i)
+              , tr = $('<tr index="'+i+'"><td><a href="">X</a></td></tr>')
+                  .height(height)
                   .data('handsonPosition',i)
                   .on('click', function(e){
                     e.preventDefault();
                     var pos = $(this).data('handsonPosition');
                     cars.remove(cars.at(pos));
                 });
-          $('.remove-sidebar').append(tr)
-      })
+            trs.push(tr); 
+      });
+      $('.remove-sidebar').append(trs)
     },
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
@@ -399,5 +400,178 @@ var setterFactor=function(attr){
 
   App = new AppView();
 
+var post = function(){
+
+  $.ajax({
+    type: "POST",
+    url: '/upload',
+    data: {
+      csv:$('#csv-ajax').val()
+    },
+  
+    success: function(result, xhr, jqxhr){
+
+
+        var keys = _.keys(result.data[0])
+            , values = _.map(result.data,function(val){ return _.values(val) });
+
+        $('#example').handsontable({
+          data: values,
+          minSpareRows: 1,
+          colHeaders: keys,
+          contextMenu: true
+        });
+
+
+    },
+    dataType: 'json'
+  });
+
+
+}
+
+
+
+$('#fileupload').fileupload({
+        url: '/upload',
+        dataType: 'json',
+        autoUpload: true,
+      //  acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize: 20000000, // 5 MB
+        // Enable image resizing, except for Android and Opera,
+        // which actually support image resizing, but fail to
+        // send Blob objects via XHR requests:
+        disableImageResize: /Android(?!.*Chrome)|Opera/
+            .test(window.navigator.userAgent),
+        previewMaxWidth: 100,
+        previewMaxHeight: 100,
+        previewCrop: true
+    })
+    .on('fileuploaddone', function (e, data) {
+        
+        if (!data.result.data.length){
+          return false
+        };
+
+
+        var keys = _.keys(data.result.data[0])
+            , values = _.map(data.result.data,function(val){ return _.values(val) });
+
+
+
+
+
+
+        $('#example').handsontable({
+          data: values
+          ,minSpareRows: 1
+          ,colHeaders: App.handsonObj.getColHeader()
+          ,colWidths: [180, 100, 160, 160, 80, 80, 80, 80, 180]
+          ,columnSorting: true
+        });
+        
+        var addRowCount=App.handsonObj.getColHeader().length-keys.length;
+
+        for (var i = addRowCount - 1; i >= 0; i--) {
+           var length= $('#example').data('handsontable').countCols()
+
+          $('#example').data('handsontable').alter(
+
+            'insert_col',
+            length
+            )
+
+        };
+
+
+
+          var headers = $('#example').data('handsontable').getColHeader()
+
+          headers.forEach(function(val, i){
+
+            if (headers.length===i+1){return};
+            var a = $('<a>').html(i);
+            //<a>'+i+'</a>
+              a.on('click', function(){
+                  var i =$(this).data('swapIndex');
+                    swap(i,i+1);
+              });
+              a.data('swapIndex',i)
+
+            $('#exampleAfter').append($('<span>').append(a));
+          })
+        // data.context = $('<div/>').appendTo('#files');
+        // $.each(data.files, function (index, file) {
+        //     var node = $('<p/>')
+        //             .append($('<span/>').text(file.name));
+        //     if (!index) {
+        //         node
+        //             .append('<br>')
+        //         debugger
+        //             // .append(data.files[index].preview)
+        //             // d.append(uploadButton.clone(true).data(data));
+        //     }
+        //     node.appendTo(data.context);
+        // });
+      });
+
+
+var swap=function(x,y){
+  var m =$('#example').data('handsontable')
+  //     ,colOneData = m.getDataAtCol(colOne)
+  //     ,colTwoData = m.getDataAtCol(colTwo)
+  
+  // for (var i = colOneData.length - 1; i >= 0; i--) {    
+  //   m.setDataAtCell(i,colTwo,colOneData[i])
+  // };
+  // for (var i = colTwoData.length - 1; i >= 0; i--) {    
+  //   m.setDataAtCell(i,colOne,colTwoData[i])
+  // };
+
+  var data = m.getData()
+      ,newData = data.map(function(list){
+        var b = list[y];
+            list[y] = list[x];
+            list[x] = b;
+          return list
+      });
+  m.loadData(newData);
+
+
+}
+
+var rerender = function(){
+  var m =$('#example').data('handsontable')
+  
+   var values = m.getData()
+   m.destroy();
+          $('#example').handsontable({
+          data: values
+          ,minSpareRows: 1
+          ,colHeaders: App.handsonObj.getColHeader()
+          ,colWidths: [180, 100, 160, 160, 80, 80, 80, 80, 180]
+          ,columnSorting: true
+        });
+
+
+}
+
+var addAll = function(){
+
+  var data = $('#example').data('handsontable').getData()
+      , headers = App.handsonObj.getColHeader();
+
+  var addData = data.map(function(val, i){
+    var obj={};
+    headers.forEach(function(headerVal,i){
+      return obj[headerVal]=val[i]
+    });
+    return obj;
+  });
+  cars.add(addData)
+}
+
+
 
 //}(jQuery, _, Backbone));
+

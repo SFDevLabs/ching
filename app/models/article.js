@@ -74,6 +74,8 @@ var ArticleSchema = new Schema({
   createdAt  : {type : Date, default : Date.now},
   items: [itemsSchema],
   status: {type : String, default : 'draft', trim : true},
+  addresss: {type : String, default : 'draft', trim : true}
+
 });
 
 ArticleSchema
