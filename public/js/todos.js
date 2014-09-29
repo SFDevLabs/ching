@@ -46,7 +46,11 @@
         }, "") + "." + p[1];
       },
     totalCalculation: function(todo, response){
-
+      if (!todo.length){
+        var curr = App.formatCurrency(0);
+        App.total.html(curr);
+        return false
+      };
       var total = cars.pluck('total').reduce(function(a,b){ 
         var A = (isNaN(a) || typeof a!=='number')?0:a
           , B = (isNaN(b) || typeof b!=='number')?0:b;
@@ -273,12 +277,13 @@
             }
         },
         qtyFormater:function(todo,val){
-            if (typeof val === 'string' && val!==""){
+            if (isNaN(Number(val)) && val.search(':')!==-1 && typeof val === 'string' && val!==""){
               var vals = val.split(':'),
                   hour = vals[1]?Number(vals[0]):0,
                   min = vals[1]?Number(vals[1]):0,
                   sec = vals[2]?Number(vals[2]):0;
               todo.set('qty', hour+(min/60)+(sec/3600));//Set the tax attr from the above calculation
+              todo.set('type', 'Time');
             }
         },
         saveIt:function(todo, option){
@@ -400,6 +405,8 @@ var setterFactor=function(attr){
 
   App = new AppView();
 
+
+
 var post = function(){
 
   $.ajax({
@@ -457,119 +464,101 @@ $('#fileupload').fileupload({
         var keys = _.keys(data.result.data[0])
             , values = _.map(data.result.data,function(val){ return _.values(val) });
 
-
-
-
-
-
         $('#example').handsontable({
           data: values
           ,minSpareRows: 1
-          ,colHeaders: App.handsonObj.getColHeader()
-          ,colWidths: [180, 100, 160, 160, 80, 80, 80, 80, 180]
+          ,colHeaders: keys
           ,columnSorting: true
         });
         
-        var addRowCount=App.handsonObj.getColHeader().length-keys.length;
+        //var addRowCount=App.handsonObj.getColHeader().length-keys.length;
 
-        for (var i = addRowCount - 1; i >= 0; i--) {
-           var length= $('#example').data('handsontable').countCols()
+        // for (var i = addRowCount - 1; i >= 0; i--) {
+        //    var length= $('#example').data('handsontable').countCols()
 
-          $('#example').data('handsontable').alter(
+        //   $('#example').data('handsontable').alter(
 
-            'insert_col',
-            length
-            )
+        //     'insert_col',
+        //     length
+        //     )
 
-        };
+        // };
 
 
 
-          var headers = $('#example').data('handsontable').getColHeader()
+          // var headers = $('#example').data('handsontable').getColHeader()
 
-          headers.forEach(function(val, i){
+          // headers.forEach(function(val, i){
 
-            if (headers.length===i+1){return};
-            var a = $('<a>').html(i);
-            //<a>'+i+'</a>
-              a.on('click', function(){
-                  var i =$(this).data('swapIndex');
-                    swap(i,i+1);
-              });
-              a.data('swapIndex',i)
+          //   if (headers.length===i+1){return};
+          //   var a = $('<a>').html(i);
+          //   //<a>'+i+'</a>
+          //     a.on('click', function(){
+          //         var i =$(this).data('swapIndex');
+          //           swap(i,i+1);
+          //     });
+          //     a.data('swapIndex',i)
 
-            $('#exampleAfter').append($('<span>').append(a));
-          })
-        // data.context = $('<div/>').appendTo('#files');
-        // $.each(data.files, function (index, file) {
-        //     var node = $('<p/>')
-        //             .append($('<span/>').text(file.name));
-        //     if (!index) {
-        //         node
-        //             .append('<br>')
-        //         debugger
-        //             // .append(data.files[index].preview)
-        //             // d.append(uploadButton.clone(true).data(data));
-        //     }
-        //     node.appendTo(data.context);
-        // });
+          //   $('#exampleAfter').append($('<span>').append(a));
+          // })
+
       });
 
 
-var swap=function(x,y){
-  var m =$('#example').data('handsontable')
-  //     ,colOneData = m.getDataAtCol(colOne)
-  //     ,colTwoData = m.getDataAtCol(colTwo)
+// var swap=function(x,y){
+//   var m =$('#example').data('handsontable')
+//   //     ,colOneData = m.getDataAtCol(colOne)
+//   //     ,colTwoData = m.getDataAtCol(colTwo)
   
-  // for (var i = colOneData.length - 1; i >= 0; i--) {    
-  //   m.setDataAtCell(i,colTwo,colOneData[i])
-  // };
-  // for (var i = colTwoData.length - 1; i >= 0; i--) {    
-  //   m.setDataAtCell(i,colOne,colTwoData[i])
-  // };
+//   // for (var i = colOneData.length - 1; i >= 0; i--) {    
+//   //   m.setDataAtCell(i,colTwo,colOneData[i])
+//   // };
+//   // for (var i = colTwoData.length - 1; i >= 0; i--) {    
+//   //   m.setDataAtCell(i,colOne,colTwoData[i])
+//   // };
 
-  var data = m.getData()
-      ,newData = data.map(function(list){
-        var b = list[y];
-            list[y] = list[x];
-            list[x] = b;
-          return list
-      });
-  m.loadData(newData);
+//   var data = m.getData()
+//       ,newData = data.map(function(list){
+//         var b = list[y];
+//             list[y] = list[x];
+//             list[x] = b;
+//           return list
+//       });
+//   m.loadData(newData);
 
 
-}
+// }
 
-var rerender = function(){
-  var m =$('#example').data('handsontable')
+// var rerender = function(){
+//   var m =$('#example').data('handsontable')
   
-   var values = m.getData()
-   m.destroy();
-          $('#example').handsontable({
-          data: values
-          ,minSpareRows: 1
-          ,colHeaders: App.handsonObj.getColHeader()
-          ,colWidths: [180, 100, 160, 160, 80, 80, 80, 80, 180]
-          ,columnSorting: true
-        });
+//    var values = m.getData()
+//    m.destroy();
+//           $('#example').handsontable({
+//           data: values
+//           ,minSpareRows: 1
+//           ,colHeaders: App.handsonObj.getColHeader()
+//           ,colWidths: [180, 100, 160, 160, 80, 80, 80, 80, 180]
+//           ,columnSorting: true
+//         });
 
 
-}
+// }
 
-var addAll = function(){
+// var addAll = function(){
 
-  var data = $('#example').data('handsontable').getData()
-      , headers = App.handsonObj.getColHeader();
+//   var data = $('#example').data('handsontable').getData()
+//       , headers = App.handsonObj.getColHeader();
 
-  var addData = data.map(function(val, i){
-    var obj={};
-    headers.forEach(function(headerVal,i){
-      return obj[headerVal]=val[i]
-    });
-    return obj;
-  });
-  cars.add(addData)
-}
+//   var addData = data.map(function(val, i){
+//     var obj={};
+//     headers.forEach(function(headerVal,i){
+//       return obj[headerVal]=val[i]
+//     });
+//     return obj;
+//   });
+//   cars.add(addData)
+// }
 
 
 
