@@ -1,7 +1,51 @@
 extends ../layouts/default
 
-block main
-  h1= title
-
 block content
-  p="home"
+	header
+		.container
+			p.right
+				a(href="/login", class="button") Log in
+			.landing-wrap
+				div.logo
+					img(src="./img/logo.png")
+				h1 Ching
+				p.tagline Zero effort invoicing.
+				p
+					a(href="/signup", class="button action") Sign up
+	div.feature-list
+		div.container.details
+			ul.features.row
+				li.col.col-lg-3 
+					span(class="icon typcn typcn-chart-line")
+					p Visualize your cash flow
+				li.col.col-lg-3
+					span(class="icon typcn typcn-zoom-in-outline")
+					p Drill-down queries and filters
+				li.col.col-lg-3
+					span(class="icon typcn typcn-th-list-outline")
+					p Works like a spreadsheet
+				li.col.col-lg-3
+					span(class="icon typcn typcn-calendar")
+					p See where you are in net 30
+	div.sources.logos
+		div.container.details
+			h2.mini Combine timesheets and expenses from anywhere.
+			ul
+				li.col.col-lg-3.ding
+					img(src="/img/logo-ding.png")
+				li.col.col-lg-3.freshbooks
+					img(src="/img/logo-freshbooks.png")
+				li.col.col-lg-3.expensify
+					img(src="/img/logo-expensify.png")
+				li.col.col-lg-3.excel
+					img(src="/img/logo-excel.png")
+	div.cta
+		div.container.details
+			p Generate an invoice as quickly as you can copy &amp; paste.
+			p
+				a(href="/signup", class="button action") Sign up
+	footer
+		.container.center.center-block
+			div.logo
+				img(src="/img/sfdevlabs.png")
+			p Dog food made by a dev shop for a dev shop.

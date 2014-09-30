@@ -1,5 +1,5 @@
 html, body {
-  height: 100%;
+  min-height: 100%;
 }
 
 .remove-sidebar {
@@ -95,8 +95,7 @@ button.error {
 }
 
 .navbar-brand {
-  font-size: 14px;
-  color: #000 !important;
+
 }
 
 .navbar-nav > li > a.travis {

@@ -1,0 +1,32 @@
+extends ./layouts/default
+
+block content
+	header
+		.container
+			p.right
+				a(href="/login", class="button") Log in
+			.landing-wrap
+				div.logo
+					img(src="./img/logo.png")
+				h1 Ching
+				p.tagline Zero effort invoicing.
+				p
+					a(href="/signup", class="button action") Sign up
+	div.container
+		ul.features
+			li Visualize your cash flow
+			li Drill-down queries and filters to answer your questions
+			li Works like a speadsheet
+			li Net 30 nudges: see where you stand and remind your clients
+		div.sources
+			h2 Copy and paste to combine your timesheets and expenses from many sources:
+			ul
+				li Ding
+				li Freshbooks
+				li Expensify
+				li Excel
+		p
+			a(href="/login", class="button") Log in
+			a(href="/signup", class="button action") Sign up
+	footer
+		p Dog food made by a dev shop for a dev shop.

@@ -1,25 +1,24 @@
 extends auth
 
 block auth
-  form.form-horizontal(action="/users/session", method="post", role="form")
-    input(type='hidden', name='_csrf', value="#{csrf_token}")
+  .row.center
+    form.large.col.col-lg-5.center-block(action="/users/session", method="post", role="form")
+      div.logo
+        a(href="/")
+          img(src="./img/logo.png")
+      h1= title
+      input(type='hidden', name='_csrf', value="#{csrf_token}")
 
-    p.col-sm-offset-2.error= message
+      p.col-sm-offset-2.error= message
 
-    .form-group
-      label.col-sm-2.control-label(for="email") Email
-      .col-sm-10
-        input#email.form-control(type="email", placeholder="Email", name="email" value='#{email}')
+      .form-group
+        input#email(type="email", placeholder="Email", name="email" value='#{email}')
 
-    .form-group
-      label.col-sm-2.control-label(for="password") Password
-      .col-sm-10
-        input#password.form-control(type="password", placeholder="Password", name="password", value='#{password}')
+      .form-group
+        input#password(type="password", placeholder="Password", name="password", value='#{password}')
 
-    .form-group
-      .col-sm-offset-2.col-sm-10
-        button.btn.btn-primary(type='submit') Log in
-        | &nbsp; or &nbsp;
-        a.show-signup(href="/signup") Sign up
-        | &nbsp; or &nbsp;
-        a.show-login(href="/reset") Reset
+      .form-group
+        button.button.action(type='submit') Log in
+      
+      p.forgot
+        a(href="/reset") Forgot your password?
