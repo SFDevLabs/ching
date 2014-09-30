@@ -140,10 +140,10 @@
     setup:function(){
 
       var columns=[]
-          , colHeaders=[],
-            colPos = cars.columnPosition;
+          , colHeaders=[]
+          , colWidth=[]
+          , colPos = cars.columnPosition;
       for (var i in colPos){
-        console.log(i, colPos)
         if (i!=="_id"){
           var pos = colPos[i];
           colHeaders[pos] = cars.displayName[i];
@@ -165,6 +165,7 @@
               }
           }
           if(i==='total'){columns[pos].readOnly=true};
+        colWidth[pos]=cars.colWidth[i]
         }
       }
 
@@ -189,7 +190,7 @@
         contextMenu: true,
         columns: columns,
         colHeaders: colHeaders,
-        colWidths: [180, 100, 160, 160, 80, 80, 80, 180, 100],  //TODO add to api
+        colWidths: colWidth//[180, 100, 160, 160, 80, 80, 80, 180, 100],  //TODO add to api
 
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
@@ -349,6 +350,7 @@
       this.dropdownOptions=response.dropdownOptions;
       this.columnPosition=response.columnPosition;
       this.displayName=response.displayName;
+      this.colWidth=response.colWidth
       return response.data
     },
     sync:function(a,b,c){
