@@ -479,18 +479,17 @@ $('#fileupload').fileupload({
 
         var keys = _.keys(data.result.data[0])
             , values = _.map(data.result.data,function(val){ return _.values(val) });
-        if (true){
+        if (false){
                   cars.fetch();
 
-                } else{
-        $('#preview').handsontable({
-          data: values
-          ,minSpareRows: 1
-          ,colHeaders: keys
-          ,columnSorting: true
-        });
-
-                }
+                } else {
+          $('#preview').handsontable({
+            data: values
+            ,minSpareRows: 1
+            ,colHeaders: keys
+            ,columnSorting: true
+          });
+        }
 
         
         //var addRowCount=App.handsonObj.getColHeader().length-keys.length;

@@ -28,15 +28,26 @@ exports.uploadcsv = function(req, res){
 
 
 
-          var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ]
+          //console.log(keys);
+
+          var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ];
+          var expensifyKey =[ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ];
+          var freshbooksTime =["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ];
+          var freshbooksExpense =["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
+          var paymo = ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
+          var shoebox = ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
+          var harvest = ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
+          var toggl = ["Client","Project","Registered time","","Amount ()"]
+
+
+//var timeeye = projectId,projectName,billableMinutes,billableExpenses,totalMinutes,totalExpenses
+//var timeeye =entryDate,userId,userName,projectId,projectName,taskId,taskName,notes,billed,minutes,expenses
+//var timeeye =projectId,projectName,fixedAmount,hourlyRate,billableMinutes,billableTimeAmount,billableExpenses,totalMinutes,totalExpenses
+
+//bigtime
+
 
           var isEqual = _.isEqual(dingKey, keys) 
-          // 
-          // keys.every(function(a){ 
-          //   return -1!=dingKey.indexOf(a);
-          // });
-
-
 
           if (isEqual){
 
