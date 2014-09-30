@@ -6,9 +6,129 @@ var mongoose = require('mongoose')
   , Article = mongoose.model('Article')
   , utils = require('../../lib/utils')
   , validateEmail = utils.validateEmail
-  , extend = require('util')._extend;
+  , extend = require('util')._extend
+  , fs    = require('fs')
+  , Converter=require("csvtojson").core.Converter
+  , _ = require("underscore");
 
 
+
+/**
+ * upload
+ */
+exports.uploadcsv = function(req, res){
+
+    getcsv(req.files, req.body, function(err, data){
+
+      var csvConverter=new Converter({});
+      csvConverter.fromString(data, function(err, json){
+          if (err) return next(err);
+
+          var keys = Object.keys(json[0]);
+
+
+
+          var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ]
+
+          var isEqual = _.isEqual(dingKey, keys) 
+          // 
+          // keys.every(function(a){ 
+          //   return -1!=dingKey.indexOf(a);
+          // });
+
+
+
+          if (isEqual){
+
+
+            var convertedJson = json.map(function(val, i){
+              return {
+                 date: new Date(val.Date.split('-'))
+                , qty : parseTimeQuantity(val.Time)
+                , item : val.User+' - '+val.Project
+                , note : val.Comment
+              }
+            });
+
+
+            console.log(convertedJson.length, req.article.item);
+
+            req.article.items=req.article.items.concat(convertedJson)
+
+            req.article.save(function(err){
+              if (err) return next(err);     
+              return res.send({
+                   data:json
+                  ,status: 'Ching Uploaded!'
+                });
+            });
+          } else {
+
+            return res.send({
+                 data:json
+                ,status: 'raw data'
+              });
+
+          }
+      });
+    });
+
+var parseTimeQuantity = function(val){
+  if (isNaN(Number(val)) && typeof val === 'string' && val.search(':')!==-1)
+    {var vals = val.split(':'),
+         hour = vals[1]?Number(vals[0]):0,
+         min = vals[1]?Number(vals[1]):0,
+         sec = vals[2]?Number(vals[2]):0,
+         number = hour+(min/60)+(sec/3600);
+      return number;} 
+  else {return 0;}
+  
+}
+    //console.log(req.body.csv)
+    // if (!req.files){
+
+    //       csvConverter.fromString(req.body.csv,function(err, jsonObj){
+
+    //           return res.send({
+    //                    data:jsonObj
+    //                   ,status: 'raw data'
+    //                 });
+
+    //       });
+
+    // }else{
+  
+    //   fs.readFile(req.files.files[0].path, {encoding: 'utf-8'}, function(err,data){
+    //     var csvConverter=new Converter({});
+    //         csvConverter.fromString(data,function(err, jsonObj){
+    //           return res.send({
+    //              data:jsonObj
+    //             ,status: 'raw data'
+    //           });
+    //         });//CSV convert
+    //         fs.unlinkSync(req.files.files[0].path);
+    //   });//file read
+
+    // }
+
+}
+
+
+
+
+var getcsv=function(files, body, cb){
+   if (!files && body.csv){
+      cb(null, body.csv);
+   } else if (files && files.files[0]) {
+      fs.readFile(files.files[0].path, {encoding: 'utf-8'}, function(err,data){
+        cb(null,data);
+        fs.unlinkSync(files.files[0].path);
+      });//file read
+   }else{
+    cb('no csv', null);
+   }
+
+}
 
 
 /**

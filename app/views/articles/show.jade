@@ -96,11 +96,16 @@ block content
         span
           |Total:&nbsp;
         span.amount
+      hr
       input(id="fileupload", type="file", name="files[]", multiple)
+      #dropzone
       div(id="files", class="files")
+      br
       textarea#csv-ajax
-      #exampleAfter
-      #example
+      br
+      br
+      button.btn.btn-danger#destroyPreview Cancel
+      #preview
 
 
   hr

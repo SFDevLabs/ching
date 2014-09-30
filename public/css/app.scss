@@ -109,3 +109,12 @@ button.error {
   color: inherit;
   
 }
+
+#dropzone{
+  width:500px;
+  height:100px;
+  background-color: pink;
+  &.dragging{
+    border: 5px dashed;
+  }
+}

@@ -43,7 +43,10 @@
     "view-helpers": "latest",
     "forever": "latest",
     "stylus":"latest",
-    "sendgrid":"latest"
+    "sendgrid":"latest",
+    "csvtojson":"latest",
+    "underscore" : "latest"
+
   },
   "devDependencies": {
     "supertest": "latest",

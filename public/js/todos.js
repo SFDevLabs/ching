@@ -46,7 +46,7 @@
         }, "") + "." + p[1];
       },
     totalCalculation: function(todo, response){
-      if (!todo.length){
+      if (!cars.length){
         var curr = App.formatCurrency(0);
         App.total.html(curr);
         return false
@@ -56,7 +56,7 @@
           , B = (isNaN(b) || typeof b!=='number')?0:b;
         return A+B;
       });
-          total = App.formatCurrency(total);
+      total = total?App.formatCurrency(total):App.formatCurrency(0);
       App.total.html(total);
     },
     renderAfterSync: function (todos, response) {  
@@ -146,7 +146,7 @@
         console.log(i, colPos)
         if (i!=="_id"){
           var pos = colPos[i];
-          colHeaders[pos] = i;
+          colHeaders[pos] = cars.displayName[i];
           if (cars.format[i]==='dropdown'){
             columns[pos] =
             {
@@ -189,7 +189,7 @@
         contextMenu: true,
         columns: columns,
         colHeaders: colHeaders,
-        colWidths: [180, 100, 160, 160, 80, 80, 80, 80, 180],  //TODO add to api
+        colWidths: [180, 100, 160, 160, 80, 80, 80, 180, 100],  //TODO add to api
 
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
@@ -277,12 +277,13 @@
             }
         },
         qtyFormater:function(todo,val){
-            if (isNaN(Number(val)) && val.search(':')!==-1 && typeof val === 'string' && val!==""){
+            if (isNaN(Number(val)) && typeof val === 'string' && val.search(':')!==-1){
               var vals = val.split(':'),
                   hour = vals[1]?Number(vals[0]):0,
                   min = vals[1]?Number(vals[1]):0,
-                  sec = vals[2]?Number(vals[2]):0;
-              todo.set('qty', hour+(min/60)+(sec/3600));//Set the tax attr from the above calculation
+                  sec = vals[2]?Number(vals[2]):0,
+                  number = hour+(min/60)+(sec/3600);
+              todo.set('qty', number);//Set the tax attr from the above calculation
               todo.set('type', 'Time');
             }
         },
@@ -347,6 +348,7 @@
       this.format=response.format;
       this.dropdownOptions=response.dropdownOptions;
       this.columnPosition=response.columnPosition;
+      this.displayName=response.displayName;
       return response.data
     },
     sync:function(a,b,c){
@@ -439,20 +441,32 @@ var post = function(){
 
 
 
+$('#dropzone').on('dragenter',function(e){
+  $(this).addClass('dragging');
+});
+$('#dropzone').on('dragleave drop',function(e){
+  $(this).removeClass('dragging');
+});
+
+$('#destroyPreview').on('click', function(e){
+  $('#preview').data('handsontable').destroy();
+});
+
 $('#fileupload').fileupload({
-        url: '/upload',
-        dataType: 'json',
-        autoUpload: true,
+        url: aId+'/upload'
+        ,dataType: 'json'
+        ,autoUpload: true
+        ,dropZone: $('#dropzone')
       //  acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        maxFileSize: 20000000, // 5 MB
+        ,maxFileSize: 20000000 // 5 MB
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
         // send Blob objects via XHR requests:
-        disableImageResize: /Android(?!.*Chrome)|Opera/
-            .test(window.navigator.userAgent),
-        previewMaxWidth: 100,
-        previewMaxHeight: 100,
-        previewCrop: true
+        ,disableImageResize: /Android(?!.*Chrome)|Opera/
+            .test(window.navigator.userAgent)
+        ,previewMaxWidth: 100
+        ,previewMaxHeight: 100
+        ,previewCrop: true
     })
     .on('fileuploaddone', function (e, data) {
         
@@ -463,13 +477,19 @@ $('#fileupload').fileupload({
 
         var keys = _.keys(data.result.data[0])
             , values = _.map(data.result.data,function(val){ return _.values(val) });
+        if (true){
+                  cars.fetch();
 
-        $('#example').handsontable({
+                } else{
+        $('#preview').handsontable({
           data: values
           ,minSpareRows: 1
           ,colHeaders: keys
           ,columnSorting: true
         });
+
+                }
+
         
         //var addRowCount=App.handsonObj.getColHeader().length-keys.length;
 

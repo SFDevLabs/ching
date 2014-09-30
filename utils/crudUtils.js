@@ -35,7 +35,9 @@
           format = {},
           dropdownOptions = {},
           first  = req.article.items[0],
-          columnPosition = {};
+          columnPosition = {},
+          displayName = {},
+          colWidth = {};
       
       Object.keys(itemsSchema).map(function(value, index) { //iterag over object keys
         schema[value]=itemsSchema[value].typeString
@@ -43,6 +45,9 @@
         if (itemsSchema[value].dropdownOptions)
           dropdownOptions[value]=itemsSchema[value].dropdownOptions;
         columnPosition[value]=itemsSchema[value].columnPosition
+        displayName[value]=itemsSchema[value].displayName
+        colWidth[value]=itemsSchema[value].colWidth
+
       });
 
       var result = {
@@ -50,7 +55,9 @@
         schema : schema,
         format : format,
         columnPosition : columnPosition,
-        dropdownOptions : dropdownOptions
+        dropdownOptions : dropdownOptions,
+        displayName : displayName,
+        colWidth : colWidth
       }
 
       res.send(result);

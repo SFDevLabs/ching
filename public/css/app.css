@@ -82,6 +82,9 @@ button.error {
 #grid .htDimmed {
   color: inherit; }
 
-#my-awesome-dropzone {
-  background-color: pink;
-  height: 100px; }
+#dropzone {
+  width: 500px;
+  height: 100px;
+  background-color: pink; }
+  #dropzone.dragging {
+    border: 5px dashed; }

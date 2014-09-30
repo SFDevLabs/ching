@@ -35,15 +35,15 @@ var setTags = function (tags) {
       formateKeys = ['cost','qty','tax1','tax2','type','date'];
 
 var itemsSchema = {
-    note:{type : String, default :  null, format: '', typeString:'string',columnPosition:0},
-    date: {type: Date, default : null, format: 'mm/dd/yy', typeString:'date',columnPosition:1},
-    cost:{type : Number, default : null, format: '$0,0.00', typeString:'number',columnPosition:2},
-    qty:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:3},
-    tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4},
-    tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5},
-    type:{type : String, default : 'Time', format: 'dropdown', dropdownOptions: ['Time','Item'], typeString:'string',columnPosition:6},
-    item:{type : String, default : null, format: '', typeString:'string',columnPosition:7},
-    total:{type : Number, default : null, format: '$0,0.00', typeString:'number',columnPosition:8}
+    note:{type : String, default :  null, format: '', typeString:'string',columnPosition:0, displayName:'Note', colWidth:180},
+    date: {type: Date, default : null, format: 'mm/dd/yy', typeString:'date',columnPosition:1, displayName:'Date', colWidth:100},
+    cost:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:2, displayName:'Cost/Rate', colWidth:160},
+    qty:{type : Number, default : null, format: '0,0[.]0000', typeString:'number',columnPosition:3, displayName:'Quantity/Hours', colWidth:160},
+    tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4, displayName:'Tax 1', colWidth:80},
+    tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5, displayName:'Tax 2', colWidth:80},
+    type:{type : String, default : 'Time', format: 'dropdown', dropdownOptions: ['Time','Item'], typeString:'string',columnPosition:6, displayName:'Time | Item', colWidth:80},
+    item:{type : String, default : null, format: '', typeString:'string',columnPosition:7, displayName:'Item/Service Desc.', colWidth:180},
+    total:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:8, displayName:'Total', colWidth:100}
   }
   var viewersSchema = new Schema({
     user: {type : Schema.ObjectId, ref : 'User'},
@@ -74,7 +74,8 @@ var ArticleSchema = new Schema({
   createdAt  : {type : Date, default : Date.now},
   items: [itemsSchema],
   status: {type : String, default : 'draft', trim : true},
-  addresss: {type : String, default : 'draft', trim : true}
+  addresss: {type : String, default : 'draft', trim : true},
+  currency: {type : String, default : 'USD', trim : true}
 
 });
 
