@@ -59,7 +59,6 @@
         displayName : displayName,
         colWidth : colWidth
       }
-
       res.send(result);
     }
   }
