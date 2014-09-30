@@ -24,32 +24,17 @@ exports.uploadcsv = function(req, res){
       csvConverter.fromString(data, function(err, json){
           if (err) return next(err);
 
-          var keys = Object.keys(json[0]);
 
-
-
-          //console.log(keys);
-
-          keyCheck();
+          var convertedJson = converterJSON(json);
 //bigtime
 
 
-          var isEqual = _.isEqual(dingKey, keys) 
+         // var isEqual = _.isEqual(dingKey, keys) 
 
-          if (isEqual){
-
-
-            var convertedJson = json.map(function(val, i){
-              return {
-                 date: new Date(val.Date.split('-'))
-                , qty : parseTimeQuantity(val.Time)
-                , item : val.User+' - '+val.Project
-                , note : val.Comment
-              }
-            });
+          if (false){
 
 
-            console.log(convertedJson.length, req.article.item);
+            //console.log(convertedJson.length, req.article.item);
 
             req.article.items=req.article.items.concat(convertedJson)
 
@@ -70,6 +55,7 @@ exports.uploadcsv = function(req, res){
           }
       });
     });
+  }
 
 var parseTimeQuantity = function(val){
   if (isNaN(Number(val)) && typeof val === 'string' && val.search(':')!==-1)
@@ -83,22 +69,96 @@ var parseTimeQuantity = function(val){
   
 }
 
-var keyCheck = function(){
+  var serviceList = {  
+         dingKey : [ 'Date', 'Time', 'Project', 'User', 'Comment' ]
+        // ,expensifyKey : [ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ]
+        // ,freshbooksTime : ["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ]
+        // ,freshbooksExpense : ["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
+        // ,paymo : ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
+        // ,shoebox : ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
+        // ,harvest : ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
+        // ,toggl : ["Client","Project","Registered time","","Amount ()"]
+        // ,timeeye : ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
+        // ,timeeye : ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
+        // ,timeeye : ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
+        // ,freckle : ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice Reference","Paid"]
+        ,tsheets : ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
+        ,tsheets_2 : ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes"]
 
-          var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ];
-          var expensifyKey =[ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ];
-          var freshbooksTime =["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ];
-          var freshbooksExpense =["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
-          var paymo = ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
-          var shoebox = ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
-          var harvest = ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
-          var toggl = ["Client","Project","Registered time","","Amount ()"]
-          var timeeye = ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
-          var timeeye = ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
-          var timeeye = ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
-          var freckle = ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice" "Reference","Paid"]
-          var tsheets = ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
+      },
+      serviceListKeys=_.keys(serviceList)
+      ,parseRules = function(key, val){
 
+        if (key==='dingKey'){
+
+        } 
+
+        switch (expr) {
+          case "Oranges":
+            console.log("Oranges are $0.59 a pound.");
+            break;
+          case "Apples":
+
+        }
+        var keys={
+          // dingKey : {
+          //           date: new Date(val.Date.split('-'))
+          //         , qty : parseTimeQuantity(val.Time)
+          //         , item : val.User+' - '+val.Project
+          //         , note : val.Comment
+          //       }
+          tsheets_2 : {
+            date: new Date(val.local_date.split('-'))
+          }
+          ,tsheets : {
+            date: new Date(val.local_date.split('-'))
+          }
+        } 
+        console.log(keys[key])
+        return keys[key]
+      };
+
+converterJSON = function(json){
+
+
+          var keys = Object.keys(json[0])
+            , matchVal;
+
+
+          var match = serviceListKeys.some(function(val){
+            console.log(
+              serviceList[val]
+              , keys
+              , _.isEqual(serviceList[val], keys)
+              , 'matcher')
+            matchVal = val;
+            return _.isEqual(serviceList[val], keys);
+          });
+
+          console.log(match, matchVal);
+
+
+          //now we need to map the vlaues to our values
+          //var m = parseRules(matchVal);
+
+          //console.log(m);
+
+
+          return json.map(function(val, i){
+                    return parseRules(matchVal, val);
+                 });
+            
+
+          // var convertedJson = json.map(function(val, i){
+          //   return {
+          //      date: new Date(val.Date.split('-'))
+          //     , qty : parseTimeQuantity(val.Time)
+          //     , item : val.User+' - '+val.Project
+          //     , note : val.Comment
+          //   }
+          // });
+
+          // return convertedJson;
 
 
 
@@ -130,7 +190,7 @@ var keyCheck = function(){
 
     // }
 
-}
+
 
 
 
