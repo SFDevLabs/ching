@@ -11,12 +11,8 @@ block auth
 
       .form-group
         label(for='lastname') Name 
-        input#firstname.form-control.half(type='text', name="firstname", placeholder='First (optional)', value=user.name)
-        input#lastname.form-control.half.right-float(type='text', name="lastname", placeholder='Last (optional)', value=user.name)
-
-      .form-group.center
-        label(for='lastname') Or 
-      hr
+        input#firstname.form-control.half(type='text', name="firstname", placeholder='First', value=user.name)
+        input#lastname.form-control.half.right-float(type='text', name="lastname", placeholder='Last', value=user.name)
 
       .form-group
         label(for='organization') Organization
@@ -24,11 +20,11 @@ block auth
 
       .form-group
         label(for='email') Email
-        input#email.form-control(type='text', name="email", placeholder='Email', value=user.email)
+        input#email.form-control(type='text', name="email", placeholder='', value=user.email)
 
       .form-group
         label(for='password') Password
-        input#password.form-control(type='password', name="password", placeholder='Password')
+        input#password.form-control(type='password', name="password", placeholder='')
 
       .form-group.center
         button.btn.action.center-block(type='submit') Sign up

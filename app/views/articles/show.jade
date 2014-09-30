@@ -13,7 +13,46 @@ block content
     -if (article.title)
       h1= article.title
     -else
-      h1 New Invoice
+      h1 New Invoice 
+
+
+    .row
+      .col-md-8
+        h3
+          | Add Recipeint
+        form.form-horizontal(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
+          input(type="hidden", name="_csrf", value="#{csrf_token}")
+          input(type="hidden", name="_method", value="POST")
+          .form-group
+            label.col-sm-2.control-label(for='title') Email
+            .col-sm-10
+              input.form-control#title(type='text', name="email", placeholder='Enter a new email')
+
+          .form-group
+            label.col-sm-2.control-label(for='title') Organization
+            .col-sm-10
+              input.form-control#title(type='text', name="organization", placeholder='Enter an Organization Name')
+          .form-group
+            label.col-sm-2.control-label(for='title') Firstname
+            .col-sm-10
+              input.form-control#title(type='text', name="firstname", placeholder='Firstname')
+
+          .form-group
+            label.col-sm-2.control-label(for='title') Lastname
+            .col-sm-10
+              input.form-control#title(type='text', name="lastname", placeholder='Lastname')
+
+
+          .form-group
+            .col-sm-offset-2.col-sm-10
+              button.btn.subtle(type='submit')
+                span.typcn.typcn-user-add
+                  |  Add Recipient
+
+      .col-md-4
+        - if (!article.isNew && article.image && article.image.files && article.image.files.length)
+          img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
+
     .row
       .col-md-8
         p=article.body
@@ -22,9 +61,9 @@ block content
             - var name = article.user.name ? article.user.name : article.user.username
             p To:&nbsp;
               a(href="/users/"+article.user._id)= name
-            a.btn.subtle.right(href='/articles/'+article._id+'/viewer', title="edit")
-              span.typcn.typcn-user-add
-                |  Add Recipient
+            //- a.btn.subtle.right(href='/articles/'+article._id+'/viewer', title="edit")
+            //-   span.typcn.typcn-user-add
+            //-     |  Add Recipient
             hr
             - each viewer, i in article.viewers
               p.muted='organization:'
@@ -35,13 +74,18 @@ block content
               span=viewer.user.lastname
               span ,&nbsp;
               span=viewer.user.firstname
-              hr
+              form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
+                input(type='hidden', name='_csrf', value="#{csrf_token}")
+                input(type="hidden", name="_method", value="DELETE")
+                button.btn.btn-danger.btn-link.error(type="submit") delete 
+            hr
             p From:&nbsp;
               p.muted='organization:'
               p=article.user.organization
               p=article.user.email
               span=article.user.lastname
               span=article.user.firstname
+
 
           - if (article.tags)
             p Tags &nbsp;

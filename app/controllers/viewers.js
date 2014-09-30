@@ -38,7 +38,7 @@ exports.create = function (req, res) {
 
   if (!req.body.email || req.body.email.length===0){
         req.flash('error', 'No email')
-        return res.redirect('/articles/' + article.id+'/viewer')
+        return res.redirect('/articles/' + article.id)
   }
 
   User.findOne({email: validatedEmail}, function(err, user){
@@ -56,12 +56,12 @@ exports.create = function (req, res) {
       }
       if (duplicate){
           req.flash('warning', 'This email address is already on the invoice.')
-          res.redirect('/articles/' + article.id+'/viewer')
+          res.redirect('/articles/' + article.id)
       } else {
       article.addViewer({user:user._id}, function (err, obj, newViewer) {
         if (err) return res.render('500')
           req.flash('success', 'New Viewer Added!')
-          res.redirect('/articles/'+ article.id+'/viewer/')
+          res.redirect('/articles/'+ article.id)
       });//viewer added
 
       }
@@ -116,7 +116,7 @@ exports.destroy = function (req, res) {
     } else {
       req.flash('success', 'Viewer Removed')
     }
-    res.redirect('/articles/' + article.id+'/viewer')
+    res.redirect('/articles/' + article.id)
   })
 }
 
