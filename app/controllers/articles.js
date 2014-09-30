@@ -198,11 +198,29 @@ exports.indexRecieved = function(req, res){
   })
 }
 
+
+/**
+ * Home page
+ */
+
+exports.homeOrSent = function(req, res){
+
+  if (req.isAuthenticated()){
+    return indexSent(req, res)
+  }else{
+    res.render('articles/home', {
+      title: 'Home',
+    })
+  }
+
+}
+
+
 /**
  * List
  */
 
-exports.indexSent = function(req, res){
+var indexSent = exports.indexSent = function(req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
   var perPage = 30,
       userID=req.user?req.user._id:null;
@@ -386,14 +404,5 @@ exports.destroy = function(req, res){
   article.remove(function(err){
     req.flash('info', 'Deleted successfully')
     res.redirect('/articles')
-  })
-}
-/**
- * Home page
- */
-
-exports.home = function(req, res){
-  res.render('articles/home', {
-    title: 'Home',
   })
 }

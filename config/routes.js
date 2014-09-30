@@ -105,7 +105,6 @@ module.exports = function (app, passport) {
   app.param('userId', users.user)
 
   // article routes
-  app.get('/home', auth.requiresLogin ,articles.home)
   app.param('id', articles.load)
   app.get('/articles', auth.requiresLogin, articles.indexSent)
   app.get('/articles/new', auth.requiresLogin, articles.new)
@@ -133,10 +132,9 @@ module.exports = function (app, passport) {
 
 
   // home route
-  app.get('/', auth.requiresLogin,  articles.indexSent)
-
-  app.get('/recieved', auth.requiresLogin,  articles.indexRecieved)
+  app.get('/',  articles.homeOrSent)
   app.get('/sent', auth.requiresLogin,  articles.indexSent)
+  app.get('/recieved', auth.requiresLogin,  articles.indexRecieved)
 
 
   // comment routes
