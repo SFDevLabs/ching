@@ -1,38 +1,34 @@
 extends auth
 
 block auth
-  form.form-horizontal(action="/users", method="post", role="form")
-    input(type='hidden', name='_csrf', value="#{csrf_token}")
+  .row.sign-up
+    form.large.col.col-lg-5.center-block(action="/users", method="post", role="form")
+      div.logo.center-block
+        a(href="/")
+          img(src="./img/logo.png")
+      h1.center= title
+      input(type='hidden', name='_csrf', value="#{csrf_token}")
 
-    .form-group
-      label.col-sm-2.control-label(for='name') First name 
-      .col-sm-10
-        input#name.form-control(type='text', name="firstname", placeholder='First name (optinal)', value=user.name)
+      .form-group
+        label(for='lastname') Name 
+        input#firstname.form-control.half(type='text', name="firstname", placeholder='First (optional)', value=user.name)
+        input#lastname.form-control.half.right-float(type='text', name="lastname", placeholder='Last (optional)', value=user.name)
 
-    .form-group
-      label.col-sm-2.control-label(for='name') Last name 
-      .col-sm-10
-        input#name.form-control(type='text', name="lastname", placeholder='Last name (optinal)', value=user.name)
+      .form-group.center
+        label(for='lastname') Or 
+      hr
 
-    .form-group
-      label.col-sm-2.control-label(for='name') Organization
-      .col-sm-10
-        input#name.form-control(type='text', name="organization", placeholder='organization (optinal)', value=user.name)
+      .form-group
+        label(for='organization') Organization
+        input#organization.form-control(type='text', name="organization", placeholder='Optional', value=user.name)
 
-    .form-group
-      label.col-sm-2.control-label(for='email') Email
-      .col-sm-10
+      .form-group
+        label(for='email') Email
         input#email.form-control(type='text', name="email", placeholder='Email', value=user.email)
 
-    .form-group
-      label.col-sm-2.control-label(for='password') Password
-      .col-sm-10
+      .form-group
+        label(for='password') Password
         input#password.form-control(type='password', name="password", placeholder='Password')
 
-    .form-group
-      .col-sm-offset-2.col-sm-10
-        button.btn.btn-primary(type='submit') Sign up
-        | &nbsp; or &nbsp;
-        a.show-login(href="/login") Log in
-        | &nbsp; or &nbsp;
-        a.show-login(href="/reset") Reset
+      .form-group.center
+        button.btn.action.center-block(type='submit') Sign up

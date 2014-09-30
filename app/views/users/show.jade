@@ -1,24 +1,25 @@
 extends ../layouts/default
 
 block main
-  h1= title
-  .row
-    .col-md-8
-      .meta
-          p='Email: '+user.email
-      .meta
-          p='Name: '+user.firstname+" "+user.lastname
-      .meta
-          p='Organization: '+user.organization
+  .container
+    h1= title
+    .row
+      .col-md-8
+        a.right.btn.btn-default(href=user.id+'/edit', title="edit")
+          span(class="typcn typcn-edit")
+            |  Edit
+        .meta
+            p='Email: '+user.email
+        .meta
+            p='Name: '+user.firstname+" "+user.lastname
+        .meta
+            p='Organization: '+user.organization
 
-
-  .row
-    .col-md-4
-        a.btn.btn-default(href=user.id+'/edit', title="edit") Edit
-
-  .row
-    .col-md-4
-     form.form-horizontal(action="/reset", method="post", role="form")
-      input(type='hidden', name='_csrf', value="#{csrf_token}")
-      input#email.form-control(type='hidden', placeholder="Your Email", name="email" value=user.email)
-      button.btn.btn-primary(type='submit') Send Rest Email
+    .row
+      .col-md-4
+        form.form-horizontal(action="/reset", method="post", role="form")
+          input(type='hidden', name='_csrf', value="#{csrf_token}")
+          input#email.form-control(type='hidden', placeholder="Your Email", name="email" value=user.email)
+          button.btn.btn-primary(type='submit')
+            span(class="typcn typcn-mail")
+              |  Send Reset Email

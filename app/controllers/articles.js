@@ -124,6 +124,20 @@ converterJSON = function(json){
           var keys = Object.keys(json[0])
             , matchVal;
 
+          var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ];
+          var expensifyKey =[ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ];
+          var freshbooksTime =["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ];
+          var freshbooksExpense =["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
+          var paymo = ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
+          var shoebox = ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
+          var harvest = ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
+          var toggl = ["Client","Project","Registered time","","Amount ()"]
+          var timeeye = ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
+          var timeeye = ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
+          var timeeye = ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
+          var freckle = ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice", "Reference","Paid"]
+          var tsheets = ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
+
 
           var match = serviceListKeys.some(function(val){
             console.log(
@@ -257,7 +271,7 @@ exports.indexRecieved = function(req, res){
     if (err) return res.render('500')
     Article.count().exec(function (err, count) {
       res.render('articles/index', {
-        title: 'Articles',
+        title: 'Received Invoices',
         articles: articles,
         page: page + 1,
         pages: Math.ceil(count / perPage)
@@ -305,7 +319,7 @@ var indexSent = exports.indexSent = function(req, res){
     if (err) return res.render('500')
     Article.count().exec(function (err, count) {
       res.render('articles/index', {
-        title: 'Articles',
+        title: 'Sent Invoices',
         articles: articles,
         page: page + 1,
         pages: Math.ceil(count / perPage)

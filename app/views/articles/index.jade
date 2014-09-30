@@ -1,36 +1,39 @@
 extends ../layouts/default
 
 block main
-  h1= title
+  .container
+    h1= title
 
 block content
-  - if (articles.length)
-    - each article in articles
-      - var viewer = article.viewers[0]? article.viewers[0].user.organization:'TBD...';
-      .article
-        span.muted clients:
-        h4
-          a(href='/articles/'+article._id, title=viewer)=viewer
-        p= article.body
+  .container
+    - if (articles.length)
+      - each article in articles
+        - var viewer = article.viewers[0]? article.viewers[0].user.organization:'TBD...';
+        .article
+          span.muted clients:
+          h4
+            a(href='/articles/'+article._id, title=viewer)=viewer
+          p= article.body
 
-        .meta
-          span.muted= formatDatetime(article.createdAt)
-          if (article.total)
-            | &nbsp; - &nbsp;
-            span Total &nbsp;
-            span(href="/users/"+article.user._id)= formatCurrency(article.total)
-            
-          - if (article.tags)
-            | &nbsp; - &nbsp;
-            span Tags &nbsp;
-            - each tag in article.tags.split(',')
-              i.muted.fa.fa-tag &nbsp;
-              a.tag(href="/tags/"+tag)= tag
-              | &nbsp;&nbsp;
+          .meta
+            span.muted= formatDatetime(article.createdAt)
+            if (article.total)
+              | &nbsp; - &nbsp;
+              span Total &nbsp;
+              span(href="/users/"+article.user._id)= formatCurrency(article.total)
+              
+            - if (article.tags)
+              | &nbsp; - &nbsp;
+              span Tags &nbsp;
+              - each tag in article.tags.split(',')
+                i.muted.fa.fa-tag &nbsp;
+                a.tag(href="/tags/"+tag)= tag
+                | &nbsp;&nbsp;
 
-    - if (pages > 1)
-      ul.pagination
-        != createPagination(pages, page)
-  - else
-    h4.muted No articles.&nbsp;
-      a(href="/articles/new") create one
+      - if (pages > 1)
+        ul.pagination
+          != createPagination(pages, page)
+    - else
+      h2.gray No invoices yet...
+      p
+        a(href="/articles/new", class="button") Create an Invoice
