@@ -219,8 +219,6 @@ var parseTimeQuantity = function(val){
             break;
         }
 
-      // [ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ]
-
         console.log(rule)
         return rule;
       };
