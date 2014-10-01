@@ -71,7 +71,7 @@ var parseTimeQuantity = function(val){
 
   var serviceList = {  
          dingKey : [ 'Date', 'Time', 'Project', 'User', 'Comment' ]
-        // ,expensifyKey : [ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ]
+         ,expensifyKey : [ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ]
         // ,freshbooksTime : ["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ]
         // ,freshbooksExpense : ["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
         // ,paymo : ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
@@ -82,6 +82,7 @@ var parseTimeQuantity = function(val){
         // ,timeeye : ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
         // ,timeeye : ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
         // ,freckle : ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice Reference","Paid"]
+        ,bigtime : ["Job","Staff Member","Category","Date","Input","N/C","Notes"]
         ,tsheets : ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
         ,tsheets_2 : ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes"]
 
@@ -91,65 +92,51 @@ var parseTimeQuantity = function(val){
 
 
       parseRules = function(keys){
-        var rule;
+        var rule
+          , tsheet = function(val){
+              return {
+                    date: val.local_date?new Date(val.local_date.split('-')):null
+                  , qty : val.hours?Number(val.hours):null
+                  , item : (val.username?val.username:'')+' - '+(val.lname?val.lname:'')+', '+(val.fname?val.fname:'')
+                  , type : 'Time'
+              }
+            };
 
         console.log(keys)
 
         var key = null;
         serviceListKeys.some(function(val, i){
           var test = _.isEqual(serviceList[val], keys);
+                  console.log(test, val)
+
           key = test?val:null;
-          return key
+          return test
         });
         console.log(key)
 
         switch (key) {
           case "dingKey":
+            rule=tsheet
+            break;
+          case "tsheets":
+            rule=tsheet
+            break;
+          case "tsheets_2":
+            return tsheet;
+            break;
+          case "bigtime":
             rule=function(val){
               return {
                     date: val.Date?new Date(val.Date.split('-')):null
-                  , qty : val.Time?parseTimeQuantity(val.Time):null
-                  , item : val.User?val.User:''+' - '+val.Project?val.Project:''
-                  , note : val.Comment?val.Comment:null
+                  , qty : val.Input?Number(val.Input):null
+                  , item : val['Staff Member']?val['Staff Member']:null
                   , type : 'Time'
-              }
-            }
-            break;
-          case "tsheets":
-            rule=function(val){
-              return {
-                    date: val.local_date?new Date(val.local_date.split('-')):null
-                  , qty : val.hours?Number(val.hours):null
-                  , item : val.username?val.username:''+' - '+val.lname?val.lname:''+', '+val.fname?val.fname:''
-                  , type : 'Time'
-              }
-            }
-            break;
-          case "tsheets_2":
-            rule=function(val){
-              return {
-                    date: val.local_date?new Date(val.local_date.split('-')):null
-                  , qty : val.hours?Number(val.hours):null
-                  , item : val.username?val.username:''+' - '+val.lname?val.lname:''+', '+val.fname?val.fname:''
-                  , type : 'Time'
+                  , note : (val.Job?val.Job:'')+' - '+(val.Category?val.Category:'')
               }
             }
             break;
         }
-        // var keys={
-        //   // dingKey : {
-        //   //           date: new Date(val.Date.split('-'))
-        //   //         , qty : parseTimeQuantity(val.Time)
-        //   //         , item : val.User+' - '+val.Project
-        //   //         , note : val.Comment
-        //   //       }
-        //   tsheets_2 : {
-        //     date: new Date(val.local_date.split('-'))
-        //   }
-        //   ,tsheets : {
-        //     date: new Date(val.local_date.split('-'))
-        //   }
-        // }
+        //["Job","Staff Member","Category","Date","Input","N/C,Notes"]
 
         console.log(rule)
         return rule;
