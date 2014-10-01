@@ -72,16 +72,16 @@ var parseTimeQuantity = function(val){
   var serviceList = {  
          dingKey : [ 'Date', 'Time', 'Project', 'User', 'Comment' ]
          ,expensifyKey : [ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ]
-        // ,freshbooksTime : ["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ]
-        // ,freshbooksExpense : ["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
-        // ,paymo : ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
-        // ,shoebox : ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
-        // ,harvest : ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
-        // ,toggl : ["Client","Project","Registered time","","Amount ()"]
+        ,freshbooksTime : ["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ]
+        ,freshbooksExpense : ["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
+         ,paymo : ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
+         ,shoebox : ["Date","Store","Note","Total (USD)", "Tax (USD)","Payment Type","Category","Receipt"]
+         ,harvest : ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
+         ,toggl : ["User","Email","Client","Project","Task","Description","Billable","Start date","Start time","End date","End time","Duration","Tags","Amount ()"]
         // ,timeeye : ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
         // ,timeeye : ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
         // ,timeeye : ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
-        // ,freckle : ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice Reference","Paid"]
+        ,freckle : ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice Reference","Paid"]
         ,bigtime : ["Job","Staff Member","Category","Date","Input","N/C","Notes"]
         ,tsheets : ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
         ,tsheets_2 : ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes"]
@@ -135,8 +135,91 @@ var parseTimeQuantity = function(val){
               }
             }
             break;
+          case "expensifyKey":
+            rule=function(val){
+              return {
+                    date: val.Timestamp?new Date(val.Timestamp.split('-')):null
+                  , cost : val.Amount && !isNaN(Number(val.Amount))?Number(val.Amount):null
+                  , qty : 1
+                  , item : val.Merchant?val.Merchant:''
+                  , type : 'Item'
+                  , note : (val.Comment?val.Comment:'')+' - '+(val['']?val.Tag:'')+' - '+(val['Original Currency']?val['Original Currency']:'')
+              }
+            }
+            break;
+          case "shoebox":
+            rule=function(val){
+              return {
+                    date: val.Date?new Date(val.Date.split('-')):null
+                  , cost : val['Total (USD)'] && !isNaN(Number(val['Total (USD)']))?Number(val['Total (USD)']):null
+                  , qty : 1
+                  , tax1: val['Tax (USD)'] && !isNaN(Number(val['Tax (USD)']))?Number(val['Tax (USD)']):null
+                  , item : val.Store?val.Store:''
+                  , type : 'Item'
+                  , note : (val.Note?val.Note:'')+' - '+(val['Payment Type']?val['Payment Type']:'')+' - '+(val.Category?val.Category:'')
+              }
+            }
+            break;
+          case "paymo":
+            rule=function(val){
+              return {
+                    date: ( val['Start Time'] && val['Start Time'].slice(0,10) )?new Date(val['Start Time'].slice(0,10).split('/')):null
+                  , qty : val.Hours?Number(val.Hours):null
+                  , item : val.User?val.User:''
+                  , type : 'Time'
+                  , note : (val.Notes?val.Notes:'')+' - '+(val.Project?val.Project:'')+' - '+(val['Task List']?val['Task List']:'')+' - '+(val.Task?val.Task:'')
+              }
+            }
+            break;
+          case "freckle":
+            rule=function(val){
+              return {
+                    date: val.Date?new Date(val.Date.split('-')):null
+                  , qty : val.Hours?val.Hours:null
+                  , item : val.Person?val.Person:''
+                  , type : 'Time'
+                  , note : (val.Description?val.Description:'')+' - '+(val.Project?val.Project:'')+' - '+(val['Group/Client']?val['Group/Client']:'')+' - '+(val.Tags?val.Tags:'')
+              }
+            }
+            break;
+          case "freshbooksExpense":
+            rule=function(val){
+              return {
+                    date: val.Date?new Date(val.Date.split('-')):null
+                  , qty : 1
+                  , cost : val.Amount?val.Amount:null
+                  , item : val.Category?val.Category:''
+                  , type : 'Item'
+                  , note : (val.Notes?val.Notes:'')+' - '+(val.Vendor?val.Vendor:'')+' - '+(val.Project?val.Project:'')
+              }
+            }
+            break;
+          case "toggl":
+            rule=function(val){
+              return {
+                    date: val['Start date']?new Date(val['Start date'].split('-')):null
+                  , qty : val.Duration?parseTimeQuantity(val.Duration):null
+                  , item : val.User?val.User:null
+                  , type : 'Time'
+                  , note : (val.Description?val.Description:'')+' - '+(val.Client?val.Client:'')+' - '+(val.Project?val.Project:'')
+              }
+            }
+            break;
+          case "harvest":
+            rule=function(val){
+              return {
+                    date: val.Date?new Date(val.Date.split('/')):null
+                  , qty : val.Hours?Number(val.Hours):null
+                  , item : (val['Last Name']?val['Last Name']:null)+', '+(val['First Name']?val['First Name']:null)
+                  , type : 'Time'
+                  , cost: val['Hourly Rate']?val['Hourly Rate']:null
+                  , note : (val.Notes?val.Notes:'')+' - '+(val.Job?val.Job:'')+' - '+(val.Category?val.Category:'')+' - '+(val.Project?val.Project:'')+' - '+(val.Currency?val.Currency:'')
+              }
+            }
+            break;
         }
-        //["Job","Staff Member","Category","Date","Input","N/C,Notes"]
+
+      // [ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ]
 
         console.log(rule)
         return rule;
