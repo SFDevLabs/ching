@@ -479,7 +479,7 @@ $('#fileupload').fileupload({
 
         var keys = _.keys(data.result.data[0])
             , values = _.map(data.result.data,function(val){ return _.values(val) });
-        if (false){
+        if (true){//
                   cars.fetch();
 
                 } else {

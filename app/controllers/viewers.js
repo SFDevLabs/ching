@@ -98,7 +98,6 @@ exports.sendInvoice=function(req, res){
             res.redirect('/articles/'+ article.id)            
           }
         });//email
-
   });
 }
 

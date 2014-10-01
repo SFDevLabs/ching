@@ -26,18 +26,18 @@ exports.uploadcsv = function(req, res){
 
 
           var convertedJson = converterJSON(json);
-//bigtime
+
+           
 
 
-         // var isEqual = _.isEqual(dingKey, keys) 
 
-          if (false){
+          if (true){
 
 
-            //console.log(convertedJson.length, req.article.item);
 
             req.article.items=req.article.items.concat(convertedJson)
 
+            
             req.article.save(function(err){
               if (err) return next(err);     
               return res.send({
@@ -86,36 +86,73 @@ var parseTimeQuantity = function(val){
         ,tsheets_2 : ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes"]
 
       },
-      serviceListKeys=_.keys(serviceList)
-      ,parseRules = function(key, val){
+      serviceListKeys=_.keys(serviceList);
 
-        if (key==='dingKey'){
 
-        } 
 
-        switch (expr) {
-          case "Oranges":
-            console.log("Oranges are $0.59 a pound.");
+      parseRules = function(keys){
+        var rule;
+
+        console.log(keys)
+
+        var key = null;
+        serviceListKeys.some(function(val, i){
+          var test = _.isEqual(serviceList[val], keys);
+          key = test?val:null;
+          return key
+        });
+        console.log(key)
+
+        switch (key) {
+          case "dingKey":
+            rule=function(val){
+              return {
+                    date: val.Date?new Date(val.Date.split('-')):null
+                  , qty : val.Time?parseTimeQuantity(val.Time):null
+                  , item : val.User?val.User:''+' - '+val.Project?val.Project:''
+                  , note : val.Comment?val.Comment:null
+                  , type : 'Time'
+              }
+            }
             break;
-          case "Apples":
-
+          case "tsheets":
+            rule=function(val){
+              return {
+                    date: val.local_date?new Date(val.local_date.split('-')):null
+                  , qty : val.hours?Number(val.hours):null
+                  , item : val.username?val.username:''+' - '+val.lname?val.lname:''+', '+val.fname?val.fname:''
+                  , type : 'Time'
+              }
+            }
+            break;
+          case "tsheets_2":
+            rule=function(val){
+              return {
+                    date: val.local_date?new Date(val.local_date.split('-')):null
+                  , qty : val.hours?Number(val.hours):null
+                  , item : val.username?val.username:''+' - '+val.lname?val.lname:''+', '+val.fname?val.fname:''
+                  , type : 'Time'
+              }
+            }
+            break;
         }
-        var keys={
-          // dingKey : {
-          //           date: new Date(val.Date.split('-'))
-          //         , qty : parseTimeQuantity(val.Time)
-          //         , item : val.User+' - '+val.Project
-          //         , note : val.Comment
-          //       }
-          tsheets_2 : {
-            date: new Date(val.local_date.split('-'))
-          }
-          ,tsheets : {
-            date: new Date(val.local_date.split('-'))
-          }
-        } 
-        console.log(keys[key])
-        return keys[key]
+        // var keys={
+        //   // dingKey : {
+        //   //           date: new Date(val.Date.split('-'))
+        //   //         , qty : parseTimeQuantity(val.Time)
+        //   //         , item : val.User+' - '+val.Project
+        //   //         , note : val.Comment
+        //   //       }
+        //   tsheets_2 : {
+        //     date: new Date(val.local_date.split('-'))
+        //   }
+        //   ,tsheets : {
+        //     date: new Date(val.local_date.split('-'))
+        //   }
+        // }
+
+        console.log(rule)
+        return rule;
       };
 
 converterJSON = function(json){
@@ -124,32 +161,32 @@ converterJSON = function(json){
           var keys = Object.keys(json[0])
             , matchVal;
 
-          var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ];
-          var expensifyKey =[ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ];
-          var freshbooksTime =["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ];
-          var freshbooksExpense =["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
-          var paymo = ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
-          var shoebox = ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
-          var harvest = ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
-          var toggl = ["Client","Project","Registered time","","Amount ()"]
-          var timeeye = ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
-          var timeeye = ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
-          var timeeye = ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
-          var freckle = ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice", "Reference","Paid"]
-          var tsheets = ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
+          // var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ];
+          // var expensifyKey =[ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ];
+          // var freshbooksTime =["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ];
+          // var freshbooksExpense =["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
+          // var paymo = ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
+          // var shoebox = ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
+          // var harvest = ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
+          // var toggl = ["Client","Project","Registered time","","Amount ()"]
+          // var timeeye = ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
+          // var timeeye = ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
+          // var timeeye = ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
+          // var freckle = ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice", "Reference","Paid"]
+          // var tsheets = ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
 
 
-          var match = serviceListKeys.some(function(val){
-            console.log(
-              serviceList[val]
-              , keys
-              , _.isEqual(serviceList[val], keys)
-              , 'matcher')
-            matchVal = val;
-            return _.isEqual(serviceList[val], keys);
-          });
+          // var match = serviceListKeys.some(function(val){
+          //   // console.log(
+          //   //   serviceList[val]
+          //   //   , keys
+          //   //   , _.isEqual(serviceList[val], keys)
+          //   //   , 'matcher')
+          //   matchVal = val;
+          //   return _.isEqual(serviceList[val], keys);
+          // });
 
-          console.log(match, matchVal);
+          //console.log(match, matchVal);
 
 
           //now we need to map the vlaues to our values
@@ -157,9 +194,9 @@ converterJSON = function(json){
 
           //console.log(m);
 
-
-          return json.map(function(val, i){
-                    return parseRules(matchVal, val);
+          var mapper = parseRules(keys);
+          return json.map(function(val){
+                    return mapper(val);
                  });
             
 
