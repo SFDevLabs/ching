@@ -319,8 +319,8 @@ var getcsv=function(files, body, cb){
       cb(null, body.csv);
    } else if (files && files.files[0]) {
       fs.readFile(files.files[0].path, {encoding: 'utf-8'}, function(err,data){
-        cb(null,data);
         fs.unlinkSync(files.files[0].path);
+        cb(null,data);
       });//file read
    }else{
     cb('no csv', null);
