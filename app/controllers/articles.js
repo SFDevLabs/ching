@@ -16,24 +16,35 @@ var mongoose = require('mongoose')
 /**
  * upload
  */
-exports.uploadcsv = function(req, res){
+exports.uploadcsv = function(req, res, next){
 
     getcsv(req.files, req.body, function(err, data){
 
       var csvConverter=new Converter({});
+
+      if (data.slice(1,15)==='Invoiced Tasks'){//Freshbooks catch for 2nd line
+        data=data.slice(43)
+      }
+
       csvConverter.fromString(data, function(err, json){
           if (err) return next(err);
 
+          //we need logic to figure out when something gets parsed correctly.
+          var keys = Object.keys(json[0])
+              , mapper = parseRules(keys);
 
-          var convertedJson = converterJSON(json);
+            
+          if (mapper){
+            convertedJson =  json.map(function(val){
+              return mapper(val);
+            });  
+          } else {
+            convertedJson = json
+          }    
 
-           
 
-
-
-          if (true){
-
-
+          console.log(mapper)
+          if (mapper){
 
             req.article.items=req.article.items.concat(convertedJson)
 
@@ -42,7 +53,7 @@ exports.uploadcsv = function(req, res){
               if (err) return next(err);     
               return res.send({
                    data:json
-                  ,status: 'Ching Uploaded!'
+                  ,status: 'StuffU ploaded!'
                 });
             });
           } else {
@@ -69,6 +80,9 @@ var parseTimeQuantity = function(val){
   
 }
 
+
+
+
   var serviceList = {  
          dingKey : [ 'Date', 'Time', 'Project', 'User', 'Comment' ]
          ,expensifyKey : [ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ]
@@ -90,7 +104,6 @@ var parseTimeQuantity = function(val){
       serviceListKeys=_.keys(serviceList);
 
 
-
       parseRules = function(keys){
         var rule
           , tsheet = function(val){
@@ -102,18 +115,14 @@ var parseTimeQuantity = function(val){
               }
             };
 
-        console.log(keys)
-
+        //Find the Keys
         var key = null;
-        serviceListKeys.some(function(val, i){
+        serviceListKeys.some(function(val, i){//This logic only finds the matching keys var
           var test = _.isEqual(serviceList[val], keys);
-                  console.log(test, val)
-
           key = test?val:null;
           return test
         });
-        console.log(key)
-
+        //This contains the facotrs whuch parse the json returned from CSV.
         switch (key) {
           case "dingKey":
             rule=tsheet
@@ -144,6 +153,7 @@ var parseTimeQuantity = function(val){
                   , item : val.Merchant?val.Merchant:''
                   , type : 'Item'
                   , note : (val.Comment?val.Comment:'')+' - '+(val['']?val.Tag:'')+' - '+(val['Original Currency']?val['Original Currency']:'')
+                  , total : (val.Amount)? val.Amount:null
               }
             }
             break;
@@ -157,6 +167,8 @@ var parseTimeQuantity = function(val){
                   , item : val.Store?val.Store:''
                   , type : 'Item'
                   , note : (val.Note?val.Note:'')+' - '+(val['Payment Type']?val['Payment Type']:'')+' - '+(val.Category?val.Category:'')
+                  , total : (val['Total (USD)'])? val['Total (USD)']:null
+
               }
             }
             break;
@@ -187,10 +199,24 @@ var parseTimeQuantity = function(val){
               return {
                     date: val.Date?new Date(val.Date.split('-')):null
                   , qty : 1
-                  , cost : val.Amount?val.Amount:null
+                  , cost : val.Amount?Number(val.Amount.replace(',','')):null
                   , item : val.Category?val.Category:''
                   , type : 'Item'
                   , note : (val.Notes?val.Notes:'')+' - '+(val.Vendor?val.Vendor:'')+' - '+(val.Project?val.Project:'')
+                  , total : (val.Amount)? val.Amount:null
+              }
+            }
+            break;
+          case "freshbooksTime":
+            rule=function(val){
+              return {
+                    date: val['Invoice Date']?new Date(val['Invoice Date'].split('/')):null
+                  , qty : val.Hours?Number(val.Hours):null
+                  , item : val['Task name']?val['Task name']:''
+                  , type : 'Time'
+                  , cost: val.Rate?Number(val.Rate.replace(',','')):null
+                  , note : (val['Client name']?val['Client name']:'')
+                  , total : (val.Hours && val.Rate)?Number(val.Hours)*Number(val.Rate.replace(',','')):null
               }
             }
             break;
@@ -212,106 +238,15 @@ var parseTimeQuantity = function(val){
                   , qty : val.Hours?Number(val.Hours):null
                   , item : (val['Last Name']?val['Last Name']:null)+', '+(val['First Name']?val['First Name']:null)
                   , type : 'Time'
-                  , cost: val['Hourly Rate']?val['Hourly Rate']:null
-                  , note : (val.Notes?val.Notes:'')+' - '+(val.Job?val.Job:'')+' - '+(val.Category?val.Category:'')+' - '+(val.Project?val.Project:'')+' - '+(val.Currency?val.Currency:'')
+                  , cost: val['Hourly Rate']? Number( val['Hourly Rate'].replace(',','') ):null
+                  , note : (val.Notes?val.Notes:'')+' - '+(val.Job?val.Job:'')+' - '+(val.Category?val.Category:'')+' - '+(val.Project?val.Project:'')
+                  , total : (val.Hours && val['Hourly Rate'])?Number(val.Hours)*val['Hourly Rate']:null
               }
             }
             break;
         }
-
-        console.log(rule)
-        return rule;
+        return rule;//We returnt he rule for building the JSON
       };
-
-converterJSON = function(json){
-
-
-          var keys = Object.keys(json[0])
-            , matchVal;
-
-          // var dingKey = [ 'Date', 'Time', 'Project', 'User', 'Comment' ];
-          // var expensifyKey =[ 'Timestamp', 'Merchant', 'Amount', 'MCC', 'Category', 'Tag', 'Comment', 'Reimbursable', 'Original Currency', 'Original Amount', 'Receipt' ];
-          // var freshbooksTime =["Task name","Client name","Invoice","Invoice Date","Rate","Hours","Discount","Line Cost","Currency" ];
-          // var freshbooksExpense =["Date","Category","Vendor","Client","Author","Project","Notes","Amount","Bank Name","Bank Account"]
-          // var paymo = ["Project","Task List","Task","User","Start Time","End Time","Notes","Hours"]
-          // var shoebox = ["Date","Store","Note","Total (USD)", "Tax", "(USD)","Payment Type","Category","Receipt"]
-          // var harvest = ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
-          // var toggl = ["Client","Project","Registered time","","Amount ()"]
-          // var timeeye = ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
-          // var timeeye = ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
-          // var timeeye = ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
-          // var freckle = ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice", "Reference","Paid"]
-          // var tsheets = ["username","payroll_id","fname","lname","number","group","local_date","local_day","local_start_time","local_end_time","tz","hours","jobcode","location","notes","approved_status"]
-
-
-          // var match = serviceListKeys.some(function(val){
-          //   // console.log(
-          //   //   serviceList[val]
-          //   //   , keys
-          //   //   , _.isEqual(serviceList[val], keys)
-          //   //   , 'matcher')
-          //   matchVal = val;
-          //   return _.isEqual(serviceList[val], keys);
-          // });
-
-          //console.log(match, matchVal);
-
-
-          //now we need to map the vlaues to our values
-          //var m = parseRules(matchVal);
-
-          //console.log(m);
-
-          var mapper = parseRules(keys);
-          return json.map(function(val){
-                    return mapper(val);
-                 });
-            
-
-          // var convertedJson = json.map(function(val, i){
-          //   return {
-          //      date: new Date(val.Date.split('-'))
-          //     , qty : parseTimeQuantity(val.Time)
-          //     , item : val.User+' - '+val.Project
-          //     , note : val.Comment
-          //   }
-          // });
-
-          // return convertedJson;
-
-
-
-}
-    //console.log(req.body.csv)
-    // if (!req.files){
-
-    //       csvConverter.fromString(req.body.csv,function(err, jsonObj){
-
-    //           return res.send({
-    //                    data:jsonObj
-    //                   ,status: 'raw data'
-    //                 });
-
-    //       });
-
-    // }else{
-  
-    //   fs.readFile(req.files.files[0].path, {encoding: 'utf-8'}, function(err,data){
-    //     var csvConverter=new Converter({});
-    //         csvConverter.fromString(data,function(err, jsonObj){
-    //           return res.send({
-    //              data:jsonObj
-    //             ,status: 'raw data'
-    //           });
-    //         });//CSV convert
-    //         fs.unlinkSync(req.files.files[0].path);
-    //   });//file read
-
-    // }
-
-
-
-
 
 
 var getcsv=function(files, body, cb){

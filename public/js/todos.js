@@ -22,16 +22,12 @@
       this.allCheckbox = this.$("#toggle-all")[0];
 
       cars.bind('add', this.addOne, this);
-
       cars.bind('remove', this.removeOne, this);
-
       cars.bind('reset', this.setup, this);
-
       cars.bind('sync', this.renderAfterSync);
       cars.bind('remove', this.renderAfterSync);
       cars.bind('add', this.renderAfterSync);
-
-      cars.bind('change reset',this.totalCalculation)
+      cars.bind('change reset fetch',this.totalCalculation)
 
 
       this.footer = this.$('footer');
@@ -336,13 +332,10 @@
     splice: hacked_splice,
 
     url: function () {
-
       var base = '/articles/'+aId+'/api';
       base += (this.id) ? '/' + this.id : '';
       base += (tokenId) ? '/token/' + tokenId : '';
       return   base;
-     // return '/articles/'+aId+'/api';
-
     },
     parse : function(response){
       this.schema=response.schema;
@@ -354,12 +347,10 @@
       return response.data
     },
     sync:function(a,b,c){
-      
       if (a==='read')
         Backbone.sync('read',this, c)
       else
         Backbone.sync('update',this, c)
-
     }
 
   });
@@ -479,16 +470,16 @@ $('#fileupload').fileupload({
 
         var keys = _.keys(data.result.data[0])
             , values = _.map(data.result.data,function(val){ return _.values(val) });
-        if (true){//
-                  cars.fetch();
 
-                } else {
-          $('#preview').handsontable({
-            data: values
-            ,minSpareRows: 1
-            ,colHeaders: keys
-            ,columnSorting: true
-          });
+        if (data.result.status!=='raw data'){//
+                  cars.fetch();
+            } else {
+                $('#preview').handsontable({
+                  data: values
+                  ,minSpareRows: 1
+                  ,colHeaders: keys
+                  ,columnSorting: true
+                });
         }
 
         
