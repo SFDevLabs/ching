@@ -125,7 +125,15 @@ var parseTimeQuantity = function(val){
         //This contains the facotrs whuch parse the json returned from CSV.
         switch (key) {
           case "dingKey":
-            rule=tsheet
+            rule=function(val){
+              return {
+                    date: val.Date?new Date(val.Date.split('-')):null
+                  , qty : val.Time?parseTimeQuantity(val.Time):null
+                  , item : val.User?val.User:''+' - '+val.Project?val.Project:''
+                  , note : val.Comment?val.Comment:null
+                  , type : 'Time'
+              }
+            }
             break;
           case "tsheets":
             rule=tsheet
