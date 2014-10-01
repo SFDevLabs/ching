@@ -1,56 +1,56 @@
-extends ../layouts/default
+//- extends ../layouts/default
 
-block main
-  h1= title
-  hr
+//- block main
+//-   h1= title
+//-   hr
 
-block content
-  - var action = '/articles'
-  - action += article.isNew? '' : '/' + article.id
+//- block content
+//-   - var action = '/articles'
+//-   - action += article.isNew? '' : '/' + article.id
 
-  - each viewer, i in article.viewers
-    ul
-      li
-        form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
-          span.viewer= viewer
-          input(type='hidden', name='_csrf', value="#{csrf_token}")
-          input(type="hidden", name="_method", value="DELETE")
-          button.btn.btn-danger.btn-link.error(type="submit") delete
+//-   - each viewer, i in article.viewers
+//-     ul
+//-       li
+//-         form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
+//-           span.viewer= viewer
+//-           input(type='hidden', name='_csrf', value="#{csrf_token}")
+//-           input(type="hidden", name="_method", value="DELETE")
+//-           button.btn.btn-danger.btn-link.error(type="submit") delete
 
-  .row
-    .col-md-8
-      form.form-horizontal(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
+//-   .row
+//-     .col-md-8
+//-       form.form-horizontal(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
 
-        input(type="hidden", name="_csrf", value="#{csrf_token}")
+//-         input(type="hidden", name="_csrf", value="#{csrf_token}")
 
-        input(type="hidden", name="_method", value="POST")
+//-         input(type="hidden", name="_method", value="POST")
 
-        .form-group
-          label.col-sm-2.control-label(for='title') Email
-          .col-sm-10
-            input.form-control#title(type='text', name="email", placeholder='Enter a new email')
+//-         .form-group
+//-           label.col-sm-2.control-label(for='title') Email
+//-           .col-sm-10
+//-             input.form-control#title(type='text', name="email", placeholder='Enter a new email')
 
-        .form-group
-          label.col-sm-2.control-label(for='title') Organization
-          .col-sm-10
-            input.form-control#title(type='text', name="organization", placeholder='Enter an Organization Name')
-        .form-group
-          label.col-sm-2.control-label(for='title') Firstname
-          .col-sm-10
-            input.form-control#title(type='text', name="firstname", placeholder='Firstname')
+//-         .form-group
+//-           label.col-sm-2.control-label(for='title') Organization
+//-           .col-sm-10
+//-             input.form-control#title(type='text', name="organization", placeholder='Enter an Organization Name')
+//-         .form-group
+//-           label.col-sm-2.control-label(for='title') Firstname
+//-           .col-sm-10
+//-             input.form-control#title(type='text', name="firstname", placeholder='Firstname')
 
-        .form-group
-          label.col-sm-2.control-label(for='title') Lastname
-          .col-sm-10
-            input.form-control#title(type='text', name="lastname", placeholder='Lastname')
+//-         .form-group
+//-           label.col-sm-2.control-label(for='title') Lastname
+//-           .col-sm-10
+//-             input.form-control#title(type='text', name="lastname", placeholder='Lastname')
 
 
-        .form-group
-          .col-sm-offset-2.col-sm-10
-            button.btn.btn-primary(type='submit') Add
-            | &nbsp;
-            a.btn(href='/articles/'+article.id, title="cancel") Back
+//-         .form-group
+//-           .col-sm-offset-2.col-sm-10
+//-             button.btn.btn-primary(type='submit') Add
+//-             | &nbsp;
+//-             a.btn(href='/articles/'+article.id, title="cancel") Back
 
-    .col-md-4
-      - if (!article.isNew && article.image && article.image.files && article.image.files.length)
-        img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
+//-     .col-md-4
+//-       - if (!article.isNew && article.image && article.image.files && article.image.files.length)
+//-         img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
