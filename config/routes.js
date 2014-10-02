@@ -125,7 +125,10 @@ module.exports = function (app, passport) {
   app.post('/articles/:id/viewer', articleAuth, viewers.create)
   app.post('/articles/:id/send', articleAuth, viewers.sendInvoice)
   app.del('/articles/:id/viewer/:viewerId', articleAuth, viewers.destroy)
-  app.get('/articles/:id/viewer', articleAuth, viewers.share)
+  //app.get('/articles/:id/viewer', articleAuth, viewers.share)
+  app.get('/articles/:id/pdf', viewerAuth, articles.pdf)
+
+
 
 
 

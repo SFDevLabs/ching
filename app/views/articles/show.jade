@@ -61,9 +61,6 @@ block content
             - var name = article.user.name ? article.user.name : article.user.username
             p To:&nbsp;
               a(href="/users/"+article.user._id)= name
-            //- a.btn.subtle.right(href='/articles/'+article._id+'/viewer', title="edit")
-            //-   span.typcn.typcn-user-add
-            //-     |  Add Recipient
             hr
             - each viewer, i in article.viewers
               p.muted='organization:'
@@ -74,6 +71,10 @@ block content
               span=viewer.user.lastname
               span ,&nbsp;
               span=viewer.user.firstname
+              hr
+              a.btn.btn-danger.btn-link.error(href="/articles/" + article._id + "/pdf") Download PDF 
+              button.btn.btn-danger.btn-link.error(type="submit") Download PDF 
+              hr
               form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
                 input(type='hidden', name='_csrf', value="#{csrf_token}")
                 input(type="hidden", name="_method", value="DELETE")

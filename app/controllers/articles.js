@@ -9,9 +9,9 @@ var mongoose = require('mongoose')
   , extend = require('util')._extend
   , fs    = require('fs')
   , Converter=require("csvtojson").core.Converter
-  , _ = require("underscore");
-
-
+  , _ = require("underscore")
+  , pdfDocument = require( "pdfkit")
+  , itemsSchema = require('../models/article').itemsSchema;
 
 /**
  * upload
@@ -535,4 +535,174 @@ exports.destroy = function(req, res){
     req.flash('info', 'Deleted successfully')
     res.redirect('/articles')
   })
+}
+
+
+var formateDate = function(d){
+  var string = '';
+  string=d.getDate()+'/' // Returns the date
+  string+=d.getMonth()+'/' // Returns the month
+  string+=d.getFullYear() // Returns the year
+  return string;
+}
+
+exports.pdf = function(req, res){
+
+    console.log(req.article.title)
+    //return res.send('!ha');
+
+
+
+
+    // // Create PDF
+    var doc = new pdfDocument();
+
+    var m=doc.font('Times-Roman', 13)
+    
+    // m.text('jeff')
+    // m.addPage();
+    // m.text('jeff')
+
+
+    
+
+    var drawRows = function(rows, margin){
+
+        var rowHeight = 55;
+
+        _.keys(itemsSchema).forEach(function(key){
+            var colIndex = itemsSchema[key].columnPosition,
+                rowWidth =55;//itemsSchema[key].printColWidth
+            m.text(key?String(key):'', margin.left+rowWidth*colIndex, margin.top );
+        });
+
+        rows.forEach(function(rowObj, rowIndex){
+            var rowWidthIndex = 0;
+              _.keys(itemsSchema).forEach(function(key){
+                  var colIndex = itemsSchema[key].columnPosition,
+                      rowWidth =55,//itemsSchema[key].printColWidth,
+                      content;
+                    // var filtered= _.values(itemsSchema).filter(function(val){return val.columnPosition<colIndex}).map(function(val){ return val.printColWidth})
+                    //     ,sum = filtered.length?filtered.reduce(function(a,b){ return a+b}):0;
+
+                    //                     console.log(sum)
+
+
+                  if (key==='date'){
+                    content = rowObj[key]?formateDate(rowObj[key]):'';
+                  }else{
+                    content = rowObj[key]?String(rowObj[key]):''
+                  }
+
+                  // if (key==='note'){
+
+                  // }
+                  
+                  doc.text(
+                    content, 
+                    margin.left+rowWidth*colIndex, 
+                    (margin.top+rowHeight)+(rowHeight*rowIndex), 
+                    {width: rowWidth,
+                     height:55} 
+                    );
+                   //rowWidthIndex+=rowWidth; ///almost pull objects and sort them
+
+              }) 
+
+        });
+         
+    }
+
+    // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
+    // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
+
+
+    // drawRows(req.article.items,{left:50,top:50})
+    // console.log(req.article.items.length)
+
+     req.article.items.forEach(function(val, i){
+
+        var perPage = 12
+          , margin = {left:50,top:50};
+
+        if (i===0){
+          drawRows(req.article.items.slice(i,i+perPage),margin);
+        }else if ( (i % perPage)===0){
+          doc.addPage();
+          drawRows(req.article.items.slice(i,i+perPage), margin);
+        }
+
+     });
+
+    // req.article.items.forEach(function(rowObj, rowIndex){
+
+    //       _.keys(itemsSchema).forEach(function(key){
+    //           var colIndex = itemsSchema[key].columnPosition;
+    //           doc.text(rowObj[key]?String(rowObj[key]).slice(0,5):'', 40+40*colIndex, 60+30*rowIndex );
+    //       })  
+
+    // });
+
+    // Write headers
+    res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Access-Control-Allow-Origin': '*',
+        'Content-Disposition': 'attachment; filename='+req.article.title+'.pdf',
+    });
+
+
+    // Pipe generated PDF into response
+    doc.pipe(res);
+    doc.end();
+    //doc=null;
+
+
+  // // create a document and pipe to a blob
+  // var doc = new PDFDocument();
+  // //var stream = doc.pipe(blobStream());
+
+  // // draw some text
+  // doc.fontSize(25)
+  //    .text('Here is some vector graphics...', 100, 80);
+     
+  // // some vector graphics
+  // doc.save()
+  //    .moveTo(100, 150)
+  //    .lineTo(100, 250)
+  //    .lineTo(200, 250)
+  //    .fill("#FF3300");
+     
+  // doc.circle(280, 200, 50)
+  //    .fill("#6600FF");
+     
+  // // an SVG path
+  // doc.scale(0.6)
+  //    .translate(470, 130)
+  //    .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
+  //    .fill('red', 'even-odd')
+  //    .restore();
+     
+  // // and some justified text wrapped into columns
+  // doc.text('And here is some wrapped text...', 100, 300)
+  //    .font('Times-Roman', 13)
+  //    .moveDown()
+  //    .text(lorem, {
+  //      width: 412,
+  //      align: 'justify',
+  //      indent: 30,
+  //      columns: 2,
+  //      height: 300,
+  //      ellipsis: true
+  //    });
+
+  // doc.pipe(res)
+
+     
+  // // end and display the document in the iframe to the right
+  // doc.end();
+  // stream.on('finish', function() {
+  //   iframe.src = stream.toBlobURL('application/pdf');
+  // });
+
+
 }

@@ -4,7 +4,7 @@
  */
 
 var mongoose = require('mongoose')
-  , Imager = require('imager')
+  , Imager = require('Imager')
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
   , imagerConfig = require(config.root + '/config/imager.js')
@@ -39,8 +39,8 @@ var itemsSchema = {
     date: {type: Date, default : null, format: 'mm/dd/yy', typeString:'date',columnPosition:3, displayName:'Date', colWidth:100},
     cost:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:1, displayName:'Cost/Rate', colWidth:160},
     qty:{type : Number, default : null, format: '0,0[.]0000', typeString:'number',columnPosition:2, displayName:'Quantity/Hours', colWidth:160},
-    tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4, displayName:'Tax 1', colWidth:80},
-    tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5, displayName:'Tax 2', colWidth:80},
+    tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4, displayName:'Tax 1', colWidth:60},
+    tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5, displayName:'Tax 2', colWidth:60},
     type:{type : String, default : 'Time', format: 'dropdown', dropdownOptions: ['Time','Item'], typeString:'string',columnPosition:6, displayName:'Time | Item', colWidth:80},
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:0, displayName:'Item/Service Desc.', colWidth:180},
     total:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:8, displayName:'Total', colWidth:100}

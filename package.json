@@ -36,7 +36,7 @@
     "passport-github": "latest",
     "passport-google-oauth": "latest",
     "passport-linkedin": "latest",
-    "imager": "latest",
+    "imager": "0.4.0",
     "winston": "latest",
     "notifier": "latest",
     "async": "latest",
@@ -45,7 +45,8 @@
     "stylus":"latest",
     "sendgrid":"latest",
     "csvtojson":"latest",
-    "underscore" : "latest"
+    "underscore" : "latest",
+    "pdfkit":"latest"
 
   },
   "devDependencies": {
