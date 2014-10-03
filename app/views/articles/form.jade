@@ -37,6 +37,11 @@ block content
               input.form-control#tags(type='text', name="tags", value=article.tags, placeholder='Enter the tags')
 
           .form-group
+            label.col-sm-2.control-label(for='tags') Net
+            .col-sm-10
+              input.form-control#tags(type='number', name="net", value=article.net, placeholder='net')
+
+          .form-group
             .col-sm-offset-2.col-sm-10
               button.btn.btn-primary(type='submit') Save
               | &nbsp;

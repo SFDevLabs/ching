@@ -101,12 +101,7 @@ module.exports = function (app, config, passport) {
 
       // You need to tell your templates about your function
       // which is done by passing your function to res.locals
-      res.locals.formatCurrency =  function(num) {
-        var p = num.toFixed(2).split(".");
-        return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
-            return  num + (i && !(i % 3) ? "," : "") + acc;
-        }, "") + "." + p[1];
-      };
+      res.locals.formatCurrency =  require('../lib/utils').formatCurrency;
       next();
     });
 

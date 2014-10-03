@@ -105,6 +105,7 @@ block content
       .col-md-4
         - if (!article.isNew && article.image && article.image.files && article.image.files.length)
           img(src=article.image.cdnUri + '/mini_' + article.image.files[0])
+    .net=article.net
     .row
       .col-md-4
           - if (req.user && req.article && req.article.user.id===req.user.id)

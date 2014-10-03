@@ -14,6 +14,7 @@ block content
           h4
             a(href='/articles/'+article._id, title=viewer)=viewer
           p= article.body
+          .clock
 
           .meta
             span.muted= formatDatetime(article.createdAt)
@@ -21,7 +22,8 @@ block content
               | &nbsp; - &nbsp;
               span Total &nbsp;
               span(href="/users/"+article.user._id)= formatCurrency(article.total)
-              
+              |&nbsp; - &nbsp;
+              span=article.net
             - if (article.tags)
               | &nbsp; - &nbsp;
               span Tags &nbsp;
@@ -30,6 +32,7 @@ block content
                 a.tag(href="/tags/"+tag)= tag
                 | &nbsp;&nbsp;
 
+
       - if (pages > 1)
         ul.pagination
           != createPagination(pages, page)
@@ -37,3 +40,7 @@ block content
       h2.gray No invoices yet...
       p
         a(href="/articles/new", class="button") Create an Invoice
+
+block subfoot
+  script(type="text/javascript", src='/js/vendor/d3.js')
+  script(type="text/javascript", src='/js/index-page.js')
