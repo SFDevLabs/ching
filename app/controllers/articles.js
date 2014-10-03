@@ -557,7 +557,7 @@ exports.pdf = function(req, res){
     // // Create PDF
     var doc = new pdfDocument();
 
-    var m=doc.font('Times-Roman', 13)
+    var m=doc.font('Times-Roman', 12)
     
     // m.text('jeff')
     // m.addPage();
@@ -566,30 +566,54 @@ exports.pdf = function(req, res){
 
     
 
-    var drawRows = function(rows, margin){
+    var drawRows = function(rows, margin,rowHeight,colPadding){
 
-        var rowHeight = 55;
+        var keys = _.keys(itemsSchema).sort(function(key,keyTwo){
+              return itemsSchema[key].columnPosition>itemsSchema[keyTwo].columnPosition
+            });
+            console.log(keys)
 
-        _.keys(itemsSchema).forEach(function(key){
-            var colIndex = itemsSchema[key].columnPosition,
-                rowWidth =55;//itemsSchema[key].printColWidth
-            m.text(key?String(key):'', margin.left+rowWidth*colIndex, margin.top );
+        var rowWidthIndexHeader = 0;
+        keys.forEach(function(key, colIndex){
+
+            //var colIndex = itemsSchema[key].columnPosition,
+            var rowWidth =itemsSchema[key].printColWidth;
+                console.log(key,colIndex,rowWidth,rowWidthIndexHeader)
+
+            m.text(key?String(key):''
+              , margin.left+rowWidthIndexHeader
+              , margin.top 
+              , {width: rowWidth,
+                  height:rowHeight
+                });
+            rowWidthIndexHeader+=(rowWidth+colPadding);
+
         });
 
         rows.forEach(function(rowObj, rowIndex){
             var rowWidthIndex = 0;
-              _.keys(itemsSchema).forEach(function(key){
+
+                   // console.log(rowObj)
+
+              keys.forEach(function(key){
                   var colIndex = itemsSchema[key].columnPosition,
-                      rowWidth =55,//itemsSchema[key].printColWidth,
+                      rowWidth =itemsSchema[key].printColWidth,
                       content;
                     // var filtered= _.values(itemsSchema).filter(function(val){return val.columnPosition<colIndex}).map(function(val){ return val.printColWidth})
                     //     ,sum = filtered.length?filtered.reduce(function(a,b){ return a+b}):0;
 
                     //                     console.log(sum)
 
+                    //console.log(key,rowObj[key])
 
                   if (key==='date'){
                     content = rowObj[key]?formateDate(rowObj[key]):'';
+                  }else if(['cost','total'].indexOf(key)!==-1){
+                    //content = rowObj[key]?rowObj[key].toFixed(2):'';
+                    content = rowObj[key]?utils.formatCurrency(rowObj[key]):'';
+                  }else if (['tax1','tax2','qty'].indexOf(key)!==-1){
+                    content = rowObj[key]?rowObj[key].toFixed(2):'';
+                    content = content?String(content):'';
                   }else{
                     content = rowObj[key]?String(rowObj[key]):''
                   }
@@ -600,12 +624,12 @@ exports.pdf = function(req, res){
                   
                   doc.text(
                     content, 
-                    margin.left+rowWidth*colIndex, 
+                    margin.left+rowWidthIndex, 
                     (margin.top+rowHeight)+(rowHeight*rowIndex), 
                     {width: rowWidth,
-                     height:55} 
-                    );
-                   //rowWidthIndex+=rowWidth; ///almost pull objects and sort them
+                     height:rowHeight
+                   });
+                   rowWidthIndex+=(rowWidth+colPadding); ///almost pull objects and sort them
 
               }) 
 
@@ -622,14 +646,16 @@ exports.pdf = function(req, res){
 
      req.article.items.forEach(function(val, i){
 
-        var perPage = 12
+        var perPage = 15
+          , rowHeight = 45
+          , colPadding = 5
           , margin = {left:50,top:50};
 
         if (i===0){
-          drawRows(req.article.items.slice(i,i+perPage),margin);
+          drawRows(req.article.items.slice(i,i+perPage),margin, rowHeight, colPadding);
         }else if ( (i % perPage)===0){
           doc.addPage();
-          drawRows(req.article.items.slice(i,i+perPage), margin);
+          drawRows(req.article.items.slice(i,i+perPage),margin, rowHeight, colPadding);
         }
 
      });
