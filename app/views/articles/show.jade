@@ -1,115 +1,18 @@
 extends ../layouts/default
 
-block main
+block extrahead
   link(rel='stylesheet', href='/css/jquery.handsontable.bootstrap.css')
   link(rel='stylesheet', href='/css/jquery.handsontable.full.css')
   link(rel='stylesheet', href='/css/jquery-ui.min.css')
   link(rel='stylesheet', href='/css/jquery-ui.ching.theme.css')
 
-
-
-block content
-  .container.invoice-form
-    -if (article.title)
-      h1= article.title
-    -else
-      h1 New Invoice 
-
-
-    .row
-      .col-md-8
-        h3
-          | Add Recipeint
-        form.form-horizontal(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
-          input(type="hidden", name="_csrf", value="#{csrf_token}")
-          input(type="hidden", name="_method", value="POST")
-          .form-group
-            label.col-sm-2.control-label(for='title') Email
-            .col-sm-10
-              input.form-control#title(type='text', name="email", placeholder='Enter a new email')
-
-          .form-group
-            label.col-sm-2.control-label(for='title') Organization
-            .col-sm-10
-              input.form-control#title(type='text', name="organization", placeholder='Enter an Organization Name')
-          .form-group
-            label.col-sm-2.control-label(for='title') Firstname
-            .col-sm-10
-              input.form-control#title(type='text', name="firstname", placeholder='Firstname')
-
-          .form-group
-            label.col-sm-2.control-label(for='title') Lastname
-            .col-sm-10
-              input.form-control#title(type='text', name="lastname", placeholder='Lastname')
-
-
-          .form-group
-            .col-sm-offset-2.col-sm-10
-              button.btn.subtle(type='submit')
-                span.typcn.typcn-user-add
-                  |  Add Recipient
-
-      .col-md-4
-        - if (!article.isNew && article.image && article.image.files && article.image.files.length)
-          img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
-
-    .row
-      .col-md-8
-        p=article.body
-        .meta
-          - if (article.user)
-            - var name = article.user.name ? article.user.name : article.user.username
-            p To:&nbsp;
-              a(href="/users/"+article.user._id)= name
-            hr
-            - each viewer, i in article.viewers
-              p.muted='organization:'
-              p=viewer.user.organization
-              p.muted='email:'
-              p=viewer.user.email
-              p.muted='Name:'
-              span=viewer.user.lastname
-              span ,&nbsp;
-              span=viewer.user.firstname
-              hr
-              a.btn.btn-danger.btn-link.error(href="/articles/" + article._id + "/pdf") Download PDF 
-              button.btn.btn-danger.btn-link.error(type="submit") Download PDF 
-              hr
-              form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
-                input(type='hidden', name='_csrf', value="#{csrf_token}")
-                input(type="hidden", name="_method", value="DELETE")
-                button.btn.btn-danger.btn-link.error(type="submit") delete 
-            hr
-            p From:&nbsp;
-              p.muted='organization:'
-              p=article.user.organization
-              p=article.user.email
-              span=article.user.lastname
-              span=article.user.firstname
-
-
-          - if (article.tags)
-            p Tags &nbsp;
-              - each tag in article.tags.split(',')
-                i.muted.fa.fa-tag &nbsp;
-                a.tag(href="/tags/"+tag)= tag
-                | &nbsp;&nbsp;
-          hr
-          p 
-            |created:
-            span.muted= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
-          p 
-            |status:
-            span.muted= article.status
-
-      .col-md-4
-        - if (!article.isNew && article.image && article.image.files && article.image.files.length)
-          img(src=article.image.cdnUri + '/mini_' + article.image.files[0])
-    .net=article.net
-    .row
-      .col-md-4
+block main
+  .controls
+    .container
+      .row
+        .col-md-8
           - if (req.user && req.article && req.article.user.id===req.user.id)
-            a.btn.btn-default(href='/articles/'+article._id+'/edit', title="edit") Edit
+            button.btn.btn-default.btn-edit Edit
             | &nbsp;
 
             form(action="/articles/"+article.id, method="post")
@@ -123,6 +26,152 @@ block content
               input(type='hidden', name='_csrf', value="#{csrf_token}")
               input(type="hidden", name="_method", value="POST")
               button.btn.btn-info(type="submit") Send
+
+
+
+
+block content
+  .container.invoice-form.view-state
+    div.left
+      -if (article.title)
+        h1= article.title
+      -else
+        h1 Invoice 
+      p 
+        |Created: 
+        span.lightgray= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
+      p
+        | Status: 
+        span.lightgray= article.status
+
+    
+
+      .col-md-4
+        - if (!article.isNew && article.image && article.image.files && article.image.files.length)
+          img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
+
+    .row
+      .col-md-8
+        p=article.body
+
+        .meta.clear.show-view
+          form(class="block edit-content", method="post", action=action, enctype="multipart/form-data", role="form")
+
+            input(type="hidden", name="_csrf", value="#{csrf_token}")
+
+            - if (!article.isNew)
+              input(type="hidden", name="_method", value="PUT")
+
+            .form-group
+              label.control-label(for='title') Title
+              input.form-control#title(type='text', name="title", value=article.title, placeholder='Enter the title')
+
+            .form-group
+              label.control-label(for='file') Image
+              input.form-control#file(type='file', name="image[]")
+
+            .form-group
+              label.control-label(for='desc') Body
+              textarea.form-control#desc(rows="5", name="body", placeholder='Enter the article description')=article.body
+
+            .form-group
+              label.control-label(for='tags') Tags
+              input.form-control#tags(type='text', name="tags", value=article.tags, placeholder='Enter the tags')
+
+            .form-group
+              label.control-label(for='tags') Net
+              input.form-control#tags(type='number', name="net", value=article.net, placeholder='net')
+
+            .form-group
+              .col-sm-10
+                button.left-float.btn.btn-primary(type='submit') Save
+                | &nbsp;
+                a.right-float.btn(href='/articles', title="cancel") Cancel
+
+            .col-md-4
+              - if (!article.isNew && article.image && article.image.files && article.image.files.length)
+                img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
+          div.view-content
+            - if (article.user)
+              - var name = article.user.name ? article.user.name : article.user.username
+              .clear
+                p.col-sm-2 To:&nbsp;
+                  a(href="/users/"+article.user._id)= name
+              hr.clear
+              -if(article.viewers.length > 0)
+                .clear
+                  - each viewer, i in article.viewers
+                    p.muted='organization:'
+                    p=viewer.user.organization
+                    p.muted='email:'
+                    p=viewer.user.email
+                    p.muted='Name:'
+                    span=viewer.user.lastname
+                    span ,&nbsp;
+                    span=viewer.user.firstname
+                    hr
+                    a.btn.btn-danger.btn-link.error(href="/articles/" + article._id + "/pdf") Download PDF 
+                    button.btn.btn-danger.btn-link.error(type="submit") Download PDF 
+                    hr
+                    form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
+                      input(type='hidden', name='_csrf', value="#{csrf_token}")
+                      input(type="hidden", name="_method", value="DELETE")
+                      button.btn.btn-danger.btn-link.error(type="submit") delete 
+                  hr
+              .clear
+                p.col-sm-2 From:&nbsp;
+                  -if(article.user.organization)
+                    p.muted='organization:'
+                    p=article.user.organization
+                  p.col-sm-2=article.user.email
+                  span=article.user.lastname
+                  span=article.user.firstname
+
+
+                - if (article.tags)
+                  p Tags &nbsp;
+                    - each tag in article.tags.split(',')
+                      i.muted.fa.fa-tag &nbsp;
+                      a.tag(href="/tags/"+tag)= tag
+                      | &nbsp;&nbsp;
+      .col-md-4
+        button.right.btn.subtle.add-recipient-trigger.closed
+          span.typcn.typcn-user-add
+            |  Add Recipient
+        .row.clear
+          .right-float.add-recipient-form
+            div.add-recipient-position
+              span.close-button
+                span.typcn.typcn-delete
+              form.block(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
+                input(type="hidden", name="_csrf", value="#{csrf_token}")
+                input(type="hidden", name="_method", value="POST")
+                .form-group
+                  label.control-label(for='title') Email
+                  input.form-control#title(type='text', name="email")
+                .form-group
+                  label.control-label(for='title') First Name
+                  input.form-control#title(type='text', name="firstname")
+                .form-group
+                  label.control-label(for='title') Last Name
+                  input.form-control#title(type='text', name="lastname")
+                .form-group
+                  label.control-label(for='title') Organization <em><strong>(Optional)</strong></em>
+                  input.form-control#title(type='text', name="organization")
+                .form-group
+                  button.btn.subtle(type='submit')
+                    span.typcn.typcn-user-add
+                      |  Save
+      .clear
+        hr
+        .col-md-8
+          
+
+      .col-md-4
+        - if (!article.isNew && article.image && article.image.files && article.image.files.length)
+          img(src=article.image.cdnUri + '/mini_' + article.image.files[0])
+    .net=article.net
+
 
   .container
     .row
@@ -196,3 +245,29 @@ block subfoot
   script(type="text/javascript", src="/js/vendor/jquery.iframe-transport.js")
   script(type="text/javascript", src="/js/vendor/jquery.fileupload.js")
   script(type="text/javascript", src="/js/todos.js")
+  script.
+    $( document ).ready(function() {
+      $(".add-recipient-form").hide();
+      $(".invoice-form").on("click", ".add-recipient-trigger.closed", function() {
+        $(".add-recipient-form").fadeIn();
+        $(".add-recipient-trigger").removeClass("closed").addClass("opened");
+      });
+      $(".invoice-form").on("click", ".add-recipient-trigger.opened, .add-recipient-form .close-button", function() {
+        $(".add-recipient-form").fadeOut();
+        $(".add-recipient-trigger").removeClass("opened").addClass("closed");
+      });
+
+      $(".edit-content").hide();
+      $("body").addClass("view-state");
+      $("body.view-state").on("click", ".btn-edit", function() {
+        $(".view-content").fadeOut("fast", function() {
+          $(".edit-content").fadeIn("fast");
+          $("body").removeClass("view-state").addClass("edit-state");          
+        });
+      });
+      $(".invoice-form.edit-state").on("click", ".add-recipient-trigger.opened", function() {
+        $(".add-recipient-form").fadeOut();
+        $(".add-recipient-trigger").removeClass("opened").addClass("closed");
+      });
+
+    });

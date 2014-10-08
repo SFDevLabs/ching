@@ -1,7 +1,8 @@
 extends ../layouts/default
 
 block main
-  h1= title
+  .container.invoice-form
+    h1= title
 
 block content
   - var action = '/articles'
@@ -9,7 +10,7 @@ block content
   .container
     .row
       .col-md-8
-        form.form-horizontal(method="post", action=action, enctype="multipart/form-data", role="form")
+        form(class="block", method="post", action=action, enctype="multipart/form-data", role="form")
 
           input(type="hidden", name="_csrf", value="#{csrf_token}")
 
@@ -17,32 +18,27 @@ block content
             input(type="hidden", name="_method", value="PUT")
 
           .form-group
-            label.col-sm-2.control-label(for='title') Title
-            .col-sm-10
-              input.form-control#title(type='text', name="title", value=article.title, placeholder='Enter the title')
+            label.control-label(for='title') Title
+            input.form-control#title(type='text', name="title", value=article.title, placeholder='Enter the title')
 
           .form-group
-            label.col-sm-2.control-label(for='file') Image
-            .col-sm-10
-              input.form-control#file(type='file', name="image[]")
+            label.control-label(for='file') Image
+            input.form-control#file(type='file', name="image[]")
 
           .form-group
-            label.col-sm-2.control-label(for='desc') Body
-            .col-sm-10
-              textarea.form-control#desc(rows="5", name="body", placeholder='Enter the article description')=article.body
+            label.control-label(for='desc') Body
+            textarea.form-control#desc(rows="5", name="body", placeholder='Enter the article description')=article.body
 
           .form-group
-            label.col-sm-2.control-label(for='tags') Tags
-            .col-sm-10
-              input.form-control#tags(type='text', name="tags", value=article.tags, placeholder='Enter the tags')
+            label.control-label(for='tags') Tags
+            input.form-control#tags(type='text', name="tags", value=article.tags, placeholder='Enter the tags')
 
           .form-group
-            label.col-sm-2.control-label(for='tags') Net
-            .col-sm-10
-              input.form-control#tags(type='number', name="net", value=article.net, placeholder='net')
+            label.control-label(for='tags') Net
+            input.form-control#tags(type='number', name="net", value=article.net, placeholder='net')
 
           .form-group
-            .col-sm-offset-2.col-sm-10
+            .col-sm-10
               button.btn.btn-primary(type='submit') Save
               | &nbsp;
               a.btn(href='/articles', title="cancel") Cancel

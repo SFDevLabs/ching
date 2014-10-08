@@ -8,8 +8,12 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility; }
 
-input, textarea, select {
-  font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+button, input, textarea, select {
+  font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400; }
+
+.row {
+  clear: both; }
 
 body.landing {
   background: #d4e9ec; }
@@ -18,8 +22,8 @@ body.landing {
   float: left;
   text-align: left; }
 
-.right-float {
-  float: right; }
+.left-float {
+  float: left; }
 
 .right {
   float: right;
@@ -27,6 +31,19 @@ body.landing {
 
 .right-float {
   float: right; }
+
+.clear {
+  clear: both; }
+
+em {
+  font-style: italic; }
+
+strong {
+  font-weight: bold; }
+
+em strong, strong em {
+  font-style: italic;
+  font-weight: bold; }
 
 .center {
   text-align: center; }
@@ -37,6 +54,9 @@ body.landing {
 
 .gray {
   color: #aaa; }
+
+.lightgray {
+  color: #bbb; }
 
 a {
   text-decoration: none;
@@ -89,9 +109,14 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   font-size: 3.75em;
   line-height: 1em;
-  margin-bottom: 0.625em; }
-  h1:first-child {
-    margin-top: 0.625em; }
+  margin-bottom: 0.625em;
+  /*&:first-child {
+    margin-top: 0.625em;
+  }
+  */ }
+
+.invoice-form .left p, .invoice-form h1 {
+  margin-bottom: 0; }
 
 h2 {
   font-size: 2.5em;
@@ -133,7 +158,8 @@ form.large label, form.large input, form.large textarea, form.large select, form
   display: block;
   clear: both;
   width: 100%; }
-form.large input:focus, form.block input:focus {
+form.large textarea:focus, form.large input:focus, form.block textarea:focus, form.block input:focus {
+  outline: none;
   border-color: #6c878d; }
 form.large button, form.block button {
   width: auto; }
@@ -142,6 +168,8 @@ form.large label, form.large input, form.large textarea, form.large select, form
   line-height: 1.25em; }
 form .form-group {
   margin-bottom: 1em; }
+  form .form-group:last-child {
+    margin-bottom: 0; }
   form .form-group .line {
     background-color: #d4e9ec;
     width: 40px;
@@ -286,17 +314,53 @@ body.login {
 .sign-up {
   padding-bottom: 5em; }
 
-.invoice-form .btn.right {
-  margin-top: -3.125em; }
+.controls {
+  background: #f5f5f5;
+  width: 100%;
+  clear: both;
+  margin-top: -8px;
+  padding: 10px 0; }
+  .controls form {
+    display: inline-block; }
+
+.invoice-form {
+  padding-top: 2.5em; }
+  .invoice-form .col-md-4 {
+    position: relative; }
+  .invoice-form .add-recipient-position {
+    position: absolute;
+    top: 60px;
+    right: -50%;
+    background: #eee;
+    box-sizing: border-box;
+    padding: 20px;
+    width: 100%;
+    margin-right: 111px;
+    z-index: 1000;
+    border-bottom: 2px solid #aaa; }
+  .invoice-form .close-button span {
+    font-size: 2.5em;
+    position: absolute;
+    right: -0.5em;
+    top: -0.5em;
+    background: #ddd;
+    border-bottom: 2px solid #aaa;
+    padding: 0;
+    border-radius: 100em;
+    vertical-align: bottom;
+    height: 0.85em;
+    width: 0.85em;
+    line-height: 0.75em;
+    text-indent: -0.035em; }
+    .invoice-form .close-button span:hover {
+      color: #c61e00; }
 
 .meta {
-  padding-top: 1.25em;
-  border-bottom: 1px solid #ddd; }
+  padding-top: 1.25em; }
   .meta:last-child {
     margin-bottom: 1.25em; }
-
-.btn.right, .button.right {
-  margin-top: -5.3125em; }
+  .meta hr {
+    margin-top: 0; }
 
 @media (min-width: 1300px) {
   .landing {

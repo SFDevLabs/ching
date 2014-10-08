@@ -385,7 +385,7 @@ exports.new = function(req, res){
 
   var article = new Article({user:req.user.id});
   req.article = article;
-  article.save(function(){
+  article.save(function(err){
 
       if (err) {
         req.flash('error', 'No email')

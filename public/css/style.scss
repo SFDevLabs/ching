@@ -11,6 +11,7 @@ $hover: #90b3bc;
 $block: #d4e9ec;
 
 $gray: #aaa;
+$lightgray: #bbb;
 $gold: #c5af73;
 $green: #76d66b;
 
@@ -41,10 +42,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+button,
 input,
 textarea,
 select {
-  font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;  
+  font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+
+.row {
+  clear: both;
 }
 
 body.landing {
@@ -55,8 +62,8 @@ body.landing {
   float: left;
   text-align: left;
 }
-.right-float{
-  float: right;
+.left-float{
+  float: left;
 }
 .right {
   float: right;
@@ -65,7 +72,23 @@ body.landing {
 .right-float{
   float: right;
 }
+.clear {
+  clear: both;
+}
 
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: bold;
+}
+
+em strong,
+strong em {
+  font-style: italic;
+  font-weight: bold;
+}
 
 
 .center {
@@ -79,6 +102,7 @@ body.landing {
 }
 
 .gray { color: $gray; }
+.lightgray { color: $lightgray; }
 
 a {
   text-decoration: none;
@@ -146,9 +170,15 @@ h1 {
   font-size: 3.75em;
   line-height: 1em;
   margin-bottom: 0.625em;
-  &:first-child {
+  /*&:first-child {
     margin-top: 0.625em;
   }
+  */
+}
+
+.invoice-form .left p,
+.invoice-form h1 {
+  margin-bottom: 0;
 }
 
 h2 {
@@ -212,8 +242,10 @@ form {
       display: block;
       clear: both;
       width: 100%;
-    }  
+    }
+    textarea:focus,
     input:focus {
+      outline: none;
       border-color: $buttonbg;
     }
     button {
@@ -233,6 +265,9 @@ form {
   }
   .form-group {
     margin-bottom: 1em;
+    &:last-child {
+      margin-bottom: 0;
+    }
     .line{
       background-color: $block;
       width: 40px;
@@ -442,23 +477,74 @@ body.login {
 }
 
 // invoice
+.controls {
+  background: #f5f5f5;
+  width: 100%;
+  clear: both;
+  margin-top: -8px;
+  padding: 10px 0;
+  form {
+    display: inline-block;
+  }
+}
 .invoice-form {
+  padding-top: 2.5em;
   .btn.right {
-    margin-top: -3.125em;
+    //margin-top: -3.125em;
+  }
+  .col-md-4 {
+    position: relative;
+  }
+  .add-recipient-trigger {
+
+  }
+  .add-recipient-position {
+    position: absolute;
+    top: 60px;
+    right: -50%;
+    background: #eee;
+    box-sizing: border-box;
+    padding: 20px;
+    width: 100%;
+    margin-right: 111px;
+    z-index: 1000;
+    border-bottom: 2px solid $gray;
+    //box-shadow: 0 2px 0.15625em rgba(0,0,0,0.2);
+  }
+  .close-button span {
+    font-size: 2.5em;
+    position: absolute;
+    right: -0.5em;
+    top: -0.5em;
+    background: #ddd;
+    border-bottom: 2px solid #aaa;
+    padding: 0;
+    border-radius: 100em;
+    vertical-align: bottom;
+    height: 0.85em;
+    width: 0.85em;
+    line-height: 0.75em;
+    text-indent: -0.035em;
+    &:hover {
+      color: $actionbghover;
+    }
   }
 }
 
 // profile
 .meta {
   padding-top: 1.25em;
-  border-bottom: 1px solid #ddd;
+  //border-bottom: 1px solid #ddd;
   &:last-child {
     margin-bottom: 1.25em;
+  }
+  hr {
+    margin-top: 0;
   }
 }
 .btn.right,
 .button.right {
-  margin-top: -5.3125em;
+  //margin-top: -5.3125em;
 }
 
 @media (min-width: 1300px) {
