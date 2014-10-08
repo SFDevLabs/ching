@@ -303,7 +303,7 @@ exports.token  = function(req, res, next, token){
 
 exports.indexRecieved = function(req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
-  var perPage = 30,
+  var perPage = 10,
       userID=req.user?req.user._id:null;
   var options = {
     perPage: perPage,
@@ -322,7 +322,8 @@ exports.indexRecieved = function(req, res){
         title: 'Received Invoices',
         articles: articles,
         page: page + 1,
-        pages: Math.ceil(count / perPage)
+        pages: Math.ceil(count / perPage),
+        count: count
       })
     })
   })
@@ -352,7 +353,7 @@ exports.homeOrSent = function(req, res){
 
 var indexSent = exports.indexSent = function(req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
-  var perPage = 30,
+  var perPage = 10,
       userID=req.user?req.user._id:null;
   var options = {
     perPage: perPage,
@@ -381,9 +382,17 @@ var indexSent = exports.indexSent = function(req, res){
  */
 
 exports.new = function(req, res){
+
   var article = new Article({user:req.user.id});
   req.article = article;
   article.save(function(){
+
+      if (err) {
+        req.flash('error', 'No email')
+        return res.redirect('/articles/'+article._id)
+      }
+      req.flash('success', 'Successfully created article!')
+
       return res.redirect('/articles/' + article._id)
   })
 

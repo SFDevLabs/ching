@@ -1,12 +1,14 @@
 extends ../layouts/default
 
 block main
+  link(rel='stylesheet', href='/css/index-page.css')
   .container
     h1= title
 
 block content
   .container
     - if (articles.length)
+      #area-chart
       - each article in articles
         - var viewer = article.viewers[0]? article.viewers[0].user.organization:'TBD...';
         .article

@@ -58,6 +58,11 @@ var itemsSchema = {
 var ArticleSchema = new Schema({
   viewers:[viewersSchema],
   views: [viewsSchema],
+  notificationSent:[{
+    user: {type : Schema.ObjectId, ref : 'User'},
+    createdAt: { type : Date, default : Date.now },
+    type: {type : String, default : '', trim : true},
+  }],
   title: {type : String, default : '', trim : true},
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
@@ -73,10 +78,14 @@ var ArticleSchema = new Schema({
   },
   createdAt  : {type : Date, default : Date.now},
   items: [itemsSchema],
-  status: {type : String, default : 'draft', trim : true},
+  status: {
+    invoicedOn:{type : Date, default : Date.now},
+    paidOn:{type : Date, default : Date.now}
+  },
+  net: {type : Number, default : 0},
   addresss: {type : String, default : 'draft', trim : true},
   currency: {type : String, default : 'USD', trim : true},
-  net: {type : Number, default : 0}
+  invoiceNumber: {type : Number, default : 0}
 });
 
 ArticleSchema
