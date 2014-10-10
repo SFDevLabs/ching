@@ -22,12 +22,31 @@ var users = require('../app/controllers/users')
   , viewerAuthToken = [auth.article.hasViewAuthorizationToken]
   , userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
 
-
+var mongoose = require('mongoose')
+  , Article = mongoose.model('Article')
 /**
  * Expose routes
  */
 
 module.exports = function (app, passport) {
+
+  // put user into res.locals for easy access from templates
+  app.get('*', function(req, res, next) {
+    var userID=req.user?req.user._id:null;
+    var criteria={
+      'viewers':{$elemMatch: {user:userID}} 
+    }
+    Article.list(criteria, function(err, articles) {
+      var count = Article.count();
+      if (count > 0) {
+        res.locals.received = "yes";
+      }
+      else {
+        res.locals.received = "no";
+      }
+      next();
+    });
+  });
 
   // user routes
   app.get('/login', users.login)

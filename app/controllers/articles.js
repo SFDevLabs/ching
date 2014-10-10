@@ -319,6 +319,7 @@ exports.indexRecieved = function(req, res){
     if (err) return res.render('500')
     Article.count().exec(function (err, count) {
       res.render('articles/index', {
+        invoiceType: 'received',
         title: 'Received Invoices',
         articles: articles,
         page: page + 1,
@@ -366,8 +367,17 @@ var indexSent = exports.indexSent = function(req, res){
 
   Article.list(options, function(err, articles) {
     if (err) return res.render('500')
+    // articlesJSON = _.map(articles, function(val, i){
+    //         console.log(val.status, 'stuff2')
+
+    //   console.log(val.status, 'stuff')
+    //   return val
+    // });
+    console.log(articles[0].statusText)
     Article.count().exec(function (err, count) {
+
       res.render('articles/index', {
+        invoiceType: 'sent',
         title: 'Sent Invoices',
         articles: articles,
         page: page + 1,

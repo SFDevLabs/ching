@@ -2,46 +2,94 @@ extends ../layouts/default
 
 block main
   link(rel='stylesheet', href='/css/index-page.css')
-  .container
-    h1= title
+
 
 block content
-  .container
-    - if (articles.length)
-      #area-chart
-      - each article in articles
-        - var viewer = article.viewers[0]? article.viewers[0].user.organization:'TBD...';
-        .article
-          span.muted clients:
-          h4
-            a(href='/articles/'+article._id, title=viewer)=viewer
-          p= article.body
-          .clock
+  - if (articles.length)
+    - var draftCount = 0;
+    - var sentCount = 0;
+    - var paidCount = 0;
+    - var overdueCount = 0;
+    -each article in articles
+      -if (article.status.text == "draft")
+        -  draftCount++
+      -else if (article.status.text == "sent")
+        -  sentCount++
+      -else if (article.status.text == "paid")
+        -  paidCount++
+      -else if (article.status.text == "overdue")
+        -  overdueCount++
+    - var totalSent = paidCount + sentCount + overdueCount;
+    - var total = totalSent + draftCount;
+    .container.list
+      header.row
+        -if (received == "yes")
+          h1.left.col-md-3= title
+        -else
+          h1.left.col-md-3 Invoices
+        ul.right.counts.col-md-9
+          li.all
+            | All (#{total})
+          li.draft
+            | Drafts (#{draftCount})
+          li.sent
+            | Pending (#{sentCount})
+          li.paid
+            | Paid (#{paidCount})
+          li.overdue
+            | Overdue (#{overdueCount})
+        div.col-lg-12
+          hr
 
-          .meta
-            span.muted= formatDatetime(article.createdAt)
-            if (article.total)
-              | &nbsp; - &nbsp;
-              span Total &nbsp;
-              span(href="/users/"+article.user._id)= formatCurrency(article.total)
-              |&nbsp; - &nbsp;
-              span=article.net
-            - if (article.tags)
-              | &nbsp; - &nbsp;
-              span Tags &nbsp;
-              - each tag in article.tags.split(',')
-                i.muted.fa.fa-tag &nbsp;
-                a.tag(href="/tags/"+tag)= tag
-                | &nbsp;&nbsp;
+      .row
+        //- if this is the received invoices page
+        -if (articles.invoiceType == "received")
+          //- let's put something here like number of days left until the next invoice is due and for how much?
+        -else
+          //- show flow bar chart for incoming cash
+          //- this chart needs to be way shorter. like half its current height.
+          - if (articles.length)
+            -if (totalSent > 1)
+              .chart-wrapper.col-md-12
+                #area-chart
+      .row
+        - each article in articles
+          - var viewer = article.viewers[0]? article.viewers[0].user.organization:'TBD...';
+          a(href='/articles/'+article._id, class="#{article.status.text} article col-md-3 block")
+            p.status #{article.status.text}
+            .content
+              -if (viewer == "TBD...")
+                h2.dim Unspecified Client
+              -else
+                h2=viewer
+              p= article.body
+
+              .meta
+                if (article.total)
+                  | &nbsp; - &nbsp;
+                  span Total &nbsp;
+                  span(href="/users/"+article.user._id)= formatCurrency(article.total)
+                  |&nbsp; - &nbsp;
+                  span=article.net
+                - if (article.tags)
+                  | &nbsp; - &nbsp;
+                  span Tags &nbsp;
+                  - each tag in article.tags.split(',')
+                    i.muted.fa.fa-tag &nbsp;
+                    a.tag(href="/tags/"+tag)= tag
+                    | &nbsp;&nbsp;
+              p.date.muted
+                | Created 
+                span= formatDatetime(article.createdAt)
 
 
       - if (pages > 1)
-        ul.pagination
+        ul.pagination.row
           != createPagination(pages, page)
-    - else
-      h2.gray No invoices yet...
-      p
-        a(href="/articles/new", class="button") Create an Invoice
+  - else
+    h2.gray No invoices yet...
+    p
+      a(href="/articles/new", class="button") Create an Invoice
 
 block subfoot
   script(type="text/javascript", src='/js/vendor/d3.js')

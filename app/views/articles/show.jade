@@ -27,28 +27,56 @@ block main
               input(type="hidden", name="_method", value="POST")
               button.btn.btn-info(type="submit") Send
 
+            a.btn(href="/articles/" + article._id + "/pdf") Download PDF 
+            //- button.btn.btn-danger.btn-link.error(type="submit") Download PDF 
+
 
 
 
 block content
   .container.invoice-form.view-state
-    div.left
-      -if (article.title)
-        h1= article.title
-      -else
-        h1 Invoice 
-      p 
-        |Created: 
-        span.lightgray= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
-      p
-        | Status: 
-        span.lightgray= article.status
-
-    
-
-      .col-md-4
+    .row
+      div.left.col-md-8
         - if (!article.isNew && article.image && article.image.files && article.image.files.length)
-          img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
+          img(class="col-md-3", src=article.image.cdnUri + "/mini_" + article.image.files[0])
+          - var hasImage = "col-md-9"
+        - else
+          - var hasImage = ""
+        -if (article.status.text == "sent")
+          h2(class="#{article.status.text} #{hasImage}") #{article.status.text} #{article.status.invoicedOn}
+        -else if (article.status.text == "paid")
+          h2(class="#{article.status.text} #{hasImage}") #{article.status.text} #{article.status.paidOn}
+        -else if (article.status.text == "overdue")
+          -var today = new Date()
+          -var pastDue = new Date((today.getTime() - article.dueOn.getTime())).toDateString()
+          h2(class="#{article.status.text} #{hasImage}") #{article.status.text} #{pastDue}
+        -else
+          h2(class="#{article.status.text} #{hasImage}") #{article.status.text}
+
+        -if (article.title)
+          h1= article.title
+        -else
+          h1 Invoice 
+        -if (article.status.text != "draft" && req.user && req.article.user.id===req.user.id)
+          h3 Views:&nbsp;
+            - each view in article.views
+              - if (view.user!=null)
+                .view
+                  span.firstname=view.user.firstname
+                  | &nbsp;
+                  span.lastname=view.user.lastname
+                  | &nbsp; with &nbsp;
+                  span.organization=view.user.organization
+                  | &nbsp;(
+                  span.email.muted=view.user.email
+                  | )&nbsp; at &nbsp;
+                  span.time.muted= formatDatetime(view.viewedAt, "%b %d, %Y at %I:%M %p")
+
+      .col-md-4.float-right.right
+        h4 Net #{article.net}
+        h4
+          span Created 
+          span= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
 
     .row
       .col-md-8
@@ -94,30 +122,20 @@ block content
           div.view-content
             - if (article.user)
               - var name = article.user.name ? article.user.name : article.user.username
-              .clear
-                p.col-sm-2 To:&nbsp;
-                  a(href="/users/"+article.user._id)= name
-              hr.clear
-              -if(article.viewers.length > 0)
-                .clear
+              .clear.to-block.clearfix
+                p.col-sm-2 To: 
+                -if(article.viewers.length > 0)
                   - each viewer, i in article.viewers
-                    p.muted='organization:'
-                    p=viewer.user.organization
-                    p.muted='email:'
-                    p=viewer.user.email
-                    p.muted='Name:'
-                    span=viewer.user.lastname
-                    span ,&nbsp;
-                    span=viewer.user.firstname
-                    hr
-                    a.btn.btn-danger.btn-link.error(href="/articles/" + article._id + "/pdf") Download PDF 
-                    button.btn.btn-danger.btn-link.error(type="submit") Download PDF 
-                    hr
+                    div.col-sm-2.to
+                      p #{viewer.user.firstname} #{viewer.user.lastname}
+                      p=viewer.user.email
+                      p=viewer.user.organization
+                    hr.clear
                     form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
                       input(type='hidden', name='_csrf', value="#{csrf_token}")
                       input(type="hidden", name="_method", value="DELETE")
-                      button.btn.btn-danger.btn-link.error(type="submit") delete 
-                  hr
+                      div.close-button
+                        span.typcn.typcn-delete
               .clear
                 p.col-sm-2 From:&nbsp;
                   -if(article.user.organization)
@@ -126,6 +144,7 @@ block content
                   p.col-sm-2=article.user.email
                   span=article.user.lastname
                   span=article.user.firstname
+                hr.clear
 
 
                 - if (article.tags)
@@ -163,73 +182,59 @@ block content
                     span.typcn.typcn-user-add
                       |  Save
       .clear
-        hr
-        .col-md-8
-          
-
-      .col-md-4
-        - if (!article.isNew && article.image && article.image.files && article.image.files.length)
-          img(src=article.image.cdnUri + '/mini_' + article.image.files[0])
-    .net=article.net
-
-
+        .col-md-12
+          hr
+        
+        
   .container
-    .row
-      .col-md-8
+    -if (article.items.length > 0)
+      .row
         button#pop_car.btn.btn-default
-          | pop
-  .container
-    .row
-      .col-md-8
+          | Pop
+      .row
         #grid
         table.remove-sidebar
           tbody
-        button#add_car_time.btn.btn-default
-          span.typcn.typcn-watch
-          |  Add Time
-        button#add_car_item.btn.btn-default
-          span.typcn.typcn-plus
-          |  Add Item
+      .row.clear
+        hr
         div#total
           span
             |Total:&nbsp;
           span.amount
-        hr
-        input(id="fileupload", type="file", name="files[]", multiple)
-        #dropzone
-        div(id="files", class="files")
-        br
-        textarea#csv-ajax
-        br
-        br
-        button.btn.btn-danger#destroyPreview Cancel
-        #preview
+    hr
+    .row
+      .col-md-12
+        .col-md-6
+          h3 Enter items one at a time
+          button#add_car_time.btn.btn-default
+            span.typcn.typcn-watch
+            |  Add Time
+          button#add_car_item.btn.btn-default
+            span.typcn.typcn-plus
+            |  Add Item
+        .col-md-6
+          h3 Import from file
+          p
+            input(id="fileupload", type="file", name="files[]", multiple)
+          #dropzone
+            span.typcn.typcn-folder-open
+          div(id="files", class="files")
+          br
+          textarea#csv-ajax
+      .col-md-12
+        .col-md-6
+          button.btn.btn-danger#destroyPreview Cancel
+          #preview
 
 
-  hr
-
-  - if (req.user && req.article.user.id===req.user.id)
-    .container
-      .row
-        .col-md-8
-          p Views:&nbsp;
-            - each view in article.views
-              - if (view.user!=null)
-                .view
-                  span.firstname=view.user.firstname
-                  | &nbsp;
-                  span.lastname=view.user.lastname
-                  | &nbsp; with &nbsp;
-                  span.organization=view.user.organization
-                  | &nbsp;(
-                  span.email.muted=view.user.email
-                  | )&nbsp; at &nbsp;
-                  span.time.muted= formatDatetime(view.viewedAt, "%b %d, %Y at %I:%M %p")
+          
 
 
 
   .container
     .row
+      .col-md-12
+        hr
         .col-md-8
           h3 Comments
           - each comment in article.comments
@@ -260,10 +265,8 @@ block subfoot
       $(".edit-content").hide();
       $("body").addClass("view-state");
       $("body.view-state").on("click", ".btn-edit", function() {
-        $(".view-content").fadeOut("fast", function() {
-          $(".edit-content").fadeIn("fast");
-          $("body").removeClass("view-state").addClass("edit-state");          
-        });
+        $(".edit-content").slideDown();
+        $("body").removeClass("view-state").addClass("edit-state");          
       });
       $(".invoice-form.edit-state").on("click", ".add-recipient-trigger.opened", function() {
         $(".add-recipient-form").fadeOut();

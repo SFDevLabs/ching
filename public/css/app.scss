@@ -50,10 +50,10 @@ html, body {
 }
 
 body {
-  padding-top: 60px;
+  //padding-top: 60px;
 }
 
-.article, .comment {
+.comment {
   padding: 15px 0;
   border-top: 1px solid #e8e8e8;
 }
@@ -112,7 +112,7 @@ button.error {
 #dropzone{
   width:500px;
   height:100px;
-  background-color: pink;
+  //background-color: pink;
   &.dragging{
     border: 5px dashed;
   }

@@ -40,6 +40,34 @@ body {
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  padding-top: 3.125em;
+}
+
+.navbar {
+  margin-bottom: 0;
+}
+
+.alert {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 3.125em;
+    z-index: 2000;
+    margin: 0;
+    .alert-wrap {
+      width: 20%;
+      position: relative;
+      margin: 0 auto;
+      padding: 15px;
+      background: rgba(0,0,0,0.5);
+      text-align: center;
+      button {
+        border-radius: 100em;
+        position: absolute;
+        left: -0.5em;
+        top: -0.5em;
+      }
+    }
 }
 
 button,
@@ -476,18 +504,131 @@ body.login {
   padding-bottom: 5em;
 }
 
+.list h1,
+.profile h1 {
+    margin-top: 0.625em;
+}
+
+// list
+.list {
+  header.row {
+    margin-bottom: 1.25em;
+    hr {
+    }
+  }
+
+  h1 {
+    margin-bottom: 0.3125em;
+  }
+
+  .counts {
+    margin-top: 5em;
+    li {
+      display: inline-block;
+      margin-left: 1.25em;
+      font-weight: 600;
+    }
+  }
+
+  .chart-wrapper {
+    height: 200px;
+    margin-bottom: 2.5em;
+    overflow: hidden;
+    #area-chart {
+      background: #f7f7f7;
+    }
+  }
+  .all {
+    color: #000;
+  }
+
+  .article {
+    margin-bottom: 30px;
+    .status {
+      text-transform: capitalize;
+      padding: 10px 15px;
+      color: rgba(0,0,0,0.5);
+      margin: 0;
+    }
+    .content {
+      position: relative;
+      min-height: 13.75em;
+      background: #f7f7f7;
+      border-bottom: 2px solid;
+      padding: 15px;
+      .dim {
+        color: $lightgray;
+      }
+    }
+    .date {
+      position: absolute;
+      bottom: 0px;
+      left: 15px;
+    }
+
+  }
+}
+
+.draft {
+  color: #888;
+  border-bottom-color: #888;
+  .status {
+    background: lighten(#888, 30%);
+  }
+}
+
+.sent {
+  color: #c4c154;
+  border-bottom-color: #c4c154;
+  .status {
+    background: #c4c154;
+  }
+}
+
+.paid {
+  color: #5fac56;
+  border-bottom-color: #5fac56;
+  .status {
+    background: #5fac56;
+  }
+}
+
+.overdue {
+  color: $actionbg;
+  border-bottom-color: $actionbg;
+  .status {
+    background: $actionbg;
+  }
+}
+
+.draft,
+.sent,
+.paid,
+.overdue {
+  text-transform: capitalize;
+}
+
+
+
+
 // invoice
 .controls {
   background: #f5f5f5;
   width: 100%;
   clear: both;
-  margin-top: -8px;
-  padding: 10px 0;
+  padding: 15px 0;
+  border-bottom: 2px solid #ddd;
   form {
     display: inline-block;
   }
 }
 .invoice-form {
+  h2 {
+    margin-bottom: 0;
+  }
+  .meta {
+    padding-top: 0;
+  }
   padding-top: 2.5em;
   .btn.right {
     //margin-top: -3.125em;
@@ -528,6 +669,47 @@ body.login {
     &:hover {
       color: $actionbghover;
     }
+  }
+  .to p {
+    margin-bottom: 0;
+    &:last-child {
+      margin-bottom: 1.25em;
+    }
+  }
+  .to-block {
+    padding-top: 1.25em;
+    &:hover {
+      background: #fafafa;
+      .close-button span {
+        display: block;
+        right: 0;
+        top: 0;
+      }
+    }
+    .close-button span {
+      display: none;
+    }
+  }
+
+}
+
+#dropzone {
+  position: relative;
+  width:500px;
+  height:100px;
+  background-color: #f5f5f5;
+  border-radius: 1em;
+  border: 5px dashed #eee;
+  &.dragging{
+    border-color: $actionbg;
+  }
+  span {
+    position: absolute;
+    color: #e5e5e5;
+    font-size: 5em;
+    line-height: 80px;
+    text-align: center;
+    width: 100%;
   }
 }
 

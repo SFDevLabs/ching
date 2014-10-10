@@ -6,7 +6,31 @@ body {
   color: #666;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility; }
+  text-rendering: optimizeLegibility;
+  padding-top: 3.125em; }
+
+.navbar {
+  margin-bottom: 0; }
+
+.alert {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 3.125em;
+  z-index: 2000;
+  margin: 0; }
+  .alert .alert-wrap {
+    width: 20%;
+    position: relative;
+    margin: 0 auto;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    text-align: center; }
+    .alert .alert-wrap button {
+      border-radius: 100em;
+      position: absolute;
+      left: -0.5em;
+      top: -0.5em; }
 
 button, input, textarea, select {
   font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -314,17 +338,89 @@ body.login {
 .sign-up {
   padding-bottom: 5em; }
 
+.list h1, .profile h1 {
+  margin-top: 0.625em; }
+
+.list header.row {
+  margin-bottom: 1.25em; }
+.list h1 {
+  margin-bottom: 0.3125em; }
+.list .counts {
+  margin-top: 5em; }
+  .list .counts li {
+    display: inline-block;
+    margin-left: 1.25em;
+    font-weight: 600; }
+.list .chart-wrapper {
+  height: 200px;
+  margin-bottom: 2.5em;
+  overflow: hidden; }
+  .list .chart-wrapper #area-chart {
+    background: #f7f7f7; }
+.list .all {
+  color: #000; }
+.list .article {
+  margin-bottom: 30px; }
+  .list .article .status {
+    text-transform: capitalize;
+    padding: 10px 15px;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 0; }
+  .list .article .content {
+    position: relative;
+    min-height: 13.75em;
+    background: #f7f7f7;
+    border-bottom: 2px solid;
+    padding: 15px; }
+    .list .article .content .dim {
+      color: #bbb; }
+  .list .article .date {
+    position: absolute;
+    bottom: 0px;
+    left: 15px; }
+
+.draft {
+  color: #888;
+  border-bottom-color: #888; }
+  .draft .status {
+    background: #d5d5d5; }
+
+.sent {
+  color: #c4c154;
+  border-bottom-color: #c4c154; }
+  .sent .status {
+    background: #c4c154; }
+
+.paid {
+  color: #5fac56;
+  border-bottom-color: #5fac56; }
+  .paid .status {
+    background: #5fac56; }
+
+.overdue {
+  color: #F92700;
+  border-bottom-color: #F92700; }
+  .overdue .status {
+    background: #F92700; }
+
+.draft, .sent, .paid, .overdue {
+  text-transform: capitalize; }
+
 .controls {
   background: #f5f5f5;
   width: 100%;
   clear: both;
-  margin-top: -8px;
-  padding: 10px 0; }
+  padding: 15px 0;
+  border-bottom: 2px solid #ddd; }
   .controls form {
     display: inline-block; }
 
 .invoice-form {
   padding-top: 2.5em; }
+  .invoice-form h2 {
+    margin-bottom: 0; }
+  .invoice-form .meta {
+    padding-top: 0; }
   .invoice-form .col-md-4 {
     position: relative; }
   .invoice-form .add-recipient-position {
@@ -354,6 +450,37 @@ body.login {
     text-indent: -0.035em; }
     .invoice-form .close-button span:hover {
       color: #c61e00; }
+  .invoice-form .to p {
+    margin-bottom: 0; }
+    .invoice-form .to p:last-child {
+      margin-bottom: 1.25em; }
+  .invoice-form .to-block {
+    padding-top: 1.25em; }
+    .invoice-form .to-block:hover {
+      background: #fafafa; }
+      .invoice-form .to-block:hover .close-button span {
+        display: block;
+        right: 0;
+        top: 0; }
+    .invoice-form .to-block .close-button span {
+      display: none; }
+
+#dropzone {
+  position: relative;
+  width: 500px;
+  height: 100px;
+  background-color: #f5f5f5;
+  border-radius: 1em;
+  border: 5px dashed #eee; }
+  #dropzone.dragging {
+    border-color: #F92700; }
+  #dropzone span {
+    position: absolute;
+    color: #e5e5e5;
+    font-size: 5em;
+    line-height: 80px;
+    text-align: center;
+    width: 100%; }
 
 .meta {
   padding-top: 1.25em; }
