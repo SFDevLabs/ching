@@ -79,8 +79,9 @@ var ArticleSchema = new Schema({
   createdAt  : {type : Date, default : Date.now},
   items: [itemsSchema],
   status: {
-    invoicedOn:{type : Date, default : Date.now},
-    paidOn:{type : Date, default : Date.now}
+    invoicedOn:{type : Date, default : null},
+    paidOn:{type : Date, default : null},
+    dueOn:{type : Date, default : null}
   },
   net: {type : Number, default : 0},
   addresss: {type : String, default : 'draft', trim : true},
@@ -107,6 +108,32 @@ ArticleSchema
     return val
 
   })
+
+
+ArticleSchema
+  .virtual('status.text')
+  // .set(function(password) {
+  //   this._password = password
+  //   this.salt = this.makeSalt()
+  //   this.hashed_password = this.encryptPassword(password)
+  // })
+  .get(function() { 
+     var val
+      if (this.status.invoicedOn===null)
+        val='draft'
+      else if (this.status.paidOn!==null){
+        val='paid'
+      }else if (this.status.paidOn===null && val.status.dueOn && Date.now>val.status.dueOn){
+        val='overdue'
+      } else if (this.status.invoicedOn!==null){
+        val='sent'
+      }
+      return val
+
+  })
+
+
+
 
 /**
  * Validations
