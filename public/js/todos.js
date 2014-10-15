@@ -445,6 +445,23 @@ $('#destroyPreview').on('click', function(e){
   $('#preview').data('handsontable').destroy();
 });
 
+// ///copy paste info box
+// $(window).on('cut', function(e){
+//   if (App.handsonObj.getSelected()){
+//       alert('Use Command & x to cut a cell');
+//   }
+// });
+// $(window).on('copy', function(e){
+//   if (App.handsonObj.getSelected()){
+//       alert('Use Command & c to copy a cell');
+//   }
+// });
+// $(window).on('paste', function(e){
+//   if (App.handsonObj.getSelected()){
+//       alert('Use Command & p to paste into the grid');
+//   }
+// });
+
 $('#fileupload').fileupload({
         url: aId+'/upload'
         ,dataType: 'json'

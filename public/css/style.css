@@ -498,7 +498,9 @@ body.login {
       width: 100%;
       border-bottom: 2px solid #8dc5cd;
       padding-bottom: 2.5em;
-      margin-bottom: 5em; }
+      margin-bottom: 5em;
+      background-size: 110%;
+      background-repeat: no-repeat; }
   .landing-wrap {
     box-sizing: border-box;
     position: relative;
