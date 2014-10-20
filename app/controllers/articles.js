@@ -313,6 +313,7 @@ exports.indexRecieved = function(req, res){
     'viewers':{$elemMatch: {user:userID}} 
   }
 
+  var bodyClass = "list received";
 
   Article.list(options, function(err, articles) {
 
@@ -324,7 +325,8 @@ exports.indexRecieved = function(req, res){
         articles: articles,
         page: page + 1,
         pages: Math.ceil(count / perPage),
-        count: count
+        count: count,
+        bodyClass: bodyClass
       })
     })
   })
@@ -336,12 +338,14 @@ exports.indexRecieved = function(req, res){
  */
 
 exports.homeOrSent = function(req, res){
+  var bodyClass = "landing";
 
   if (req.isAuthenticated()){
     return indexSent(req, res)
   }else{
     res.render('articles/home', {
       title: 'Home',
+      bodyClass: bodyClass
     })
   }
 
@@ -353,6 +357,8 @@ exports.homeOrSent = function(req, res){
  */
 
 var indexSent = exports.indexSent = function(req, res){
+  var bodyClass = "list";
+
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
   var perPage = 10,
       userID=req.user?req.user._id:null;
@@ -377,6 +383,7 @@ var indexSent = exports.indexSent = function(req, res){
     Article.count().exec(function (err, count) {
 
       res.render('articles/index', {
+        bodyClass: bodyClass,
         invoiceType: 'sent',
         title: 'Sent Invoices',
         articles: articles,
@@ -461,6 +468,7 @@ exports.new = function(req, res){
  */
 
 exports.create = function (req, res) {
+  var bodyClass = "show new";
   var article = new Article(req.body)
   article.user = req.user
 
@@ -474,6 +482,7 @@ exports.create = function (req, res) {
     res.render('articles/new', {
       title: 'New Article',
       article: article,
+      bodyClass: bodyClass,
       error: utils.errors(err.errors || err)
     })
   })
@@ -518,9 +527,22 @@ exports.update = function(req, res){
  */
 
 exports.show = function(req, res, next){
+  var bodyClass = "show";
+
+  function capitalize(s) {
+    return s && s[0].toUpperCase() + s.slice(1);
+  }
+  if (req.article.title) {
+    var title = capitalize(req.article.status.text) + " - " + req.article.title
+  }
+  else {
+    var title = capitalize(req.article.status.text) + " - Invoice";
+  }
+
   res.render('articles/show', {
-    title: req.article.title,
-    article: req.article
+    title: title,
+    article: req.article,
+    bodyClass: bodyClass
   })
 }
 

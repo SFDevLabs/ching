@@ -5,10 +5,10 @@
 $bg: #fff;
 $heading: #333;
 $text: #666;
-$link: #6d878d;
-$hover: #90b3bc;
+$link: #0085c3;
+$hover: darken($link, 10%);
 
-$block: #d4e9ec;
+$block: #f0f0f0;
 
 $gray: #aaa;
 $lightgray: #bbb;
@@ -27,10 +27,21 @@ $buttonbg: #6c878d;
 $buttonbghover: #3a484b;
 $buttontext: #fff;
 
-$actionbg: #F92700;
+$actionbg: #02c34e;
 $actionbghover: darken($actionbg, 10%);
 $actiontext: #fff;
 
+$warnbg: #F92700;
+$warnbghover: darken($warnbg, 10%);
+$warntext: #fff;
+
+
+html,
+body, 
+header {
+  width: 100%;
+  overflow-x: hidden;
+}
 
 body {
   font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -41,6 +52,10 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   padding-top: 3.125em;
+}
+
+.container {
+  position: relative;
 }
 
 .navbar {
@@ -134,8 +149,8 @@ strong em {
 
 a {
   text-decoration: none;
-  -webkit-transition: all 0.5s;
-  transition:opacity all 0.5s;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition:opacity all 0.5s ease-in-out;
   color: $link;
   &:active {
     color: #F92700;
@@ -149,32 +164,76 @@ a {
 a.button,
 .button {
   display: inline-block;
-  background: #6c878d;
-  color: #fff !important;
-  text-shadow: 1px 1px rgba(0,0,0,0.1);
+  background: none;
+  border: 2px solid rgba(0,0,0,0.25);
+  color: rgba(0,0,0,0.35);
+  text-shadow: none;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
   text-decoration: none; 
   padding: 0.4375em 2.5em 0.625em 2.5em;
   line-height: 1em;
   font-weight: 400;
-  border: 0;
-  border-bottom: 3px solid rgba(0,0,0,0.25); 
-  border-top: 3px solid rgba(255,255,255,0.25);
   border-radius: 3px;  
   cursor: pointer;
-  transition: background-color 0.5s ease-in-out;
+
+  &:hover {
+    -webkit-transition: all 0.5s ease-in-out;
+    transition:opacity all 0.5s ease-in-out;
+    border-color: $actionbg;
+    color: $actionbg;
+  }
+
   &.action {
-    background: #F92700; 
-    transition: background-color 0.5s ease-in-out;
+    color: #fff;
+    border-bottom: 3px solid rgba(0,0,0,0.25); 
+    border-top: 3px solid rgba(255,255,255,0.25);
+    border-left: 0;
+    border-right: 0;
+    text-shadow: 1px 1px rgba(0,0,0,0.1);
+    background: $actionbg; 
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
     &:hover {
+      -webkit-transition: all 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
       background: $actionbghover;
+      border-top-color: rgba(0,0,0,0.25);
+      border-bottom-color: transparent;
     }
   }
-  &.subtle {
-    background: #aaa;
+
+  &.btn-danger {
+    background: none;
+    border-color: $warnbg;
+    color: $warnbg;
     &:hover {
-      background: #888;
+      color: $warnbghover;
+      border-color: $warnbghover;
     }
   }
+
+  &.subtle,
+  &.subtle.btn-danger {
+    background: none;
+    border-color: $actionbg;
+    color: $actionbg;
+    &:hover {
+      color: $actionbghover;
+      border-color: $actionbghover;
+    }
+  }
+
+  &.subtle.btn-danger {
+    background: none;
+    border: 2px solid rgba(0,0,0,0.25);
+    color: rgba(0,0,0,0.35);
+    &:hover {
+      color: $warnbg;
+      border-color: $warnbg;  
+    }
+  }
+
   &.left {
     display: block;
     float: left;
@@ -182,9 +241,6 @@ a.button,
   &.right {
     display: block;
     float: right;
-  }
-  &:hover {
-    background: $buttonbghover;
   }
 }
 
@@ -329,7 +385,7 @@ input.half{
 
 .navbar {
   background: $block;
-  border-bottom: 2px solid darken($block, 10%);
+  border-bottom: 1px solid darken($block, 10%);
 }
 
 nav.navbar {
@@ -375,55 +431,186 @@ nav.navbar {
 
 
 footer {
-  margin-top: 5em;
-  padding: 2.5em 0;
+  margin: 5em 0 0 0;
+  padding: 5em 0;
+  background: transparent url(/img/grid.jpg) center center repeat;
+  background-size: 50% auto;
+  text-align: center;
+  float: none;
+  clear: both;
+  border-top: 1px solid rgba(0,0,0,0.25);
+
   .logo,
   .logo img {
     border-radius: 0;
     max-width: 50px;
-    opacity: 1;
-    border-radius: 0;
   }
-  .logo {
-    box-sizing: content-box;
-    border: 5px solid darken($block, 5%);
-    border-bottom-color: darken($block, 12%);
-    border-top-color: darken($block, 12%);
+
+  img {
+    opacity: 0.5;
+    -webkit-transition: all 0.5s;
+    transition:opacity all 0.5s;
+    &:hover {
+      -webkit-transition: all 0.5s;
+      transition:opacity all 0.5s;
+      opacity: 1;
+    }
+  }
+
+  p {
+    font-size: 0.8em;
+    font-weight: 600;
   }
 }
 
 .landing {
-  //text-align: center;
 
-  .right a {
-    font-size: 0.75em;
-    margin-top: 1em;
+
+  header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    //background: #2ce084;
+    background: #fafafa;
+
+    .header-content {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 32.375em;
+      margin-top: -16.1875em;
+
+      h1 {
+        text-align: center;
+        clear: both;
+        width: 100%;
+        //color: #fff;
+        text-shadow: 0 2px rgba(0,0,0,0.25);
+        font-weight: 800;
+        color: #02c34e;
+        margin-bottom: 0.3125em;
+      }
+
+      .computer {
+        position: relative;
+        width: 100%;
+        z-index: 1000;
+        img {
+          position: relative;
+          display: block;
+          width: 40%;
+          margin: 0 auto;
+          float: none;
+          z-index: 1000;
+        }
+      }
+
+    }
+
+
+
+    .ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.025);
+      height: 50%;
+      border-top: 4px solid rgba(0,0,0,0.01);
+    }
+
+
+
+    .junk {
+      z-index: 10;
+      //color: rgba(0,0,0,0.2);
+      color: #ddd;
+      position: absolute;
+      width: 50%;
+      height: 5em;
+      top: 50%;
+      margin-top: -5em;
+      span {
+        display: block;
+        position: absolute;
+        left: 0;
+        font-size: 3.75em;
+        &.number {
+          font-size: 1.25em;
+        }
+      }
+    }
+
+    .invoices {
+      z-index: 1;
+      position: absolute;
+      width: 50%;
+      height: 5em;
+      top: 50%;
+      right: 0;
+      margin-top: -6.25em;
+      img {
+        display: block;
+        max-width: 100px;
+        position: absolute;
+        left: 0;
+      }
+    }
+
+    .right {
+      position: absolute;
+      right: 0;
+      top: 0;
+      a.button {
+        font-size: 0.85em;
+        margin-top: 1em;
+      }
+    }
+
+    p.tagline {
+      color: rgba(0,0,0,0.5);
+    }
+    
+    .more {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      bottom: 0.625em;
+      span {
+        display: block;
+      }
+      text-shadow: 0 1px rgba(0,0,0,0.15);
+    }
+
+    .tagline,
+    div > p {
+      font-size: 1.25em;
+      line-height: 1.5em;
+    }
+
+    p.tagline {
+      line-height: 1.25em;
+      font-weight: 600;
+      margin-bottom: 0.625em;
+    }
+
+
   }
 
-  h1 {
-    font-size: 7.5em;
-    line-height: 1em;
-    margin: 0 0 0.15625em;
-    //color: $green;
-    color: darken($block, 50%);
-    text-shadow: 0 1px #ddd;
-    font-weight: 400;
+  .landing-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin: 0;
   }
-  
-  .icon {
-    font-size: 5em;
-    color: darken($block, 20%);
-  }
-  div > p {
-    font-size: 1.5em;
-    line-height: 1.5em;
-  }
-  p.tagline {
-    font-size: 2.5em;
-    line-height: 1.25em;
-    font-weight: 600;
-    margin-bottom: 0.625em;
-  }
+
+
+
   .details {
     text-align: center;
     .button {
@@ -432,15 +619,25 @@ footer {
   }
 
   .feature-list {
-    padding: 0 0 2.5em 0;
-    border-bottom: 2px solid darken($block, 10%);    
+    padding: 3.75em 0 2.5em 0;
+    border-top: 1px solid darken($block, 7%);
+    border-bottom: 1px solid darken($block, 7%);
+    .icon {
+      font-size: 5em;
+      color: darken($block, 20%);
+      vertical-align: bottom;
+      line-height: 0.625em;
+      &:before {
+        display: inline;
+      }
+    }
+    p {
+      margin-top: 1.25em;
+    }    
   }
 
   .logos {
     background: #fafafa;
-    box-shadow: inset 0 0 5em rgba(0,0,0,0.05);
-    border-top: 2px solid #eaeaea;
-    border-bottom: 2px solid #eaeaea;
     h2 {
       margin-bottom: 1.25em;
     }
@@ -459,6 +656,7 @@ footer {
     }
     padding: 5em 0;
   } 
+
   p:last-child {
     margin-bottom: 0;
   }
@@ -468,26 +666,24 @@ footer {
   }
 
   .cta {
-    border-top: 2px solid darken($block, 7%);
-    border-bottom: 2px solid darken($block, 7%);
-    background: darken($block, 5%);
-    padding: 2.5em 0;
-  }
-
-  .intro {
-    padding-bottom: 1.25em;
-    border-bottom: 1px dashed #ddd;
-  }
-  footer {
-    padding: 2.5em 0 0;
-    background: none;
-    text-align: center;
-    float: none;
-    clear: both;
+    border-top: 1px solid rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(0,0,0,0.5);
+    background: #444 url(/img/invoice-icon.svg) center center repeat;
+    background-size: 20px auto;
+    padding: 5em 0; 
+    h2.mini {
+      color: rgba(255,255,255,0.75);
+    }
     p {
-      font-size: 0.8em;
+      font-size: 1.5em;
+      margin-top: 1.25em;
     }
   }
+
+  footer {
+    margin-top: 0;
+  }
+
 }
 
 body.login {
@@ -556,14 +752,15 @@ body.login {
       background: #f7f7f7;
       border-bottom: 2px solid;
       padding: 15px;
-      .dim {
-        color: $lightgray;
-      }
+
     }
     .date {
       position: absolute;
       bottom: 0px;
       left: 15px;
+    }
+    .dim {
+      color: $lightgray;
     }
 
   }
@@ -586,18 +783,18 @@ body.login {
 }
 
 .paid {
-  color: #5fac56;
-  border-bottom-color: #5fac56;
-  .status {
-    background: #5fac56;
-  }
-}
-
-.overdue {
   color: $actionbg;
   border-bottom-color: $actionbg;
   .status {
     background: $actionbg;
+  }
+}
+
+.overdue {
+  color: $warnbg;
+  border-bottom-color: $warnbg;
+  .status {
+    background: $warnbg;
   }
 }
 
@@ -606,6 +803,26 @@ body.login {
 .paid,
 .overdue {
   text-transform: capitalize;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  h2,
+  h2.dim,
+  .status,
+  .date {
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;  
+  }
+  &:hover {
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    h2,
+    h2.dim,
+    .status,
+    .date {
+      color: $link;
+    }
+    border-color: $link;
+  }
 }
 
 
@@ -613,16 +830,70 @@ body.login {
 
 // invoice
 .controls {
-  background: #f5f5f5;
+  background: darken($bg, 10%);
   width: 100%;
   clear: both;
   padding: 15px 0;
-  border-bottom: 2px solid #ddd;
-  form {
+  border-bottom: 1px solid darken($bg, 20%);
+  text-align: center;
+  form,
+  .btn {
     display: inline-block;
+    margin: 0 1.25em;
   }
 }
+
+.modal {
+  display: none;
+  background: rgba(0,0,0,0.9);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  .modal-wrap {
+    position: absolute;
+    top: 5em;
+    background: #fff;
+    padding: 1.25em;
+    &.col-lg-8 {
+      left: 50%;
+      margin-left: -33.33333333%;
+    }
+  }
+}
+
+body.show {
+  background: #f5f5f5;
+  .invoice-wrap {
+    .container {
+      background: #fff;
+      &:last-child {
+        padding-bottom: 5em;
+      }
+    }
+
+  }
+  footer {
+    margin-top: 0;
+  }
+}
+
 .invoice-form {
+
+  .properties {
+    padding: 1.25em 0;
+    border: 1px solid transparent;
+    &:hover {
+      background: #fafafa;
+      border: 1px dashed darken($bg, 10%);      
+    }
+    .btn {
+      margin-bottom: 1.25em;
+    }
+  }
+
   h2 {
     margin-bottom: 0;
   }
@@ -636,9 +907,11 @@ body.login {
   .col-md-4 {
     position: relative;
   }
-  .add-recipient-trigger {
 
+  .add-recipient-trigger {
+    margin-right: 15px;
   }
+
   .add-recipient-position {
     position: absolute;
     top: 60px;
@@ -650,47 +923,83 @@ body.login {
     margin-right: 111px;
     z-index: 1000;
     border-bottom: 2px solid $gray;
-    //box-shadow: 0 2px 0.15625em rgba(0,0,0,0.2);
   }
-  .close-button span {
-    font-size: 2.5em;
-    position: absolute;
-    right: -0.5em;
-    top: -0.5em;
-    background: #ddd;
-    border-bottom: 2px solid #aaa;
-    padding: 0;
-    border-radius: 100em;
-    vertical-align: bottom;
-    height: 0.85em;
-    width: 0.85em;
-    line-height: 0.75em;
-    text-indent: -0.035em;
-    &:hover {
-      color: $actionbghover;
-    }
-  }
-  .to p {
-    margin-bottom: 0;
-    &:last-child {
-      margin-bottom: 1.25em;
-    }
-  }
+
+
+
   .to-block {
-    padding-top: 1.25em;
-    &:hover {
-      background: #fafafa;
-      .close-button span {
-        display: block;
-        right: 0;
-        top: 0;
+    > p:first-child,
+    .to {
+      padding-top: 1.25em;
+    }
+    .to {
+      padding-bottom: 1.25em;
+      border: 1px solid transparent;
+      p {
+        margin-bottom: 0;
+      }
+      &:hover {
+        background: #fafafa;
+        border: 1px dashed darken($bg, 10%);
+        .close-button span {
+          cursor: pointer;
+          display: block;
+          right: -0.3125em;
+          top: -0.3125em;
+        }
       }
     }
+    
     .close-button span {
       display: none;
     }
   }
 
+}
+
+div.tagsinput span.tag {
+  line-height: 13px;
+  background: #f5f5f5;
+  border: 1px solid darken($bg, 10%);
+  color: $text;
+  a {
+    color: $text;
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    &:hover {
+      -webkit-transition: all 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
+      color: $warnbg;
+    }
+  }
+}
+
+.close-button span {
+  cursor: pointer;
+  font-size: 2.5em;
+  position: absolute;
+  right: -0.5em;
+  top: -0.5em;
+  background: #ddd;
+  border-bottom: 2px solid #aaa;
+  padding: 0;
+  border-radius: 100em;
+  vertical-align: bottom;
+  height: 0.85em;
+  width: 0.85em;
+  line-height: 0.75em;
+  text-indent: -0.04em;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  &:hover {
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    color: $warnbg;
+  }
+}
+
+.table-container {
+  padding-top: 1.25em;
 }
 
 #dropzone {
@@ -731,20 +1040,7 @@ body.login {
 
 @media (min-width: 1300px) {
   .landing {
-    padding: 0 0 5em 0;
-    header {
-      background: #fff;
-      height: auto;
-      width: 100%;
-      border-bottom: 2px solid darken($block, 20%);
-      padding-bottom: 2.5em;
-      margin-bottom: 5em;
 
-      // background-image: url(http://dumpfm.s3.amazonaws.com/images/20140810/1407721136572-dumpfm-FAUXreal-GridFading.png);
-      background-size: 110%;
-      background-repeat: no-repeat;
-   
-    }
   }
   .landing-wrap {
     box-sizing: border-box;

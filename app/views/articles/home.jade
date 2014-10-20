@@ -2,50 +2,197 @@ extends ../layouts/default
 
 block content
 	header
+		.ground
 		.container
 			p.right
 				a(href="/login", class="button") Log in
-			.landing-wrap
-				div.logo
-					img(src="./img/logo.png")
+		.invoices
+			img(src="/img/invoice.svg", class="invoice")
+		.junk
+			span.number 1
+			span.number 2
+			span.number 3
+			span.number 4
+			span.number 5
+			span.number 6
+			span.number 7
+			span.number 8
+			span.number 9
+			span.number 100
+			span.number 1000
+			span.number 10,000
+			span.number 40
+			span.number 80
+			span.number 1500
+			span.number 1
+			span.number 2
+			span.number 3
+			span.number 4
+			span.number 5
+			span.number 6
+			span.number 7
+			span.number 8
+			span.number 9
+			span.number 100
+			span.number 1000
+			span.number 10,000
+			span.number 40
+			span.number 80
+			span.number 1500
+			span.typcn.typcn-flash-outline
+			span.typcn.typcn-code-outline
+			span.typcn.typcn-divide-outline
+			span.typcn.typcn-stopwatch
+			span.typcn.typcn-input-checked-outline
+			span.typcn.typcn-th-list-outline
+			span.typcn.typcn-watch
+			span.typcn.typcn-calendar-outline
+			span.typcn.typcn-mail
+			span.typcn.typcn-clipboard
+			span.typcn.typcn-times-outline
+			span.typcn.typcn-clock
+			span.number 100
+			span.number 200
+			span.number 300
+			span.number 400
+			span.number 500
+			span.number 600
+			span.number 700
+			span.number 800
+			span.number 900
+			span.number 100
+			span.number 1000
+			span.number 10,000
+			span.number 40
+			span.number 80
+			span.number 1500
+			span.number 1000
+			span.number 2000
+			span.number 3000
+			span.number 4000
+			span.number 5000
+			span.number 6000
+			span.number 7000
+			span.number 8000
+			span.number 9000
+			span.number 100
+			span.number 1000
+			span.number 10,000
+			span.number 40
+			span.number 80
+			span.number 1500
+			span.typcn.typcn-flash-outline
+			span.typcn.typcn-code-outline
+			span.typcn.typcn-divide-outline
+			span.typcn.typcn-stopwatch
+			span.typcn.typcn-input-checked-outline
+			span.typcn.typcn-th-list-outline
+			span.typcn.typcn-watch
+			span.typcn.typcn-calendar-outline
+			span.typcn.typcn-mail
+			span.typcn.typcn-clipboard
+			span.typcn.typcn-times-outline
+			span.typcn.typcn-clock
+		.header-content
+			.container
 				h1 Ching
+				.computer
+					img(src="/img/laptop.svg", class="laptop")
+				//- div.logo
+					img(src="./img/logo.png")
+				
 				p.tagline Zero effort invoicing.
 				p
 					a(href="/signup", class="button action") Sign up
-	div.feature-list
-		div.container.details
-			ul.features.row
-				li.col.col-lg-3 
-					span(class="icon typcn typcn-chart-line")
-					p Visualize your cash flow
-				li.col.col-lg-3
-					span(class="icon typcn typcn-zoom-in-outline")
-					p Drill-down queries and filters
-				li.col.col-lg-3
-					span(class="icon typcn typcn-th-list-outline")
-					p Works like a spreadsheet
-				li.col.col-lg-3
-					span(class="icon typcn typcn-calendar")
-					p See where you are in net 30
-	div.sources.logos
-		div.container.details
-			h2.mini Combine timesheets and expenses from anywhere.
-			ul
-				li.col.col-lg-3.ding
-					img(src="/img/logo-ding.png")
-				li.col.col-lg-3.freshbooks
-					img(src="/img/logo-freshbooks.png")
-				li.col.col-lg-3.expensify
-					img(src="/img/logo-expensify.png")
-				li.col.col-lg-3.excel
-					img(src="/img/logo-excel.png")
-	div.cta
-		div.container.details
-			p Generate an invoice as quickly as you can copy &amp; paste.
-			p
-				a(href="/signup", class="button action") Sign up
-	footer
-		.container.center.center-block
-			div.logo
-				img(src="/img/sfdevlabs.png")
-			p Dog food made by a dev shop for a dev shop.
+		.more.tagline
+			a(href="#more") Learn more
+				span.typcn.typcn-arrow-down
+	.landing-content#more
+		div.feature-list
+			div.container.details
+				ul.features.row
+					li.col.col-lg-3 
+						span(class="icon typcn typcn-chart-line")
+						p Visualize your cash flow
+					li.col.col-lg-3
+						span(class="icon typcn typcn-zoom-in-outline")
+						p Drill-down queries and filters
+					li.col.col-lg-3
+						span(class="icon typcn typcn-th-list-outline")
+						p Works like a spreadsheet
+					li.col.col-lg-3
+						span(class="icon typcn typcn-calendar-outline")
+						p See where you are in net 30
+		div.sources.logos
+			div.container.details
+				h2.mini Combine timesheets and expenses from anywhere.
+				ul
+					li.col.col-lg-3.ding
+						img(src="/img/logo-ding.png")
+					li.col.col-lg-3.freshbooks
+						img(src="/img/logo-freshbooks.png")
+					li.col.col-lg-3.expensify
+						img(src="/img/logo-expensify.png")
+					li.col.col-lg-3.excel
+						img(src="/img/logo-excel.png")
+		div.cta
+			div.container.details
+				h2.mini Generate an invoice as quickly as you can copy &amp; paste.
+				p.tagline
+					a(href="/signup", class="button action") Sign up
+		footer
+			.container.center.center-block
+				div.logo
+					a(href="http://sfdevlabs.com")
+						img(src="/img/sfdevlabs.png")
+				p Dog food made by a dev shop for a dev shop.
+block subfoot
+	script(src="/js/jquery.easing.js")
+	script(src="/js/jquery.scrollTo.min.js")
+	script.
+		$( document ).on("ready", function() {
+
+			$(".more").on("click", function(e) {
+				e.preventDefault();
+				$("body").scrollTo("#more", 500);
+			});
+			$(".junk span").each(function() {
+				var width = $(window).width() / 1000;
+				var top = Math.floor((Math.random() * 100) + 1) + "%";
+				//var left = (Math.floor(Math.random() * (99 - 5 + 1)) + 5) + "%";
+				var left = "-" + ((Math.floor(Math.random() * (150 - 10 + 1)) + 10) / width) + "%";
+				$(this).css("top", top).css("left", left);
+				floatJunk(this);
+			});
+
+			function timer(element) {
+				var delay = Math.floor(Math.random() * (2000 - 100 + 1)) + 100;
+				floatJunk(element, delay);
+			}
+
+			function floatJunk(element, delay) {
+				var width = $(window).width() / 1000;
+				var newLeft = "-" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10) + "%";
+				var speed = width * (Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000);
+				$(element).delay(delay).animate({
+					left: "100%"
+				}, speed, 'easeInOutQuad', function() {
+					$(element).css("left", newLeft);
+					floatJunk(element);
+				});
+			}
+
+			function invoice() {
+				var width = $(window).width() / 1000;
+				var delay = width * 3000;
+				var speed = width * 5000;
+				$(".invoices img").delay(delay).animate({
+					left: "150%"
+				}, speed, 'easeInSine', function() {
+					$(".invoices img").css("left", "0");
+					invoice();
+				});
+			}
+
+			invoice();
+		});

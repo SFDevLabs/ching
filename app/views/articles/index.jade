@@ -65,19 +65,15 @@ block content
               p= article.body
 
               .meta
-                if (article.total)
+                -if (article.total)
                   | &nbsp; - &nbsp;
                   span Total &nbsp;
                   span(href="/users/"+article.user._id)= formatCurrency(article.total)
                   |&nbsp; - &nbsp;
                   span=article.net
-                - if (article.tags)
-                  | &nbsp; - &nbsp;
-                  span Tags &nbsp;
+                -if (article.tags)
                   - each tag in article.tags.split(',')
-                    i.muted.fa.fa-tag &nbsp;
-                    a.tag(href="/tags/"+tag)= tag
-                    | &nbsp;&nbsp;
+                    span.tag ##{tag}
               p.date.muted
                 | Created 
                 span= formatDatetime(article.createdAt)

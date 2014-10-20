@@ -1,9 +1,6 @@
 doctype html
 html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.facebook.com/2008/fbml', itemscope='itemscope', itemtype='http://schema.org/Product')
   include ../includes/head
-  -if (req.path == '/' && !req.isAuthenticated()) var bodyClass = 'landing'
-  -else if (req.path == '/login' || req.path == '/reset' || req.path == '/signup') var bodyClass = 'login'
-  -else var bodyClass = 'logged-in'
   body(class=bodyClass)
     -if (req.isAuthenticated()) 
       include ../includes/header

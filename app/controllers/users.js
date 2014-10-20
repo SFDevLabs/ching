@@ -40,6 +40,8 @@ exports.savepw = function (req, res, next) {
  */
 
 exports.login = function (req, res) {
+
+  var bodyClass = "login";
  
   var savedbody = req.flash('savedbody'),
       password = savedbody.length && savedbody[0].password?savedbody[0].password:'',
@@ -49,7 +51,8 @@ exports.login = function (req, res) {
     title: 'Login',
     message: req.flash('error'),
     password: password,
-    email: email
+    email: email,
+    bodyClass: bodyClass
   })
 }
 
@@ -58,8 +61,10 @@ exports.login = function (req, res) {
  */
 
 exports.signup = function (req, res) {
+  var bodyClass = "signup";
   res.render('users/signup', {
     title: 'Sign up',
+    bodyClass: bodyClass,
     user: new User()
   })
 }
@@ -69,8 +74,10 @@ exports.signup = function (req, res) {
  */
 
 exports.resetpage = function (req, res) {
+  var bodyClass = "reset";
   res.render('users/reset', {
     title: 'Reset',
+    bodyClass: bodyClass,
     message: req.flash('error')
   })
 }
@@ -93,8 +100,10 @@ exports.loadreset = function(req, res, next, resetid){
  */
 
 exports.resetPWpage = function (req, res) {
+  var bodyClass = "reset";
   if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
   res.render('users/resetpage', {
+    bodyClass: bodyClass,
     title: 'Reset Password',
     message: req.flash('error')
   })
@@ -235,10 +244,12 @@ exports.create = function (req, res) {
  */
 
 exports.show = function (req, res) {
+  var bodyClass = "profile";
   var user = req.profile
   res.render('users/show', {
     title: 'Profile',
-    user: user
+    user: user,
+    bodyClass: bodyClass
   })
 }
 
@@ -264,10 +275,12 @@ exports.user = function (req, res, next, id) {
  */
 
 exports.edit = function (req, res) {
+  var bodyClass = "profile";
   var user = req.profile
   res.render('users/edit', {
     title: 'Edit Profile',
-    user: user
+    user: user,
+    bodyClass: bodyClass
   })
 }
 
