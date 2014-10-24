@@ -92,7 +92,7 @@ var parseTimeQuantity = function(val){
          ,shoebox : ["Date","Store","Note","Total (USD)", "Tax (USD)","Payment Type","Category","Receipt"]
          ,harvest : ["Date","Client","Project","Project Code","Task","Notes","Hours","Billable?","Invoiced?","First Name","Last Name","Department","Employee?","Hourly Rate","Billable Amount","Currency"]
          ,toggl : ["User","Email","Client","Project","Task","Description","Billable","Start date","Start time","End date","End time","Duration","Tags","Amount ()"]
-        // ,timeeye : ["projectId","projectName","billableMinutes","billableExpenses","totalMinutes","totalExpenses"]
+         ,pivotal : ["Date","Last Name","Given Name","Person ID","Project","Hours","Description"]
         // ,timeeye : ["entryDate","userId","userName","projectId","projectName","taskId","taskName","notes","billed","minutes","expenses"]
         // ,timeeye : ["projectId","projectName","fixedAmount","hourlyRate","billableMinutes","billableTimeAmount","billableExpenses","totalMinutes","totalExpenses"]
         ,freckle : ["Date","Person","Group/Client","Project","Minutes","Hours","Tags","Description","Billable","Invoiced","Invoice Reference","Paid"]
@@ -199,6 +199,17 @@ var parseTimeQuantity = function(val){
                   , item : val.Person?val.Person:''
                   , type : 'Time'
                   , note : (val.Description?val.Description:'')+' - '+(val.Project?val.Project:'')+' - '+(val['Group/Client']?val['Group/Client']:'')+' - '+(val.Tags?val.Tags:'')
+              }
+            }
+            break;
+          case "pivotal":
+            rule=function(val){
+              return {
+                    date: val.Date?new Date(val.Date.split('-')):null
+                  , qty : val.Hours?val.Hours:null
+                  , item : (val['Given Name']?val['Given Name']:'')+' '+(val['Last Name']?val['Last Name']:'')+' - '+ (val.Project?val.Project:'')
+                  , type : 'Time'
+                  , note : (val.Description?val.Description:'')
               }
             }
             break;
