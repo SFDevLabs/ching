@@ -50,27 +50,31 @@ block content
           //- this chart needs to be way shorter. like half its current height.
           - if (articles.length)
             -if (totalSent > 1)
-              .chart-wrapper.col-md-12
-                #area-chart
+              //.chart-wrapper.col-md-12
+                //#area-chart
       .row
         - each article in articles
-          - var viewer = article.viewers[0]? article.viewers[0].user.organization:'TBD...';
+          - var viewer = article.viewers[0]? article.viewers[0].user.organization:'';
           a(href='/articles/'+article._id, class="#{article.status.text} article col-md-3 block")
-            p.status #{article.status.text}
+            .status 
+              span #{article.status.text}
+              span.right # #{article.number}
+
             .content
-              -if (viewer == "TBD...")
-                h2.dim Unspecified Client
-              -else
-                h2=viewer
-              p= article.body
+              span recipients:
+              if (article.viewers[0])
+                h3.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
+              if (article.viewers[1])
+                h3.dim #{article.viewers[1].user.organization}
+              if (article.viewers[3])
+                h4.dim more...
 
               .meta
-                -if (article.total)
-                  | &nbsp; - &nbsp;
-                  span Total &nbsp;
-                  span(href="/users/"+article.user._id)= formatCurrency(article.total)
-                  |&nbsp; - &nbsp;
-                  span=article.net
+                | &nbsp; - &nbsp;
+                span Total &nbsp;
+                span(href="/users/"+article.user._id)= formatCurrency(article.total)
+                |&nbsp; - &nbsp;
+                span=article.net
                 -if (article.tags)
                   - each tag in article.tags.split(',')
                     span.tag ##{tag}
@@ -89,4 +93,4 @@ block content
 
 block subfoot
   script(type="text/javascript", src='/js/vendor/d3.js')
-  script(type="text/javascript", src='/js/index-page.js')
+  //script(type="text/javascript", src='/js/index-page.js')

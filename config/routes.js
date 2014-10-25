@@ -127,7 +127,7 @@ module.exports = function (app, passport) {
   app.param('id', articles.load)
   app.get('/articles', auth.requiresLogin, articles.indexSent)
   app.get('/articles/new', auth.requiresLogin, articles.new)
-  app.post('/articles', auth.requiresLogin, articles.create)
+  //app.post('/articles', auth.requiresLogin, articles.create)
 
   app.param('token', articles.token)
   app.get('/articles/:id/token/:token', viewerAuthToken, articles.record, articles.show)

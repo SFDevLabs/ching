@@ -9,13 +9,15 @@ html, body {
   .remove-sidebar tr {
     border: none;
     height: 23px;
-    width: 50px; }
+    width: 40px; }
     .remove-sidebar tr td {
       border: none !important;
       width: 50px; }
       .remove-sidebar tr td a {
         display: none;
         text-decoration: none; }
+        .remove-sidebar tr td a.visible {
+          display: block; }
     .remove-sidebar tr:hover td a {
       display: block; }
 
@@ -80,3 +82,9 @@ button.error {
   height: 100px; }
   #dropzone.dragging {
     border: 5px dashed; }
+
+#ui-datepicker-div {
+  background-color: #fff;
+  border: 1px solid #ddd; }
+  #ui-datepicker-div .ui-icon {
+    text-indent: initial; }

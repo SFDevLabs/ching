@@ -110,7 +110,6 @@
 
       req.article.items=req.body;
       
-      console.log(req.article.items);
       req.article.save(function(err){
           if (!err) {
             res.send( req.article.toJSON() );
@@ -184,6 +183,26 @@
             res.send(500,errMsg(err));
           }
       })
+
+    };
+  }
+  //@TODO
+  //------------------------------
+  // Add Item in Invoice at position
+  //
+  function  getItemDeleteController(model) {
+    return function (req, res) {
+      var key;
+
+      //req.article.update({ "$push": { "items": { "$each": [{}], "$position": req.idt } } });
+
+      // req.article.save(function(err){
+      //     if (!err) {
+      //       res.send(204);
+      //     } else {
+      //       res.send(500,errMsg(err));
+      //     }
+      // })
 
     };
   }

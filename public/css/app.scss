@@ -10,14 +10,18 @@ html, body {
   tr {
     border: none;
     height: 23px;
-    width: 50px;
+    width: 40px;
     td {
       border: none !important;
       width: 50px;
       a {
         display: none;
         text-decoration: none;
+        &.visible{
+        display: block;
+        }
       }
+      
     }
     &:hover td a {
       display: block;
@@ -117,3 +121,13 @@ button.error {
     border: 5px dashed;
   }
 }
+
+//datepicker
+#ui-datepicker-div {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  .ui-icon {
+    text-indent: initial;
+  }
+}
+

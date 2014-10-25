@@ -230,6 +230,15 @@
       });
       this.scrollPasteHack();
 
+
+      this.handsonObj.addHook('afterSelection',function(a, b, c){
+        $('.remove-sidebar tr td a').removeClass('visible')
+        $("[index='"+a+"'] td a").addClass('visible')
+      })
+      this.handsonObj.addHook('afterDeselect',function(a, b, c){
+        $('.remove-sidebar tr td a').removeClass('visible')
+      })
+
     },
     //scrollPasteHack Found at: http://stackoverflow.com/questions/24593357/handsontable-disable-auto-scroll-up-when-pasting-into-a-cell
     scrollPasteHack:function(){
@@ -532,7 +541,8 @@ $('#fileupload').fileupload({
           // })
 
       });
-
+///turn on date picker
+$('.date').datepicker()
 
 // var swap=function(x,y){
 //   var m =$('#example').data('handsontable')

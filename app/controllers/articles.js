@@ -189,25 +189,36 @@ var indexSent = exports.indexSent = function(req, res){
 
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
   var perPage = 10,
-      userID=req.user?req.user._id:null;
+      userID=req.user?req.user._id:null,
+      time = new Date();
+      time.setDate(time.getDate()-30);// set the date 30 days in the past 
   var options = {
     perPage: perPage,
     page: page,
+    firstDate: time
   }
   options.criteria={
     user: userID
   }
 
 
+// Article.aggregate([
+// //  { $match: { status: "A" } },
+//   { $group: { _id: "$user", total: { $sum: "$total" } } },
+//   ],function(err, results){
+
+//     console.log(err,results)
+
+//   res.send(results)
+// });
+
   Article.list(options, function(err, articles) {
     if (err) return res.render('500')
-    // articlesJSON = _.map(articles, function(val, i){
-    //         console.log(val.status, 'stuff2')
 
-    //   console.log(val.status, 'stuff')
-    //   return val
-    // });
-    console.log(articles[0].statusText)
+
+    // res.send(articles[1])
+    // return;    
+
     Article.count().exec(function (err, count) {
 
       res.render('articles/index', {
@@ -228,18 +239,24 @@ var indexSent = exports.indexSent = function(req, res){
 
 exports.new = function(req, res){
 
-  var article = new Article({user:req.user.id});
-  req.article = article;
-  article.save(function(err){
 
-      if (err) {
-        req.flash('error', 'No email')
-        return res.redirect('/articles/'+article._id)
-      }
-      req.flash('success', 'Successfully created article!')
+  Article.highestNumber(req.user.id, function(err, number){
 
-      return res.redirect('/articles/' + article._id)
-  })
+    var article = new Article({user:req.user.id, number:number});
+    req.article = article;
+    article.save(function(err){
+        if (err) {
+          req.flash('error', 'No email')
+          return res.redirect('/articles/'+article._id)
+        }
+        req.flash('success', 'Successfully created article!')
+
+        return res.redirect('/articles/' + article._id)
+    })
+
+  });
+
+
 
 }
 
@@ -295,26 +312,31 @@ exports.new = function(req, res){
  * Create an article
  */
 
-exports.create = function (req, res) {
-  var bodyClass = "show new";
-  var article = new Article(req.body)
-  article.user = req.user
+// exports.create = function (req, res) {
+//   var bodyClass = "show new";
+//   var article = new Article(req.body)
+//   article.user = req.user
 
-  article.save(function (err) {
-    console.log(err)
-    if (!err) {
-      req.flash('success', 'Successfully created article!')
-      return res.redirect('/articles/'+article._id)
-    }
+//   Article.highestNumber(req.user.id, function(err, highest){
+//     console.log(highest)
+//   });
 
-    res.render('articles/new', {
-      title: 'New Article',
-      article: article,
-      bodyClass: bodyClass,
-      error: utils.errors(err.errors || err)
-    })
-  })
-}
+
+//   // article.save(function (err) {
+//   //   console.log(err)
+//   //   if (!err) {
+//   //     req.flash('success', 'Successfully created article!')
+//   //     return res.redirect('/articles/'+article._id)
+//   //   }
+
+//   //   // res.render('articles/new', {
+//   //   //   title: 'New Article',
+//   //   //   article: article,
+//   //   //   bodyClass: bodyClass,
+//   //   //   error: utils.errors(err.errors || err)
+//   //   // })
+//   // })
+// }
 
 /**
  * Edit an article
@@ -427,12 +449,6 @@ exports.pdf = function(req, res){
     var doc = new pdfDocument();
 
     var m=doc.font('Times-Roman', 12)
-    
-    // m.text('jeff')
-    // m.addPage();
-    // m.text('jeff')
-
-
     
 
     var drawRows = function(rows, margin,rowHeight,colPadding){

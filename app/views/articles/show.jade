@@ -7,6 +7,8 @@ block extrahead
   link(rel='stylesheet', href='/css/jquery-ui.ching.theme.css')
 
 block main
+  p=article.number
+  p=article.total
   .controls
     .container
       .row
@@ -15,10 +17,10 @@ block main
             form(action="/articles/"+article.id, method="post")
               input(type='hidden', name='_csrf', value="#{csrf_token}")
               input(type="hidden", name="_method", value="DELETE")
-              
-              span.btn.btn-danger.subtle
-                span.typcn.typcn-times
-                |  Delete
+              button.btn.btn-danger.subtle(type='submit')
+                  span.typcn.typcn-user-add
+                    |  Delete
+
 
             a.btn(href="/articles/" + article._id + "/pdf")
               span.typcn.typcn-document-text
@@ -57,9 +59,10 @@ block content
                 h2(class="#{article.status.text} #{hasImage}") #{article.status.text}
 
               -if (article.title)
-                h1= article.title
+                h1 article.title
               -else
-                h1 Invoice 
+                a(href="")
+                  h1 add title 
               -if (article.status.text != "draft" && req.user && req.article.user.id===req.user.id)
                 h3 Views:&nbsp;
                   - each view in article.views
@@ -87,7 +90,8 @@ block content
                 span.btn.btn-default.btn-edit
                   span.typcn.typcn-edit
                   |  Edit
-              h2.mini Net #{article.net}
+              h4.mini  Number: #{article.number}
+              h4.mini Due Date: #{article.net}
               h4.gray
                 span Created 
                 span= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
@@ -161,34 +165,31 @@ block content
     .container
       .row
         .col-md-12
-          .col-md-6
-            button#pop_car.btn.btn-default
-              | Pop
-      .row
-        .col-md-12
           .col-md-12.table-container
             #grid
             table.remove-sidebar
               tbody
       .row.clear
         .col-md-12
-          hr
+          br
           .col-md-12
-            div#total
-              span
-                |Total:&nbsp;
-              span.amount
+            .col-md-6
+              button#add_car_time.btn.btn-default
+                span.typcn.typcn-watch
+                |  Add Time
+              button#add_car_item.btn.btn-default
+                span.typcn.typcn-plus
+                |  Add Item
+            .col-md-6
+              div#total
+                span
+                  |Total:&nbsp;
+                span.amount
       hr
       .row
         .col-md-12
           .col-md-6
-            h3 Enter items one at a time
-            button#add_car_time.btn.btn-default
-              span.typcn.typcn-watch
-              |  Add Time
-            button#add_car_item.btn.btn-default
-              span.typcn.typcn-plus
-              |  Add Item
+
           .col-md-6
             h3 Import items from file
             p
@@ -224,7 +225,7 @@ block subfoot
       .modal-wrap.col-lg-8
         span.close-button
           span.typcn.typcn-delete
-        form(class="block edit-content", method="post", action=action, enctype="multipart/form-data", role="form")
+        form(class="block edit-content", method="post", action="/articles/"+article.id, enctype="multipart/form-data", role="form")
 
           input(type="hidden", name="_csrf", value="#{csrf_token}")
 
@@ -248,8 +249,8 @@ block subfoot
             input.form-control#tags(type='text', name="tags", value=article.tags, placeholder='Enter the tags')
 
           .form-group
-            label.control-label(for='tags') Net
-            input.form-control#tags(type='number', name="net", value=article.net, placeholder='net')
+            label.control-label(for='tags') Due Date
+            input.form-control#date.date(type='text', name="dueDate", value=article.net, placeholder='Due Date')
 
           .form-group
             button.left-float.btn.action(type='submit')
