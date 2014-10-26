@@ -383,10 +383,10 @@ exports.show = function(req, res, next){
     return s && s[0].toUpperCase() + s.slice(1);
   }
   if (req.article.title) {
-    var title = capitalize(req.article.status.text) + " - " + req.article.title
+    var title = capitalize(req.article.status) + " - " + req.article.title
   }
   else {
-    var title = capitalize(req.article.status.text) + " - Invoice";
+    var title = capitalize(req.article.status) + " - Invoice";
   }
 
   res.render('articles/show', {

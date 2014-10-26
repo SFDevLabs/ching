@@ -83,12 +83,10 @@ var ArticleSchema = new Schema({
   },
   createdAt  : {type : Date, default : Date.now},
   items: [itemsSchema],
-  status: {
-    invoicedOn:{type : Date, default : null},
-    paidOn:{type : Date, default : null},
-    dueOn:{type : Date, default : null}
-  },
-  addresss: {type : String, default : 'draft', trim : true},
+  invoicedOn:{type : Date, default : null},
+  paidOn:{type : Date, default : null},
+  dueOn:{type : Date, default : null},
+  address: {type : String, default : '', trim : true},
   currency: {type : String, default : 'USD', trim : true},
 });
 
@@ -112,7 +110,7 @@ ArticleSchema
 
 
 ArticleSchema
-  .virtual('status.text')
+  .virtual('status')
   // .set(function(password) {
   //   this._password = password
   //   this.salt = this.makeSalt()
@@ -120,15 +118,18 @@ ArticleSchema
   // })
   .get(function() { 
      var val
-      if (this.status.invoicedOn===null)
+      if (this.invoicedOn===null)
         val='draft'
-      else if (this.status.paidOn!==null){
+      else if (this.paidOn!==null){
         val='paid'
-      }else if (this.status.paidOn===null && val.status.dueOn && Date.now>val.status.dueOn){
+      }else if (this.paidOn===null && this.dueOn && new Date()>this.dueOn){
         val='overdue'
-      } else if (this.status.invoicedOn!==null){
+      } else if (this.invoicedOn!==null){
         val='sent'
       }
+      console.log(val, this.dueOn)
+          console.log(val)
+
       return val
 
   })

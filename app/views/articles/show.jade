@@ -7,8 +7,6 @@ block extrahead
   link(rel='stylesheet', href='/css/jquery-ui.ching.theme.css')
 
 block main
-  p=article.number
-  p=article.total
   .controls
     .container
       .row
@@ -29,9 +27,10 @@ block main
             form(action="/articles/"+article.id+'/send', method="post")
               input(type='hidden', name='_csrf', value="#{csrf_token}")
               input(type="hidden", name="_method", value="POST")
-              span.btn.subtle
-                span.typcn.typcn-mail
-                |  Send
+              button.btn.subtle(type='submit')
+                  span.typcn.typcn-mail
+                    |  Send
+      
 
 
 
@@ -47,23 +46,24 @@ block content
                 - var hasImage = "col-md-9"
               - else
                 - var hasImage = ""
-              -if (article.status.text == "sent")
-                h2(class="#{article.status.text} #{hasImage}") #{article.status.text} #{article.status.invoicedOn}
-              -else if (article.status.text == "paid")
-                h2(class="#{article.status.text} #{hasImage}") #{article.status.text} #{article.status.paidOn}
-              -else if (article.status.text == "overdue")
+              -if (article.status == "sent")
+                h2(class="#{article.status} #{hasImage}") Sent on #{formatDate(article.invoicedOn)}
+              -else if (article.status == "paid")
+                h2(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paidOn)}
+              -else if (article.status == "overdue")
                 -var today = new Date()
-                -var pastDue = new Date((today.getTime() - article.dueOn.getTime())).toDateString()
-                h2(class="#{article.status.text} #{hasImage}") #{article.status.text} #{pastDue}
+                -var pastDue = Math.round( (today.getTime() - article.dueOn.getTime())/86400000 )
+                h2(class="#{article.status} #{hasImage}") Overdue #{pastDue} days
               -else
-                h2(class="#{article.status.text} #{hasImage}") #{article.status.text}
+                h2(class="#{article.status} #{hasImage}") #{article.status}
 
               -if (article.title)
                 h1 article.title
               -else
-                a(href="")
-                  h1 add title 
-              -if (article.status.text != "draft" && req.user && req.article.user.id===req.user.id)
+                br
+                a.btn-edit Add a title...
+                    
+              -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
                 h3 Views:&nbsp;
                   - each view in article.views
                     - if (view.user!=null)
@@ -90,11 +90,20 @@ block content
                 span.btn.btn-default.btn-edit
                   span.typcn.typcn-edit
                   |  Edit
-              h4.mini  Number: #{article.number}
-              h4.mini Due Date: #{article.net}
+              h4.mini  InvoiceNumber: #{article.number}
+              if (article.dueOn)
+                h4.mini Due Date: #{formatDate(article.dueOn)}  
+              else
+                 h4.mini Due Date: 
+                  a.btn-edit Add Due Date
+              if (article.invoicedOn)
+                h4.mini Invoiced On: #{formatDate(article.invoicedOn)}
+              if (article.paidOn)
+                h4.mini Paid On: #{formatDate(article.paidOn)}   
               h4.gray
                 span Created 
                 span= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
+                
       hr
       .row
         .col-md-8
@@ -191,18 +200,14 @@ block content
           .col-md-6
 
           .col-md-6
-            h3 Import items from file
+            h3 Import items from .csv file
             p
               input(id="fileupload", type="file", name="files[]", multiple)
             #dropzone
               span.typcn.typcn-folder-open
             div(id="files", class="files")
-            br
-            textarea#csv-ajax
-        .col-md-12
-          .col-md-6
-            button.btn.subtle.btn-danger#destroyPreview Cancel
-            #preview
+            //br
+            //textarea#csv-ajax(placeholder="paste csv text here!")
 
 
             
@@ -247,16 +252,24 @@ block subfoot
           .form-group
             label.control-label(for='tags') Tags
             input.form-control#tags(type='text', name="tags", value=article.tags, placeholder='Enter the tags')
-
           .form-group
             label.control-label(for='tags') Due Date
-            input.form-control#date.date(type='text', name="dueDate", value=article.net, placeholder='Due Date')
-
+            -var date=article.dueOn?(article.dueOn.getMonth()+1)+'/'+article.dueOn.getDate()+'/'+article.dueOn.getFullYear():'';
+            input.form-control#date.date(type='text', name="dueOn", value=date, placeholder='Due Date')
+          .form-group.quickdates
+            a(value='15') 15 Days
+            &nbsp|&nbsp&nbsp
+            a(value='30') 30 Days
+            &nbsp|&nbsp&nbsp
+            a(value='60') 60 Days
+            &nbsp|&nbsp&nbsp
+            a(value='90') 90 Days
+            span.muted &nbsp&nbsp(from today)
           .form-group
-            button.left-float.btn.action(type='submit')
+            button.right-float.btn.action(type='submit')
               span.typcn.typcn-tick
               |  Save
-            a.right-float.btn.subtle.cancel.btn-danger(href='/articles', title="cancel")
+            a.left-float.btn.subtle.cancel.btn-danger(title="cancel")
               span.typcn.typcn-times
               |  Cancel
 

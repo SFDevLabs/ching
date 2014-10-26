@@ -11,13 +11,13 @@ block content
     - var paidCount = 0;
     - var overdueCount = 0;
     -each article in articles
-      -if (article.status.text == "draft")
+      -if (article.status == "draft")
         -  draftCount++
-      -else if (article.status.text == "sent")
+      -else if (article.status == "sent")
         -  sentCount++
-      -else if (article.status.text == "paid")
+      -else if (article.status == "paid")
         -  paidCount++
-      -else if (article.status.text == "overdue")
+      -else if (article.status == "overdue")
         -  overdueCount++
     - var totalSent = paidCount + sentCount + overdueCount;
     - var total = totalSent + draftCount;
@@ -55,9 +55,9 @@ block content
       .row
         - each article in articles
           - var viewer = article.viewers[0]? article.viewers[0].user.organization:'';
-          a(href='/articles/'+article._id, class="#{article.status.text} article col-md-3 block")
+          a(href='/articles/'+article._id, class="#{article.status} article col-md-3 block")
             .status 
-              span #{article.status.text}
+              span #{article.status}
               span.right # #{article.number}
 
             .content

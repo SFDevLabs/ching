@@ -544,6 +544,15 @@ $('#fileupload').fileupload({
 ///turn on date picker
 $('.date').datepicker()
 
+$('.quickdates a').on('click',function(){
+  var val = $(this).attr('value'),
+      dateDiv = $('#date'),
+      myDate = new Date();//dateDiv.datepicker('getDate');
+
+      myDate.setDate(myDate.getDate() + Number(val));
+      dateDiv.datepicker('setDate',myDate);
+})
+
 // var swap=function(x,y){
 //   var m =$('#example').data('handsontable')
 //   //     ,colOneData = m.getDataAtCol(colOne)

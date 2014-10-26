@@ -94,6 +94,8 @@ exports.sendInvoice=function(req, res){
           };
           sent.push(json)
           if (sent.length===articleJSON.viewers.length){
+            article.invoicedOn=new Date();
+            article.save();
             req.flash('success', 'Invoice Sent to '+articleJSON.viewers.length+' people.')
             res.redirect('/articles/'+ article.id)            
           }
