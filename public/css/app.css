@@ -88,3 +88,17 @@ button.error {
   border: 1px solid #ddd; }
   #ui-datepicker-div .ui-icon {
     text-indent: initial; }
+
+#csv-file .csv-paste-text {
+  display: none; }
+#csv-file.visible .csv-paste-text {
+  display: block; }
+#csv-file.visible .csv-drop-file {
+  display: none; }
+
+#csv-ajax {
+  width: 100%;
+  height: 200px; }
+
+#preview-area {
+  margin-top: 30px; }

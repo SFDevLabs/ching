@@ -131,3 +131,29 @@ button.error {
   }
 }
 
+#csv-file{
+  .csv-drop-file{
+
+  }
+  .csv-paste-text{
+    display:none;
+  }
+  &.visible{
+    .csv-paste-text{
+      display:block;
+    }
+    .csv-drop-file{
+      display:none;
+    }
+  }
+}
+
+#csv-ajax{
+  width:100%;
+  height:200px;
+}
+
+#preview-area{
+  margin-top:30px
+}
+

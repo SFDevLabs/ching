@@ -411,35 +411,7 @@ var setterFactor=function(attr){
 
 
 
-var post = function(){
 
-  $.ajax({
-    type: "POST",
-    url: '/upload',
-    data: {
-      csv:$('#csv-ajax').val()
-    },
-  
-    success: function(result, xhr, jqxhr){
-
-
-        var keys = _.keys(result.data[0])
-            , values = _.map(result.data,function(val){ return _.values(val) });
-
-        $('#example').handsontable({
-          data: values,
-          minSpareRows: 1,
-          colHeaders: keys,
-          contextMenu: true
-        });
-
-
-    },
-    dataType: 'json'
-  });
-
-
-}
 
 
 
@@ -470,6 +442,23 @@ $('#destroyPreview').on('click', function(e){
 //       alert('Use Command & p to paste into the grid');
 //   }
 // });
+// 
+var post = function(){
+
+  $.ajax({
+    type: "POST",
+    url: aId+'/upload',
+    data: {
+      csv:$('#csv-ajax').val()
+    },
+    success: function(result, xhr, jqxhr){
+        renderCSV( result.data, result.status)
+    },
+    dataType: 'json'
+  });
+  $('#csv-ajax').val('');
+
+}
 
 $('#fileupload').fileupload({
         url: aId+'/upload'
@@ -489,25 +478,9 @@ $('#fileupload').fileupload({
     })
     .on('fileuploaddone', function (e, data) {
         
-        if (!data.result.data.length){
-          return false
-        };
-
-
-        var keys = _.keys(data.result.data[0])
-            , values = _.map(data.result.data,function(val){ return _.values(val) });
-
-        if (data.result.status!=='raw data'){//
-                  cars.fetch();
-            } else {
-                $('#preview').handsontable({
-                  data: values
-                  ,minSpareRows: 1
-                  ,colHeaders: keys
-                  ,columnSorting: true
-                });
-        }
-
+        renderCSV( data.result.data, data.result.status)
+     
+      
         
         //var addRowCount=App.handsonObj.getColHeader().length-keys.length;
 
@@ -541,6 +514,28 @@ $('#fileupload').fileupload({
           // })
 
       });
+
+var renderCSV = function(data, status){
+
+          if (!data.length){
+          return false
+        };
+
+
+        var keys = _.keys(data[0])
+            , values = _.map(data,function(val){ return _.values(val) });
+
+        if (status!=='raw data'){//
+                  cars.fetch();
+            } else {
+                $('#preview').handsontable({
+                  data: values
+                  ,minSpareRows: 1
+                  ,colHeaders: keys
+                  ,columnSorting: true
+                });
+        }
+}
 ///turn on date picker
 $('.date').datepicker()
 
@@ -552,6 +547,10 @@ $('.quickdates a').on('click',function(){
       myDate.setDate(myDate.getDate() + Number(val));
       dateDiv.datepicker('setDate',myDate);
 })
+
+$('#csv-file a').on('click',function(){
+  $('#csv-file').toggleClass('visible');
+});
 
 // var swap=function(x,y){
 //   var m =$('#example').data('handsontable')
