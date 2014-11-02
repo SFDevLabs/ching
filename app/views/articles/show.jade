@@ -11,7 +11,11 @@ block main
     .container
       .row
         .col-md-12
-          a.btn(href="/articles/" + article._id + "/pdf")
+
+          - var actionPDF = "/articles/"+article._id+"/pdf"
+          -if(req.token){actionPDF+= '/token/'+req.token}          
+
+          a.btn(href=actionPDF)
             span.typcn.typcn-document-text
             |  Download PDF 
 
@@ -358,8 +362,6 @@ block subfoot
       $("body").on("click", ".confirm-send-modal .close-button", function() {
         $(".confirm-send-modal").fadeOut();
       });
-
-
 
       $("body").on("click", ".edit-properties-modal .close-button, .edit-properties-modal .cancel.btn", function() {
         $(".edit-properties-modal").fadeOut();
