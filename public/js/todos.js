@@ -538,6 +538,7 @@ var renderCSV = function(data, status){
 }
 ///turn on date picker
 $('.date').datepicker()
+ $("abbr.timeago").timeago();
 
 $('.quickdates a').on('click',function(){
   var val = $(this).attr('value'),

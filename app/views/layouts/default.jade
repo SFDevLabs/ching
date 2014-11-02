@@ -2,10 +2,9 @@ doctype html
 html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.facebook.com/2008/fbml', itemscope='itemscope', itemtype='http://schema.org/Product')
   include ../includes/head
   body(class=bodyClass)
-    -if (req.isAuthenticated()) 
-      include ../includes/header
-      -if (req.info || req.errors || req.success || req.warning)
-        include ../includes/messages
+    include ../includes/header
+    -if (req.info || req.errors || req.success || req.warning)
+      include ../includes/messages
     block main
     block content
     -if (req.isAuthenticated()) 

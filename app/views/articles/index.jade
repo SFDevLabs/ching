@@ -24,7 +24,7 @@ block content
     .container.list
       header.row
         -if (received == "yes")
-          h1.left.col-md-3= title
+          h1.left.col-md-3=title
         -else
           h1.left.col-md-3 Invoices
         ul.right.counts.col-md-9
@@ -61,11 +61,15 @@ block content
               span.right # #{article.number}
 
             .content
-              span recipients:
+              if (article.title)
+                h4=article.title
+              else
+                br
               if (article.viewers[0])
-                h3.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
+                span recipients:
+                h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
               if (article.viewers[1])
-                h3.dim #{article.viewers[1].user.organization}
+                h4.dim #{article.viewers[1].user.organization}
               if (article.viewers[3])
                 h4.dim more...
 
@@ -78,9 +82,9 @@ block content
                 -if (article.tags)
                   - each tag in article.tags.split(',')
                     span.tag ##{tag}
-              p.date.muted
-                | Created 
-                span= formatDatetime(article.createdAt)
+              p.date
+                | Created: 
+                span.dim= formatDatetime(article.createdAt)
 
 
       - if (pages > 1)

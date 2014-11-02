@@ -35,7 +35,9 @@ html, body {
     padding-right: 15px; }
 
 #total {
-  float: right; }
+  font-size: 2em;
+  float: right;
+  margin-right: 25px; }
 
 .container .text-muted {
   margin: 20px 0; }

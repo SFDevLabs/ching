@@ -11,6 +11,14 @@ block main
     .container
       .row
         .col-md-12
+          a.btn(href="/articles/" + article._id + "/pdf")
+            span.typcn.typcn-document-text
+            |  Download PDF 
+
+          a.btn(href="/articles/" + article._id + "/pdf")
+            span.typcn.typcn-document-text
+            |  Download CSV
+
           - if (req.user && req.article && req.article.user.id===req.user.id)
             form(action="/articles/"+article.id, method="post")
               input(type='hidden', name='_csrf', value="#{csrf_token}")
@@ -19,19 +27,14 @@ block main
                   span.typcn.typcn-user-add
                     |  Delete
 
-
-            a.btn(href="/articles/" + article._id + "/pdf")
-              span.typcn.typcn-document-text
-              |  Download PDF 
-
-            form(action="/articles/"+article.id+'/send', method="post")
-              input(type='hidden', name='_csrf', value="#{csrf_token}")
-              input(type="hidden", name="_method", value="POST")
-              button.btn.subtle(type='submit')
-                  span.typcn.typcn-mail
-                    |  Send
-      
-
+            -if ( article.status === 'draft' )
+              button.btn.subtle.btn-confirm-send
+                span.typcn.typcn-mail
+                  |  Send
+            -else 
+              button.btn.subtle.btn-confirm-send
+                span.typcn.typcn-mail
+                  |  Re-Send
 
 
 block content
@@ -58,25 +61,11 @@ block content
                 h2(class="#{article.status} #{hasImage}") #{article.status}
 
               -if (article.title)
-                h1 article.title
+                h1=article.title
               -else
                 br
                 a.btn-edit Add a title...
                     
-              -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
-                h3 Views:&nbsp;
-                  - each view in article.views
-                    - if (view.user!=null)
-                      .view
-                        span.firstname=view.user.firstname
-                        | &nbsp;
-                        span.lastname=view.user.lastname
-                        | &nbsp; with &nbsp;
-                        span.organization=view.user.organization
-                        | &nbsp;(
-                        span.email.muted=view.user.email
-                        | )&nbsp; at &nbsp;
-                        span.time.muted= formatDatetime(view.viewedAt, "%b %d, %Y at %I:%M %p")
               -if (article.body)
                 p=article.body
               - if (article.tags)
@@ -103,7 +92,21 @@ block content
               h4.gray
                 span Created 
                 span= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
-                
+      hr
+      .row
+        .col-md-8
+          .meta.clear.show-view
+            div.view-content
+                .clear.to-block.clearfix
+                  p.col-sm-2 From:
+                  div.col-sm-4.to
+                    -if (article.user.firstname || article.user.lastname)
+                      p
+                        strong #{article.user.firstname} #{article.user.lastname}
+                    p=article.user.email      
+                    -if(article.user.organization)
+                      p.gray='Organization: '
+                      p=article.user.organization
       hr
       .row
         .col-md-8
@@ -120,52 +123,44 @@ block content
                         p
                           strong #{viewer.user.firstname} #{viewer.user.lastname}
                         p=viewer.user.email
+                        p.gray='Organization: '
                         p=viewer.user.organization
                         form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
                           input(type='hidden', name='_csrf', value="#{csrf_token}")
                           input(type="hidden", name="_method", value="DELETE")
                           div.close-button
                             span.typcn.typcn-delete
-                hr
-                .clear.clearfix
-                  p.col-sm-2 From:
-                  div.col-sm-4
-                    -if (article.user.firstname || article.user.lastname)
-                      p
-                        strong #{article.user.firstname} #{article.user.lastname}
-                    -if(article.user.organization)
-                      p.gray='Organization: '
-                      p=article.user.organization
-                    p=article.user.email
 
-        .col-md-4
-          button.right.btn.add-recipient-trigger.closed
-            span.typcn.typcn-user-add
-              |  Add Recipient
+        - if (req.user && req.article && req.article.user.id===req.user.id)
+          .col-md-4
+            button.right.btn.add-recipient-trigger.closed
+              span.typcn.typcn-user-add
+                |  Add Recipient
           .row.clear
             .right-float.add-recipient-form
               div.add-recipient-position
                 span.close-button
                   span.typcn.typcn-delete
-                form.block(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
-                  input(type="hidden", name="_csrf", value="#{csrf_token}")
-                  input(type="hidden", name="_method", value="POST")
-                  .form-group
-                    label.control-label(for='title') Email
-                    input.form-control#title(type='text', name="email")
-                  .form-group
-                    label.control-label(for='title') First Name
-                    input.form-control#title(type='text', name="firstname")
-                  .form-group
-                    label.control-label(for='title') Last Name
-                    input.form-control#title(type='text', name="lastname")
-                  .form-group
-                    label.control-label(for='title') Organization <em><strong>(Optional)</strong></em>
-                    input.form-control#title(type='text', name="organization")
-                  .form-group
-                    button.btn.subtle(type='submit')
-                      span.typcn.typcn-user-add
-                        |  Save
+                - if (true)
+                  form.block(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
+                    input(type="hidden", name="_csrf", value="#{csrf_token}")
+                    input(type="hidden", name="_method", value="POST")
+                    .form-group
+                      label.control-label(for='title') Email
+                      input.form-control#title(type='text', name="email")
+                    .form-group
+                      label.control-label(for='title') First Name
+                      input.form-control#title(type='text', name="firstname")
+                    .form-group
+                      label.control-label(for='title') Last Name
+                      input.form-control#title(type='text', name="lastname")
+                    .form-group
+                      label.control-label(for='title') Organization <em><strong>(Optional)</strong></em>
+                      input.form-control#title(type='text', name="organization")
+                    .form-group
+                      button.btn.subtle(type='submit')
+                        span.typcn.typcn-user-add
+                          |  Save
         .clear
           .col-md-12
             hr
@@ -201,28 +196,48 @@ block content
         .col-md-12
           #preview
           a(href='')
-      hr
-      .row
-        .col-md-12
-          .col-md-6
+      - if (req.user && req.article && req.article.user.id===req.user.id)
+        hr
+        .row
+          .col-md-12
+            .col-md-6
+            .col-md-6#csv-file
+              h3 
+                | Import from 
+                a(target="_blank", href='http://office.microsoft.com/en-us/excel-help/import-or-export-text-txt-or-csv-files-HP010099725.aspx') Comma-separated values
+              .csv-drop-file
+                p
+                  input(id="fileupload", type="file", name="files[]", multiple)
+                #dropzone
+                  span.typcn.typcn-folder-open
+                div(id="files", class="files")
+              .csv-paste-text
+                textarea#csv-ajax(placeholder="paste csv text here!")
+                a.btn.subtle(onclick="post()") Submit
+              a.click(href='#none') &nbsp (toggle textarea and file upload)
+    
+    -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
+      .container
+        .row
+          .col-md-12
+            hr
+            .col-md-8
+                h3 Views:&nbsp;
+                - each view in article.views.reverse()
+                  - if (view.user!=null)
+                    .view
+                      abbr.timeago(title="#{view.viewedAt.toISOString()}")
+                      | &nbsp;:&nbsp;
+                      .right 
+                        span.firstname=view.user.firstname
+                        | &nbsp;
+                        span.lastname=view.user.lastname
+                        | &nbsp; - &nbsp;
+                        span.organization=view.user.organization
+                        | &nbsp; - &nbsp;
+                        span.email=view.user.email
+                        
 
-          .col-md-6#csv-file
-            h3 
-              | Import from 
-              a(href='http://office.microsoft.com/en-us/excel-help/import-or-export-text-txt-or-csv-files-HP010099725.aspx') Comma-separated values
-            .csv-drop-file
-              p
-                input(id="fileupload", type="file", name="files[]", multiple)
-              #dropzone
-                span.typcn.typcn-folder-open
-              div(id="files", class="files")
-            .csv-paste-text
-              textarea#csv-ajax(placeholder="paste csv text here!")
-              a.btn.subtle(onclick="post()") Submit
-            a.click(href='#none') &nbsp (toggle textarea and file upload)
-
-
-            
     .container
       .row
         .col-md-12
@@ -234,13 +249,36 @@ block content
             include ../comments/form
 
 block subfoot
+  .modal.confirm-send-modal
+    .container
+      .modal-wrap.col-lg-8
+        span.close-button
+          span.typcn.typcn-delete
+        -if ( article.viewers.length===0 )
+          p Please ADD a RECIPIENT to this invoice.
+        -else if ( article.status === 'draft' )
+          p Do you want to Send this invoice to #{article.viewers.length} recipient(s)?
+          form(action="/articles/"+article.id+'/send', method="post")
+            input(type='hidden', name='_csrf', value="#{csrf_token}")
+            input(type="hidden", name="_method", value="POST")
+            button.btn.subtle(type='submit')
+              span.typcn.typcn-mail
+                |  Send
+        -else
+          p Do you want to Re-send this invoice to #{article.viewers.length} recipient(s)?
+          form(action="/articles/"+article.id+'/send', method="post")
+            input(type='hidden', name='_csrf', value="#{csrf_token}")
+            input(type="hidden", name="_method", value="POST")
+            button.btn.subtle(type='submit')
+              span.typcn.typcn-mail
+                |  Re-Send
+
   .modal.edit-properties-modal
     .container
       .modal-wrap.col-lg-8
         span.close-button
           span.typcn.typcn-delete
         form(class="block edit-content", method="post", action="/articles/"+article.id, enctype="multipart/form-data", role="form")
-
           input(type="hidden", name="_csrf", value="#{csrf_token}")
 
           - if (!article.isNew)
@@ -292,6 +330,8 @@ block subfoot
   script(type="text/javascript", src="/js/vendor/jquery.ui.widget.js")
   script(type="text/javascript", src="/js/vendor/jquery.iframe-transport.js")
   script(type="text/javascript", src="/js/vendor/jquery.fileupload.js")
+  script(type="text/javascript", src="/js/vendor/jquery.timeago.js")
+
   script(type="text/javascript", src="/js/todos.js")
   script.
     $( document ).ready(function() {
@@ -305,10 +345,22 @@ block subfoot
         $(".add-recipient-trigger").removeClass("opened").addClass("closed");
       });
 
+
       $("body").addClass("view-state");
       $("body").on("click", ".btn-edit", function() {
         $(".edit-properties-modal").fadeIn();
       });
+
+      $("body").on("click", ".btn-confirm-send", function() {
+        $(".confirm-send-modal").fadeIn();
+      });
+
+      $("body").on("click", ".confirm-send-modal .close-button", function() {
+        $(".confirm-send-modal").fadeOut();
+      });
+
+
+
       $("body").on("click", ".edit-properties-modal .close-button, .edit-properties-modal .cancel.btn", function() {
         $(".edit-properties-modal").fadeOut();
       });

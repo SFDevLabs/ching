@@ -24,7 +24,8 @@ module.exports = function (app, config, passport) {
     level: 9
   }))
 
-  app.use(express.favicon())
+  app.use(express.favicon(config.root + '/public/favicon.ico'));
+
   app.use(require('stylus').middleware({ src: config.root + '/public' }));
   app.use(require('node-sass').middleware({src: config.root  + '/public' }));
   app.use(express.static(config.root + '/public'))
