@@ -431,8 +431,8 @@ exports.destroy = function(req, res){
 
 var formateDate = function(d){
   var string = '';
-  string=d.getDate()+'/' // Returns the date
-  string+=d.getMonth()+'/' // Returns the month
+  string+=(d.getMonth()+1)+'/' // Returns the month
+  string+=d.getDate()+'/' // Returns the date
   string+=d.getFullYear() // Returns the year
   return string;
 }
@@ -445,14 +445,10 @@ exports.pdf = function(req, res){
 
 
 
-    // // Create PDF
+    // Create PDF
     var doc = new pdfDocument();
-
     var m=doc.font('Times-Roman', 12)
-    
-
     var drawRows = function(rows, margin,rowHeight,colPadding){
-
         var keys = _.keys(itemsSchema).sort(function(key,keyTwo){
               return itemsSchema[key].columnPosition>itemsSchema[keyTwo].columnPosition
             });
@@ -478,18 +474,10 @@ exports.pdf = function(req, res){
         rows.forEach(function(rowObj, rowIndex){
             var rowWidthIndex = 0;
 
-                   // console.log(rowObj)
-
               keys.forEach(function(key){
                   var colIndex = itemsSchema[key].columnPosition,
                       rowWidth =itemsSchema[key].printColWidth,
                       content;
-                    // var filtered= _.values(itemsSchema).filter(function(val){return val.columnPosition<colIndex}).map(function(val){ return val.printColWidth})
-                    //     ,sum = filtered.length?filtered.reduce(function(a,b){ return a+b}):0;
-
-                    //                     console.log(sum)
-
-                    //console.log(key,rowObj[key])
 
                   if (key==='date'){
                     content = rowObj[key]?formateDate(rowObj[key]):'';
@@ -503,9 +491,6 @@ exports.pdf = function(req, res){
                     content = rowObj[key]?String(rowObj[key]):''
                   }
 
-                  // if (key==='note'){
-
-                  // }
                   
                   doc.text(
                     content, 
@@ -525,25 +510,28 @@ exports.pdf = function(req, res){
     // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
     // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
 
+    doc.text('Title: '+req.article.title);
+    var perPage = 15
+      , rowHeight = 45
+      , colPadding = 5
+      , margin = {left:50,top:50}
+      , perPageFirst = 10
+      , marginFirst = {left:50,top:200}
+      , lastIndex = 0
+      , nextIndex = perPageFirst;
+    req.article.items.forEach(function(val, i){
 
-    // drawRows(req.article.items,{left:50,top:50})
-    // console.log(req.article.items.length)
 
-     req.article.items.forEach(function(val, i){
-
-        var perPage = 15
-          , rowHeight = 45
-          , colPadding = 5
-          , margin = {left:50,top:50};
-
-        if (i===0){
-          drawRows(req.article.items.slice(i,i+perPage),margin, rowHeight, colPadding);
-        }else if ( (i % perPage)===0){
-          doc.addPage();
-          drawRows(req.article.items.slice(i,i+perPage),margin, rowHeight, colPadding);
+        if (i==nextIndex){
+          //drawRows(req.article.items.slice(i,perPageFirst),marginFirst, rowHeight, colPadding);
+        //}else if ( nextIndex == i ){
+          if(lastIndex!==0){doc.addPage()};
+          drawRows(req.article.items.slice(lastIndex,nextIndex),lastIndex!==0?margin:marginFirst, rowHeight, colPadding);
+          nextIndex+=perPage;
+          lastIndex=(nextIndex-perPage)
         }
 
-     });
+    });
 
     // req.article.items.forEach(function(rowObj, rowIndex){
 

@@ -19,9 +19,9 @@ block main
             span.typcn.typcn-document-text
             |  Download PDF 
 
-          a.btn(href="/articles/" + article._id + "/pdf")
-            span.typcn.typcn-document-text
-            |  Download CSV
+          //- a.btn(href="/articles/" + article._id + "/pdf")
+          //-   span.typcn.typcn-document-text
+          //-   |  Download CSV
 
           - if (req.user && req.article && req.article.user.id===req.user.id)
             form(action="/articles/"+article.id, method="post")

@@ -150,10 +150,6 @@ module.exports = function (app, passport) {
 
 
 
-
-
-
-
   // home route
   app.get('/',  articles.homeOrSent)
   app.get('/sent', auth.requiresLogin,  articles.indexSent)
