@@ -510,7 +510,13 @@ exports.pdf = function(req, res){
     // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
     // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
 
-    doc.text('Title: '+req.article.title);
+    doc.text('Title: '+req.article.title)
+
+
+   doc.moveTo(0, 100)
+      .lineTo(600, 100)
+      .stroke() 
+
     var perPage = 15
       , rowHeight = 45
       , colPadding = 5
