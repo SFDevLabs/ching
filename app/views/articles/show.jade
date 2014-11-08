@@ -129,10 +129,10 @@ block content
                         p=viewer.user.email
                         p.gray='Organization: '
                         p=viewer.user.organization
-                        form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')")
+                        form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id)
                           input(type='hidden', name='_csrf', value="#{csrf_token}")
                           input(type="hidden", name="_method", value="DELETE")
-                          div.close-button
+                          button.close-button(type="submit")
                             span.typcn.typcn-delete
 
         - if (req.user && req.article && req.article.user.id===req.user.id)
@@ -225,21 +225,23 @@ block content
         .row
           .col-md-12
             hr
-            .col-md-8
-                h3 Views:&nbsp;
-                - each view in article.views.reverse()
-                  - if (view.user!=null)
-                    .view
-                      abbr.timeago(title="#{view.viewedAt.toISOString()}")
-                      | &nbsp;:&nbsp;
-                      .right 
-                        span.firstname=view.user.firstname
-                        | &nbsp;
-                        span.lastname=view.user.lastname
-                        | &nbsp; - &nbsp;
-                        span.organization=view.user.organization
-                        | &nbsp; - &nbsp;
-                        span.email=view.user.email
+            h3 Events:&nbsp;
+            - each view in article.views.reverse()
+              - if (view.user!=null)
+                  .views
+                    abbr.timeago(title="#{view.viewedAt.toISOString()}")
+                    span.firstname=view.user.firstname
+                      | &nbsp;
+                    span.lastname=view.user.lastname
+                      | &nbsp;
+                    - if (view.user.organization)
+                      span.organization='('+view.user.organization+')'
+                      | &nbsp;
+                    //- span.email=view.user.email
+                    //-   | &nbsp;&nbsp;
+                    span
+                      | viewed the invoice.
+                  br
                         
 
     .container

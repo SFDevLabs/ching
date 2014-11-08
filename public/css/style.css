@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic);
+@import url(font-sans);
 html, body, header {
   width: 100%;
   overflow-x: hidden; }
@@ -606,11 +606,11 @@ body.show {
   .invoice-form .add-recipient-position {
     position: absolute;
     top: 60px;
-    right: -20%;
+    right: -10%;
     background: #eee;
     box-sizing: border-box;
     padding: 20px;
-    width: 100%;
+    width: 50%;
     margin-right: 111px;
     z-index: 1000;
     border-bottom: 2px solid #aaa; }
