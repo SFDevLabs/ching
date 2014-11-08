@@ -510,35 +510,38 @@ exports.pdf = function(req, res){
     // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
     // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
 
-  // doc.text('Title: '+req.article.title)
 
 
-  //  doc.moveTo(0, 100)
-  //     .lineTo(600, 100)
-  //     .stroke() 
+
 
 
      
-   // doc.text('Title: '+req.article.title)
+     
+   doc.text('Title: '+req.article.title)
 
-   // doc.text('Number: '+req.article.number)
+   doc.text('Number: '+req.article.number)
 
-   // doc.text('Name: '+req.article.user.firstname+" "+req.article.user.lastname)
-   // doc.text('Organization: '+req.article.user.Organization)
+   doc.text('Name: '+req.article.user.firstname+" "+req.article.user.lastname)
+   doc.text('Organization: '+req.article.user.Organization)
+   
+   
+   doc.moveTo(0, 170)
+      .lineTo(700, 170)
+      .stroke() 
 
-
-    var perPage = 15
+    var articles = req.article.items
+      , perPage = 15
       , rowHeight = 45
       , colPadding = 5
       , margin = {left:50,top:50}
       , perPageFirst = 10
       , marginFirst = {left:50,top:200}
       , lastIndex = 0
-      , nextIndex = perPageFirst;
+      , nextIndex = articles.length<=perPageFirst?articles.length:perPageFirst;
     req.article.items.forEach(function(val, i){
 
 
-        if (i==nextIndex){
+        if (i==lastIndex){
           //drawRows(req.article.items.slice(i,perPageFirst),marginFirst, rowHeight, colPadding);
         //}else if ( nextIndex == i ){
           if(lastIndex!==0){doc.addPage()};
@@ -548,6 +551,12 @@ exports.pdf = function(req, res){
         }
 
     });
+   doc.addPage()
+   doc.text('Invoice Total: '+utils.formatCurrency(req.article.total))
+   
+   if (req.article.invoicedOn){   
+    doc.text('Invoiced On: '+ formateDate(req.article.invoicedOn));
+   }
 
     // req.article.items.forEach(function(rowObj, rowIndex){
 

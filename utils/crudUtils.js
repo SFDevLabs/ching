@@ -190,7 +190,7 @@
   //------------------------------
   // Add Item in Invoice at position
   //
-  function  getItemDeleteController(model) {
+  function  getItemAddController(model) {
     return function (req, res) {
       var key;
 
