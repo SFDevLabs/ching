@@ -68,7 +68,6 @@ var ArticleSchema = new Schema({
     createdAt: { type : Date, default : Date.now },
     type: {type : String, default : '', trim : true},
   }],
-  title: {type : String, default : '', trim : true},
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
   comments: [{

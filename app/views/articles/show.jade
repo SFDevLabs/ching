@@ -23,22 +23,20 @@ block main
           //-   span.typcn.typcn-document-text
           //-   |  Download CSV
 
-          - if (req.user && req.article && req.article.user.id===req.user.id)
-            form(action="/articles/"+article.id, method="post")
-              input(type='hidden', name='_csrf', value="#{csrf_token}")
-              input(type="hidden", name="_method", value="DELETE")
-              button.btn.btn-danger.subtle(type='submit')
-                  span.typcn.typcn-user-add
-                    |  Delete
+          
 
-            -if ( article.status === 'draft' )
-              button.btn.subtle.btn-confirm-send
-                span.typcn.typcn-mail
-                  |  Send
-            -else 
-              button.btn.subtle.btn-confirm-send
-                span.typcn.typcn-mail
-                  |  Re-Send
+          button.btn.btn-danger.subtle.btn-confirm-delete
+            span.typcn.typcn-mail
+              |  Delete
+
+          -if ( article.status === 'draft' )
+            button.btn.subtle.btn-confirm-send
+              span.typcn.typcn-mail
+                |  Send
+          -else 
+            button.btn.subtle.btn-confirm-send
+              span.typcn.typcn-mail
+                |  Re-Send
 
 
 block content
@@ -64,11 +62,11 @@ block content
               -else
                 h2(class="#{article.status} #{hasImage}") #{article.status}
 
-              -if (article.title)
-                h1=article.title
+              -if (article.description)
+                P=article.description
               -else
                 br
-                a.btn-edit Add a title...
+                a.btn-edit Add a description...
                     
               -if (article.body)
                 p=article.body
@@ -141,7 +139,7 @@ block content
               span.typcn.typcn-user-add
                 |  Add Recipient
           .row.clear
-            .right-float.add-recipient-form
+            .right-float.add-recipient-form(style="display: none;")
               div.add-recipient-position
                 span.close-button
                   span.typcn.typcn-delete
@@ -208,7 +206,7 @@ block content
             .col-md-6#csv-file
               h3 
                 | Import from 
-                a(target="_blank", href='http://office.microsoft.com/en-us/excel-help/import-or-export-text-txt-or-csv-files-HP010099725.aspx') Comma-separated values
+                a(target="_blank", href='http://en.wikipedia.org/wiki/Comma-separated_values') Comma-separated values
               .csv-drop-file
                 p
                   input(id="fileupload", type="file", name="files[]", multiple)
@@ -261,7 +259,7 @@ block subfoot
         span.close-button
           span.typcn.typcn-delete
         -if ( article.viewers.length===0 )
-          p Please ADD a RECIPIENT to this invoice.
+          p Opps! You must ADD a RECIPIENT to this invoice first.
         -else if ( article.status === 'draft' )
           p Do you want to Send this invoice to #{article.viewers.length} recipient(s)?
           form(action="/articles/"+article.id+'/send', method="post")
@@ -279,6 +277,19 @@ block subfoot
               span.typcn.typcn-mail
                 |  Re-Send
 
+  .modal.confirm-delete-modal
+    .container
+      .modal-wrap.col-lg-8
+        span.close-button
+         span.typcn.typcn-delete
+        p Do you want to permanently delete this invoice?
+        form(action="/articles/"+article.id, method="post")
+          input(type='hidden', name='_csrf', value="#{csrf_token}")
+          input(type="hidden", name="_method", value="DELETE")
+          button.btn.btn-danger.subtle(type='submit')
+              span.typcn.typcn-user-add
+                |  Confirm Deletion
+
   .modal.edit-properties-modal
     .container
       .modal-wrap.col-lg-8
@@ -291,16 +302,12 @@ block subfoot
             input(type="hidden", name="_method", value="PUT")
 
           .form-group
-            label.control-label(for='title') Title
-            input.form-control#title(type='text', name="title", value=article.title, placeholder='Enter the title')
-
-          .form-group
             label.control-label(for='file') Image
             input.form-control#file(type='file', name="image[]")
 
           .form-group
             label.control-label(for='desc') Description
-            textarea.form-control#desc(rows="5", name="body")=article.body
+            textarea.form-control#desc(rows="5", name="description")=article.body
 
           .form-group
             label.control-label(for='tags') Tags
@@ -341,7 +348,7 @@ block subfoot
   script(type="text/javascript", src="/js/todos.js")
   script.
     $( document ).ready(function() {
-      $(".add-recipient-form, .modal").hide();
+      //$(".add-recipient-form, .modal").hide();
       $(".invoice-form").on("click", ".add-recipient-trigger.closed", function() {
         $(".add-recipient-form").fadeIn();
         $(".add-recipient-trigger").removeClass("closed").addClass("opened");
@@ -359,6 +366,14 @@ block subfoot
 
       $("body").on("click", ".btn-confirm-send", function() {
         $(".confirm-send-modal").fadeIn();
+      });
+
+      $("body").on("click", ".btn-confirm-delete", function() {
+        $(".confirm-delete-modal").fadeIn();
+      });
+
+      $("body").on("click", ".confirm-delete-modal .close-button", function() {
+        $(".confirm-delete-modal").fadeOut();
       });
 
       $("body").on("click", ".confirm-send-modal .close-button", function() {

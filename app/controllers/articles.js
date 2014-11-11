@@ -507,20 +507,11 @@ exports.pdf = function(req, res){
          
     }
 
-    // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
-    // doc.text('Times-RomanTimes-RomanTimes-RomanTimes-RomanTimes-Roman',100,100,{width:40})
-
-
-
-
 
 
      
      
-   doc.text('Title: '+req.article.title)
-
    doc.text('Number: '+req.article.number)
-
    doc.text('Name: '+req.article.user.firstname+" "+req.article.user.lastname)
    doc.text('Organization: '+req.article.user.Organization)
    
