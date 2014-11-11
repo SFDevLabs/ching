@@ -510,10 +510,15 @@ exports.pdf = function(req, res){
 
 
      
+
+   doc.text('Invoice')
      
    doc.text('Number: '+req.article.number)
    doc.text('Name: '+req.article.user.firstname+" "+req.article.user.lastname)
-   doc.text('Organization: '+req.article.user.Organization)
+   if (req.article.user.Organization){
+     doc.text('Organization: '+req.article.user.Organization);
+   }
+   
    
    
    doc.moveTo(0, 170)
