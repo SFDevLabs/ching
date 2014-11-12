@@ -166,9 +166,9 @@ module.exports = function (app, passport) {
 
   crudUtils.initRoutesForModel(app, auth);
 
-  // tag routes
-  var tags = require('../app/controllers/tags')
-  app.get('/tags/:tag', tags.index)
+  // tag routes (security risk)
+  //var tags = require('../app/controllers/tags')
+  //app.get('/tags/:tag', tags.index)
 
   app.get('/crud', function(req, res){
     res.render('crud')
