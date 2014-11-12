@@ -14,6 +14,39 @@ var path = require('path')
     }
 
 module.exports = {
+  production: {
+    db: process.env.MONGOLAB_URI,
+    root: rootPath,
+    notifier: notifier,
+    app: {
+      name: 'Nodejs Express Mongoose Demo'
+    },
+    facebook: {
+      clientID: "APP_ID",
+      clientSecret: "APP_SECRET",
+      callbackURL: "http://localhost:3000/auth/facebook/callback"
+    },
+    twitter: {
+      clientID: "CONSUMER_KEY",
+      clientSecret: "CONSUMER_SECRET",
+      callbackURL: "http://localhost:3000/auth/twitter/callback"
+    },
+    github: {
+      clientID: 'APP_ID',
+      clientSecret: 'APP_SECRET',
+      callbackURL: 'http://localhost:3000/auth/github/callback'
+    },
+    google: {
+      clientID: "APP_ID",
+      clientSecret: "APP_SECRET",
+      callbackURL: "http://localhost:3000/auth/google/callback"
+    },
+    linkedin: {
+      clientID: "CONSUMER_KEY",
+      clientSecret: "CONSUMER_SECRET",
+      callbackURL: "http://localhost:3000/auth/linkedin/callback"
+    }
+  },
   development: {
     db: 'mongodb://localhost/ching',
     root: rootPath,
