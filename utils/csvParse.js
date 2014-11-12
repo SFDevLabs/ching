@@ -158,12 +158,13 @@
             break;
           case "freshbooksTime":
             rule=function(val){
+              console.log(val.Rate)
               return {
                     date: val['Invoice Date']?new Date(val['Invoice Date'].split('/')):null
                   , qty : val.Hours?Number(val.Hours):null
                   , item : val['Task name']?val['Task name']:''
                   , type : 'Time'
-                  , cost: val.Rate?Number(val.Rate.replace(',','')):null
+                  , cost: (val.Rate && typeof val.Rate==='string')?Number(val.Rate.replace(',','')):null
                   , note : (val['Client name']?val['Client name']:'')
                   , total : (val.Hours && val.Rate)?Number(val.Hours)*Number(val.Rate.replace(',','')):null
               }
