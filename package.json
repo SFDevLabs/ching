@@ -47,7 +47,8 @@
     "sendgrid":"latest",
     "csvtojson":"latest",
     "underscore" : "latest",
-    "pdfkit":"latest"
+    "pdfkit":"latest",
+    "node-sass":"latest"
 
   },
   "devDependencies": {
