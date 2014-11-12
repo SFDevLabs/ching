@@ -7,10 +7,13 @@ var mongoose = require('mongoose')
   , utils = require('../../lib/utils')
   , User = mongoose.model('User')
   , utils = require('../../lib/utils')
-  , sendEmail = utils.sendEmail;
+  , sendEmail = utils.sendEmail
+  , fs = require('fs')
+  , emailTmpl = fs.readFileSync('./app/views/email/basic.html','utf8');
 /**
  * Load viewers
  */
+  console.log(emailTmpl)
 
 exports.load = function (req, res, next, id) {
   var article = req.article
@@ -78,7 +81,15 @@ exports.sendInvoice=function(req, res){
      req.flash('error', 'Oops! Please add at least ONE recipient to your invoice.');
      return res.redirect('/articles/' + article.id);
   }
-
+  sendEmail({
+            to:articleJSON.viewers[0].user.email
+            , subject: 'You have a new Invoice from '+user.organization
+            , from: 'noreply@ching.io'
+            ,html:emailTmpl
+          }, function(err, json){
+            console.log(err, json)
+          })
+  //console.log(emailTmpl)
   articleJSON.viewers.forEach(function(viewer, i){
         sendEmail({
             to:viewer.user.email
