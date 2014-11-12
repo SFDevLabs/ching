@@ -4,10 +4,10 @@
  */
 
 var mongoose = require('mongoose')
-  , Imager = require('Imager')
+  //, Imager = require('Imager')
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
-  , imagerConfig = require(config.root + '/config/imager.js')
+//  , imagerConfig = require(config.root + '/config/imager.js')
   , Schema = mongoose.Schema
   , utils = require('../../lib/utils')
 
@@ -144,17 +144,17 @@ ArticleSchema
  * Pre-remove hook
  */
 
-ArticleSchema.pre('remove', function (next) {
-  var imager = new Imager(imagerConfig, 'S3')
-  var files = this.image.files
+// ArticleSchema.pre('remove', function (next) {
+//   var imager = new Imager(imagerConfig, 'S3')
+//   var files = this.image.files
 
-  // if there are files associated with the item, remove from the cloud too
-  imager.remove(files, function (err) {
-    if (err) return next(err)
-  }, 'article')
+//   // if there are files associated with the item, remove from the cloud too
+//   imager.remove(files, function (err) {
+//     if (err) return next(err)
+//   }, 'article')
 
-  next()
-})
+//   next()
+// })
 
 /**
  * Methods
