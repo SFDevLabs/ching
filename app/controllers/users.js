@@ -230,8 +230,8 @@ exports.create = function (req, res) {
         }
         // manually login the user once successfully signed up
         req.logIn(user, function(err) {
-          console.log(err,"stuffy")
-          if (err) return next(err)
+          //console.log(err,"stuffy")
+          //if (err) return next(err)
           return res.redirect('/')
         })
 
