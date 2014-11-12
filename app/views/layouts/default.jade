@@ -3,8 +3,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.face
   include ../includes/head
   body(class=bodyClass)
     include ../includes/header
-    -if (req.info || req.errors || req.success || req.warning)
-      include ../includes/messages
+    include ../includes/messages
     block main
     block content
     -if (req.isAuthenticated()) 
