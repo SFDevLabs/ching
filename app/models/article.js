@@ -4,10 +4,8 @@
  */
 
 var mongoose = require('mongoose')
-  //, Imager = require('Imager')
   , env = process.env.NODE_ENV || 'development'
-  , config = require('../../config/config')[env]
-//  , imagerConfig = require(config.root + '/config/imager.js')
+  , config = require('../../config/cfonfig')[env]
   , Schema = mongoose.Schema
   , utils = require('../../lib/utils')
 
