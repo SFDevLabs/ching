@@ -205,7 +205,6 @@ exports.create = function (req, res, next) {
 
   // Check only when it is a new user or when email field is modified
   User.findOne({ email: req.body.email }).exec(function (err, user) {
-      console.log(user,"stuffy")
       var newUser
       if (!err && user && user.placeholderFromShare){ //Save over the placeholder
          newUser = extend(user, req.body) //Combine the objects
@@ -230,7 +229,6 @@ exports.create = function (req, res, next) {
         }
         // manually login the user once successfully signed up
         req.logIn(newUser, function(err) {
-          //console.log(err,"stuffy")
           if (err) return next(err)
           return res.redirect('/')
         })

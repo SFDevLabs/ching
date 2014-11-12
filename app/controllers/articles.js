@@ -249,8 +249,6 @@ exports.new = function(req, res){
           req.flash('error', 'No email')
           return res.redirect('/articles/'+article._id)
         }
-        req.flash('success', 'Successfully created article!')
-
         return res.redirect('/articles/' + article._id)
     })
 
