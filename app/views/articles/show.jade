@@ -73,7 +73,7 @@ block content
               - if (article.tags)
                 p Tags: &nbsp;
                   - each tag in article.tags.split(',')
-                    a.tag(href="/tags/"+tag) ##{tag}
+                    a.tag(href="/tags/"+tag) #{tag}
                     | &nbsp;&nbsp;
 
             .col-md-4.float-right.right
