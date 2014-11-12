@@ -164,9 +164,9 @@
                   , qty : val.Hours?Number(val.Hours):null
                   , item : val['Task name']?val['Task name']:''
                   , type : 'Time'
-                  , cost: (val.Rate && typeof val.Rate==='string')?Number(val.Rate.replace(',','')):null
+                  , cost: (val.Rate && typeof val.Rate==='string')?Number(val.Rate.replace(',','')):val.Rate
                   , note : (val['Client name']?val['Client name']:'')
-                  , total : (val.Hours && val.Rate)?Number(val.Hours)*Number(val.Rate.replace(',','')):null
+                  , total : (val.Hours && val.Rate && typeof val.Rate==='string')?Number(val.Hours)*Number(val.Rate.replace(',','')):val.Rate
               }
             }
             break;
