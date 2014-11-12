@@ -21,6 +21,18 @@
       }
     , serviceListKeys=_.keys(serviceList);
 
+  //this is a dupliced funcyion.  Consolidate it!
+  var parseTimeQuantity = function(val){
+    if (isNaN(Number(val)) && typeof val === 'string' && val.search(':')!==-1)
+      {var vals = val.split(':'),
+           hour = vals[1]?Number(vals[0]):0,
+           min = vals[1]?Number(vals[1]):0,
+           sec = vals[2]?Number(vals[2]):0,
+           number = hour+(min/60)+(sec/3600);
+        return number;} 
+    else {return 0;}
+    
+  }
 
   exports.parseRules = function(keys){
         var rule
