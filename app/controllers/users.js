@@ -205,6 +205,7 @@ exports.create = function (req, res) {
 
   // Check only when it is a new user or when email field is modified
   User.findOne({ email: req.body.email }).exec(function (err, user) {
+      console.log(user,"stuffy")
       var newUser
       if (!err && user && user.placeholderFromShare){ //Save over the placeholder
          newUser = extend(user, req.body) //Combine the objects
