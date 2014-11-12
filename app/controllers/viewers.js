@@ -9,11 +9,11 @@ var mongoose = require('mongoose')
   , utils = require('../../lib/utils')
   , sendEmail = utils.sendEmail
   , fs = require('fs')
-  , emailTmpl = fs.readFileSync('./app/views/email/basic.html','utf8');
+  , emailTmpl = fs.readFileSync('./app/views/email/basic.html','utf8')
+  , Mustache=require('mustache');
 /**
  * Load viewers
  */
-  console.log(emailTmpl)
 
 exports.load = function (req, res, next, id) {
   var article = req.article
@@ -81,23 +81,38 @@ exports.sendInvoice=function(req, res){
      req.flash('error', 'Oops! Please add at least ONE recipient to your invoice.');
      return res.redirect('/articles/' + article.id);
   }
-  sendEmail({
-            to:articleJSON.viewers[0].user.email
-            , subject: 'You have a new Invoice from '+user.organization
-            , from: 'noreply@ching.io'
-            ,html:emailTmpl
-          }, function(err, json){
-            console.log(err, json)
-          })
+
+
+
+  // sendEmail({
+  //           to:articleJSON.viewers[0].user.email
+  //           , subject: 'You have a new Invoice from '+user.organization
+  //           , from: 'noreply@ching.io'
+  //           ,html:Mustache.render(emailTmpl, views)//
+  //         }, function(err, json){
+  //           console.log(err, json)
+  //         })
   //console.log(emailTmpl)
+  //
+
   articleJSON.viewers.forEach(function(viewer, i){
+
+        var views={
+            firstname: viewer.user.firstname
+          , lastname: viewer.user.lastname
+          , lead: 'You have a new Invoice from '+user.organization
+          , main_p: "Your Invoice total is "+article.total
+          , action_text:"View your Invoice"+article.number
+          , action: "Click to View"
+          , action_href: 'http://localhost:4000/articles/'+article.id+'/token/'+viewer._id
+        };
         sendEmail({
             to:viewer.user.email
           , fromname: user.organization
           , from: 'noreply@ching.io'
           , subject: 'You have a new Invoice from '+user.organization
-          , html : '<h1>Invoice From '+user.organization+'</h1> <p>You invoice can be viewed at http://localhost:4000/articles/'+article.id+'/token/'+viewer._id+'</p><img src="">'
-          , message: 'You invoice can be viewed at http://localhost:4000/articles/'+article.id+'/token/'+viewer._id
+          , html : Mustache.render(emailTmpl, views)
+          , message: 'Your invoice can be viewed at http://localhost:4000/articles/'+article.id+'/token/'+viewer._id
         }, function(err, json){
           if (err){   
              req.flash('error', 'Oops! The invoices could not be sent');

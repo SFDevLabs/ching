@@ -56,7 +56,6 @@ var itemsSchema = {
   exports.itemsSchema = itemsSchema;
 
 var nextNumber = function(){
-  console.log(this)
   return 1;
 }
 var ArticleSchema = new Schema({
@@ -126,8 +125,6 @@ ArticleSchema
       } else if (this.invoicedOn!==null){
         val='sent'
       }
-      console.log(val, this.dueOn)
-          console.log(val)
 
       return val
 
