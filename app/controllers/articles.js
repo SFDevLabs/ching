@@ -424,6 +424,15 @@ exports.destroy = function(req, res){
   })
 }
 
+exports.verifiedAsPayed = function(req, res){
+  var article = req.article
+  article.update(function(err){
+    // req.flash('info', 'Deleted successfully')
+    // res.redirect('/articles')
+  })
+}
+
+
 
 var formateDate = function(d){
   var string = '';

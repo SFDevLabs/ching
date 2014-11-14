@@ -81,6 +81,7 @@ var ArticleSchema = new Schema({
   items: [itemsSchema],
   invoicedOn:{type : Date, default : null},
   paidOn:{type : Date, default : null},
+  paymentVerified : { type: Boolean, default: false },
   dueOn:{type : Date, default : null},
   address: {type : String, default : '', trim : true},
   currency: {type : String, default : 'USD', trim : true},
