@@ -9,8 +9,9 @@ var mongoose = require('mongoose')
   , utils = require('../../lib/utils')
   , sendEmail = utils.sendEmail
   , fs = require('fs')
-  , emailTmpl = fs.readFileSync('./app/views/email/basic.html','utf8')
-  , Mustache=require('mustache');
+  , emailTmpl = fs.readFileSync('./app/views/email/invoice.html','utf8')
+  , Mustache=require('mustache')
+  , domain = 'http://localhost:4000' //move to application logic
 /**
  * Load viewers
  */
@@ -96,23 +97,31 @@ exports.sendInvoice=function(req, res){
   //
 
   articleJSON.viewers.forEach(function(viewer, i){
-
         var views={
-            firstname: viewer.user.firstname
-          , lastname: viewer.user.lastname
-          , lead: 'You have a new Invoice from '+user.organization
-          , main_p: "Your Invoice total is "+article.total
-          , action_text:"View your Invoice"+article.number
-          , action: "Click to View"
+            sender: viewer.user.firstname +' '+ viewer.user.lastname
+          , organization_article: user.organization?' of ':''
+          , organization: user.organization
+          , amount: utils.formatCurrency(article.total)
+          , invoice_num: utils.formatInvoiceNumber(article.number)
+          , main_p: "Your Invoice total is "+utils.formatCurrency(article.total)
           , action_href: 'http://localhost:4000/articles/'+article.id+'/token/'+viewer._id
+        }
+        , subject = 'Invoice #'+utils.formatInvoiceNumber(article.number)+' from '+viewer.user.firstname +' '+ viewer.user.lastname
+        ,fromname = user.firstname +' '+user.lastname
+
+        if (user.organization && user.organization.length>0){///Organization is optional.  this logic add it when we have it
+          subject+=' with '+user.organization;
+          fromname+=user.organization;
         };
+
+        
         sendEmail({
-            to:viewer.user.email
-          , fromname: user.organization
+            to: viewer.user.email
+          , fromname: fromname 
           , from: 'noreply@ching.io'
-          , subject: 'You have a new Invoice from '+user.organization
+          , subject: subject
           , html : Mustache.render(emailTmpl, views)
-          , message: 'Your invoice can be viewed at http://localhost:4000/articles/'+article.id+'/token/'+viewer._id
+          , message: 'Your invoice can be viewed at '+domain+'/articles/'+article.id+'/token/'+viewer._id
         }, function(err, json){
           if (err){   
              req.flash('error', 'Oops! The invoices could not be sent');
