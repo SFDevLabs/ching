@@ -23,17 +23,19 @@ block content
     - var total = totalSent + draftCount;
     .container.list
       header.row
-        -if (received == "yes")
-          h1.left.col-md-3=title
-        -else
-          h1.left.col-md-3 Invoices
-        ul.right.counts.col-md-9
+        h2.left.col-md-5=title
+        ul.right.counts.col-md-7
           li.all
             | All (#{total})
-          li.draft
-            | Drafts (#{draftCount})
-          li.sent
-            | Pending (#{sentCount})
+          if (articles.invoiceType == "sent")
+            li.draft
+              | Drafts (#{draftCount})
+          if (articles.invoiceType == "sent")
+            li.sent
+              | Sent (#{sentCount})
+          else
+            li.sent
+              | Recieved (#{sentCount})
           li.paid
             | Paid (#{paidCount})
           li.overdue
@@ -57,7 +59,12 @@ block content
           - var viewer = article.viewers[0]? article.viewers[0].user.organization:'';
           a(href='/articles/'+article._id, class="#{article.status} article col-md-3 block")
             .status 
-              span #{article.status}
+              if (article.status=='sent' && invoiceType==='received')
+                span 
+                  | Recieved
+              else
+                span #{article.status}
+                
               span.right # #{article.number}
 
             .content
@@ -74,10 +81,8 @@ block content
                 h4.dim more...
 
               .meta
-                | &nbsp; - &nbsp;
-                span Total &nbsp;
+                span Total: &nbsp;
                 span(href="/users/"+article.user._id)= formatCurrency(article.total)
-                |&nbsp; - &nbsp;
                 span=article.net
                 -if (article.tags)
                   - each tag in article.tags.split(',')
