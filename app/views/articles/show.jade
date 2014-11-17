@@ -223,27 +223,31 @@ block content
         .row
           .col-md-12
             hr
-            h3 Events:&nbsp;
-            ul
-            - each view in article.views.reverse()
-              - if (view.user!=null)
-                  li.views
-                    abbr.timeago(title="#{view.viewedAt.toISOString()}")  
-                    | &nbsp;
-                    strong.firstname=view.user.firstname
+            .col-md-8
+              h3 Events:&nbsp;
+              ul
+                if (article.views.length===0)
+                  p
+                    | No activity yet...
+              - each view in article.views.reverse()
+                - if (view.user!=null)
+                    li.views
+                      abbr.timeago(title="#{view.viewedAt.toISOString()}")  
                       | &nbsp;
-                    strong.lastname=view.user.lastname
-                      | &nbsp;
-                    - if (view.user.organization)
-                      |from&nbsp;
-                      strong.organization=view.user.organization
-                      | &nbsp;
-                    //- span.email=view.user.email
-                    //-   | &nbsp;&nbsp;
-                    span
-                      | viewed the invoice.&nbsp;
-                    span.muted=formatDatetime(view.viewedAt.toISOString())
-                  br
+                      strong.firstname=view.user.firstname
+                        | &nbsp;
+                      strong.lastname=view.user.lastname
+                        | &nbsp;
+                      - if (view.user.organization)
+                        |from&nbsp;
+                        strong.organization=view.user.organization
+                        | &nbsp;
+                      //- span.email=view.user.email
+                      //-   | &nbsp;&nbsp;
+                      span
+                        | viewed the invoice.&nbsp;
+                      span.muted=formatDatetime(view.viewedAt.toISOString())
+                    br
                         
 
     .container
