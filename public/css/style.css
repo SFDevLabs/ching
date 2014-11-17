@@ -467,8 +467,9 @@ body.login {
 .sign-up {
   padding-bottom: 5em; }
 
-.list h1, .profile h1 {
-  margin-top: 0.625em; }
+.list h2, .profile h1 {
+  margin-top: 1.6em;
+  margin-bottom: 0.5em; }
 
 .list header.row {
   margin-bottom: 1.25em; }
