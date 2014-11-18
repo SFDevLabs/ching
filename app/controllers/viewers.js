@@ -171,15 +171,3 @@ exports.share = function (req, res) {
     article: req.article
   })
 }
-
-/**
- * Share article
- */
-
-
-exports.markAsPayed = function (req, res) {
-  res.render('articles/share', {
-    title: 'Edit ' + req.article.title,
-    article: req.article
-  })
-}

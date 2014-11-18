@@ -139,7 +139,6 @@ module.exports = function (app, passport) {
   //articles.record
   app.post('/articles/:id/token/:token/payed', viewerAuthToken, articles.payed)
   app.post('/articles/:id/payed', viewerAuth, articles.payed)
-
   app.post('/articles/:id/uppayed', viewerAuth, articles.unpayed)
 
   app.post('/articles/:id/upload', articles.uploadcsv);//upload 
@@ -152,8 +151,8 @@ module.exports = function (app, passport) {
   app.del('/articles/:id/viewer/:viewerId', articleAuth, viewers.destroy)
 
   //payment made
-  app.post('/articles/:id/payed', viewerAuth, viewers.markAsPayed)
-  app.post('/articles/:id/verifyPayed', articleAuth, articles.verifiedAsPayed)
+  //app.post('/articles/:id/payed', viewerAuth, viewers.markAsPayed)
+  //app.post('/articles/:id/verifyPayed', articleAuth, articles.verifiedAsPayed)
 
   //app.get('/articles/:id/viewer', articleAuth, viewers.share)
   app.get('/articles/:id/pdf/token/:token', viewerAuthToken, articles.pdf)
