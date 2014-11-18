@@ -9,6 +9,7 @@ var express = require('express')
   , winston = require('winston')
   , helpers = require('view-helpers')
   , pkg = require('../package.json')
+  , utils = require('../lib/utils');
 
 var env = process.env.NODE_ENV || 'development'
 
@@ -102,7 +103,8 @@ module.exports = function (app, config, passport) {
 
       // You need to tell your templates about your function
       // which is done by passing your function to res.locals
-      res.locals.formatCurrency =  require('../lib/utils').formatCurrency;
+      res.locals.formatCurrency =  utils.formatCurrency;
+      res.locals.formatInvoiceNumber = utils.formatInvoiceNumber
       next();
     });
 
