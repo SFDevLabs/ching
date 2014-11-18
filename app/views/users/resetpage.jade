@@ -1,21 +1,15 @@
 extends auth
 
 block auth
-  form.form-horizontal(action="", method="post", role="form")
-    input(type='hidden', name='_csrf', value="#{csrf_token}")
-
-    p.col-sm-offset-2.error= message
-
-    .form-group
-      label.col-sm-2.control-label(for="password") New Password
-      .col-sm-10
-        input#email.form-control(type="password", placeholder="New Password", name="password")
-
-
-    .form-group
-      .col-sm-offset-2.col-sm-10
-        button.btn.btn-primary(type='submit') Send Rest Email
-        | &nbsp; or &nbsp;
-        a.show-signup(href="/signup") Sign up
-        | &nbsp; or &nbsp;
-        a.show-signup(href="/login") Login
+    br
+    .col.col-lg-4
+    .col.col-lg-8
+      h3
+        | Reset Your Password
+      form.form-horizontal(action="", method="post", role="form")
+        input(type='hidden', name='_csrf', value="#{csrf_token}")
+        p.col-sm-offset-2.error= message
+        .form-group
+          input#email.form-control(type="password", placeholder="New Password", name="password")
+        .form-group
+            button.btn.btn-primary(type='submit') Set New Password
