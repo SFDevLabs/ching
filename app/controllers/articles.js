@@ -467,9 +467,9 @@ exports.show = function(req, res, next){
 
 exports.record = function(req, res, next){
   var article = req.article
-    , viewer  = req.articleViewer
+    , viewer  = req.user
     , user = req.user
-    , userId = viewer && viewer.user.id? viewer.user._id:user.id;
+    , userId = viewer.user && viewer.user.id? viewer.user._id:user.id;
 
     if (user && article.user.id===user.id){
       return next();

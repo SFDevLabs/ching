@@ -25,8 +25,7 @@ exports.load = function (req, res, next, id) {
 
 exports.create = function (req, res) {
   var article = req.article
-    , user = req.user?req.user:req.articleViewer.user
-    , redirect;
+    , user = req.user;
   if (!req.body.body) return res.redirect('/articles/'+ article.id)
 
     console.log(user,'user')
