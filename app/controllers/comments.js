@@ -27,10 +27,7 @@ exports.create = function (req, res) {
   var article = req.article
     , user = req.user;
   if (!req.body.body) return res.redirect('/articles/'+ article.id)
-
-    console.log(user,'user')
-
-  article.addComment(user, req.body, function (err) {
+    article.addComment(user, req.body, function (err) {
     //hacky logic
     redirect=req.token?'/articles/'+ article.id+'/token/'+req.token:'/articles/'+ article.id;
     if (err) return res.render('500')
