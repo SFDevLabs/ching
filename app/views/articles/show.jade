@@ -29,7 +29,7 @@ block main
                 |  Delete
 
           -if (invoiceType == "recieved")
-            button.btn.subtle.btn-confirm-send
+            button.btn.subtle.btn-confirm-payed
               span.typcn.typcn-mail
                 |  Mark As Payed
           -else if (invoiceType=='sent' && article.status === 'draft' )
@@ -64,7 +64,6 @@ block content
                 h2(class="#{article.status} #{hasImage}") Overdue #{pastDue} days
               -else
                 h2(class="#{article.status} #{hasImage}") #{article.status}
-  
 
               -if (article.description)
                 P=article.description
@@ -291,6 +290,21 @@ block subfoot
               span.typcn.typcn-mail
                 |  Re-Send
 
+  .modal.confirm-payed-modal
+    .container
+      .modal-wrap.col-lg-8
+        span.close-button
+          span.typcn.typcn-delete
+        p Do you want to mark this invoice as payed? An email will be sent to the sender.
+        form(action="/articles/"+article.id+'/payed', method="post")
+          input(type='hidden', name='_csrf', value="#{csrf_token}")
+          input(type="hidden", name="_method", value="POST")
+          button.btn.subtle(type='submit')
+            span.typcn.typcn-mail
+              |  It's Payed
+
+
+
   .modal.confirm-delete-modal
     .container
       .modal-wrap.col-lg-8
@@ -378,12 +392,20 @@ block subfoot
         $(".edit-properties-modal").fadeIn();
       });
 
+      $("body").on("click", ".btn-confirm-payed", function() {
+        $(".confirm-payed-modal").fadeIn();
+      });
+
       $("body").on("click", ".btn-confirm-send", function() {
         $(".confirm-send-modal").fadeIn();
       });
 
       $("body").on("click", ".btn-confirm-delete", function() {
         $(".confirm-delete-modal").fadeIn();
+      });
+
+      $("body").on("click", ".confirm-payed-modal .close-button", function() {
+        $(".confirm-payed-modal").fadeOut();
       });
 
       $("body").on("click", ".confirm-delete-modal .close-button", function() {

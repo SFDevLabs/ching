@@ -368,6 +368,26 @@ exports.update = function(req, res){
   })
 }
 
+exports.pay = function(req, res){
+  var article = req.article
+
+  //article = extend(article, req.body)
+
+  article.paidOn=new Date();
+  article.save(function(err) {
+    if (!err) {
+      return res.redirect('/articles/' + article._id)
+    }
+
+    res.render('articles/edit', {
+      title: 'Edit Article',
+      article: article,
+      error: utils.errors(err.errors || err)
+    })
+  })
+}
+
+
 /**
  * Show
  */
