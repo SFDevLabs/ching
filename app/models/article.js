@@ -108,12 +108,7 @@ ArticleSchema
 
 ArticleSchema
   .virtual('status')
-  // .set(function(password) {
-  //   this._password = password
-  //   this.salt = this.makeSalt()
-  //   this.hashed_password = this.encryptPassword(password)
-  // })
-  .get(function() {
+  .get(function() {// This logic and the templates that use it could be better thought out.
      var val
       if (this.paidOn!==null){
         val='paid'
