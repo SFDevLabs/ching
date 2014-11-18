@@ -9,8 +9,10 @@ var mongoose = require('mongoose')
   , crypto = require('crypto')
   , User = mongoose.model('User')
   , extend = require('util')._extend
-  , sendEmail = utils.sendEmail;
-
+  , sendEmail = utils.sendEmail
+  , env = process.env.NODE_ENV || 'development'
+  , config = require('../../config/config')[env]
+  , domain = config.rootHost;
 
 var login = function (req, res) {
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/'
@@ -127,6 +129,7 @@ exports.resetPW = function (req, res) {
       }, function(err, json, b){
         req.logIn(req.user, function(err) {
           if (err) return next(err)
+          req.flash('success', 'Your password has been reset!')
           return res.redirect('/')
         });//render
       });//email
@@ -155,21 +158,18 @@ exports.reset = function (req, res, next) {
           var token = buf.toString('hex');
           user.resetPasswordToken=token;
           user.resetPasswordExpires=Date.now() + 3600000;
-          user.save(function (err) {
-            //hard coded I know clean up! (localhost:4000)
-        
-
+          user.save(function (err) {        
             sendEmail({
                 to:email
               , from: 'noreply@ching.io'
-              , message: 'http://localhost:4000/reset/'+token
+              , message: domain+'/reset/'+token
               , subject:'Reser your Ching.io Password'
               , fromname:'Ching.io'
-              , html : 'http://localhost:4000/reset/'+token
+              , html : domain+'/reset/'+token
             }
               , function(err, json){
                 if (err){ return next(err)};
-                req.flash('success', 'Check Your Email for a Reset Link.')
+                req.flash('success', 'Check Your Email for a Reset Link. <br> Check you spam folder too.')
                 res.redirect('/reset')            
             });//Email Sent
 

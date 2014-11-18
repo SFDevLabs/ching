@@ -11,7 +11,10 @@ var mongoose = require('mongoose')
   , fs = require('fs')
   , emailTmpl = fs.readFileSync('./app/views/email/invoice.html','utf8')
   , Mustache=require('mustache')
-  , domain = 'http://localhost:4000' //move to application logic
+  , env = process.env.NODE_ENV || 'development'
+  , config = require('../../config/config')[env]
+  , domain = config.rootHost;
+
 /**
  * Load viewers
  */

@@ -19,8 +19,10 @@ module.exports = {
     root: rootPath,
     notifier: notifier,
     app: {
-      name: 'Nodejs Express Mongoose Demo'
+      name: 'Ching'
     },
+    rootHost:'https://chingio.herokuapp.com',
+    port:'80',//not required but placed for consistency
     facebook: {
       clientID: "APP_ID",
       clientSecret: "APP_SECRET",
@@ -45,6 +47,10 @@ module.exports = {
       clientID: "CONSUMER_KEY",
       clientSecret: "CONSUMER_SECRET",
       callbackURL: "http://localhost:3000/auth/linkedin/callback"
+    },
+    sendgrid:{
+       api_user: 'jeffj'
+      ,api_key: 'rambert'
     }
   },
   development: {
@@ -54,6 +60,8 @@ module.exports = {
     app: {
       name: 'Nodejs Express Mongoose Demo'
     },
+    port:'4000',
+    rootHost:'http://localhost:4000',
     facebook: {
       clientID: "APP_ID",
       clientSecret: "APP_SECRET",
@@ -78,6 +86,10 @@ module.exports = {
       clientID: "CONSUMER_KEY",
       clientSecret: "CONSUMER_SECRET",
       callbackURL: "http://localhost:3000/auth/linkedin/callback"
+    },
+    sendgrid:{
+       api_user: 'jeffj'
+      ,api_key: 'rambert'
     }
   },
   test: {
@@ -85,7 +97,7 @@ module.exports = {
     root: rootPath,
     notifier: notifier,
     app: {
-      name: 'Nodejs Express Mongoose Demo'
+      name: 'Ching'
     },
     facebook: {
       clientID: "APP_ID",
