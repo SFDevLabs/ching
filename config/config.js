@@ -124,6 +124,5 @@ module.exports = {
       clientSecret: "CONSUMER_SECRET",
       callbackURL: "http://localhost:3000/auth/linkedin/callback"
     }
-  },
-  production: {}
+  }
 }
