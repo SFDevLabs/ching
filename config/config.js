@@ -58,7 +58,7 @@ module.exports = {
     root: rootPath,
     notifier: notifier,
     app: {
-      name: 'Nodejs Express Mongoose Demo'
+      name: 'Ching'
     },
     port:'4000',
     rootHost:'http://localhost:4000',
