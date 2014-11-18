@@ -12,9 +12,15 @@ var mongoose = require('mongoose')
   , Converter=require("csvtojson").core.Converter
   , _ = require("underscore")
   , pdfDocument = require( "pdfkit")
-  , itemsSchema = require('../models/article').itemsSchema;
+  , itemsSchema = require('../models/article').itemsSchema
+  , sendEmail = utils.sendEmail
+  , env = process.env.NODE_ENV || 'development'
+  , config = require('../../config/config')[env]
+  , domain = config.rootHost
+  , emailTmplPaid = fs.readFileSync('./app/views/email/paid.html','utf8')
+  , Mustache = require('mustache');
 
-/**
+/*
  * upload
  */
 exports.uploadcsv = function(req, res, next){
@@ -354,17 +360,32 @@ exports.payed = function(req, res){
   //article = extend(article, req.body)
   article.paymentVerified=true;
   article.paidOn=new Date();
+  var views={
+            user_full_name: article.user.firstname +' '+ article.user.lastname
+          , organization_article: article.user.organization?' of ':''
+          , organization: article.user.organization
+          , invoice_num: utils.formatInvoiceNumber(article.number)
+          , action_href: domain+'/articles/'+article.id
+        };
+  sendEmail({to: article.user.email
+          , fromname : article.user.firstname +' '+article.user.lastname
+          , from: 'noreply@ching.io'
+          , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been paid.'
+          , html : Mustache.render(emailTmplPaid, views)
+          , message: 'Your invoice has been payed!'
+        },
+  function(err, json){
+    if (err){console.log('Email Error')};
+    article.save(function(err) {
+      if (err) {
+        res.flash('error','Something Went Wrong')
+      }
+      var redirect = '/articles/' + article._id;
+      if (req.token){redirect+='/token/'+req.token};
+      res.redirect(redirect)
 
-  article.save(function(err) {
-    if (err) {
-      res.flash('error','Something Went Wrong')
-    }
-
-    var redirect = '/articles/' + article._id;
-    if (req.token){redirect+='/token/'+req.token};
-    res.redirect(redirect)
-
-  })
+    })
+  });
 }
 
 /**
