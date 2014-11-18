@@ -12,7 +12,11 @@ var mongoose = require('mongoose')
   , sendEmail = utils.sendEmail
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
-  , domain = config.rootHost;
+  , domain = config.rootHost
+  , fs = require('fs')
+  , emailTmplPwReset = fs.readFileSync('./app/views/email/password_reset.html','utf8')
+  , emailTmplPwResetConfirm = fs.readFileSync('./app/views/email/password_reset_confirm.html','utf8')
+  , Mustache=require('mustache');
 
 var login = function (req, res) {
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/'
@@ -103,7 +107,10 @@ exports.loadreset = function(req, res, next, resetid){
 
 exports.resetPWpage = function (req, res) {
   var bodyClass = "reset";
-  if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
+  if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ 
+     req.flash('error', 'Password reset link invalid.')
+     return  res.redirect('/login')
+  };
   res.render('users/resetpage', {
     bodyClass: bodyClass,
     title: 'Reset Password',
@@ -123,9 +130,16 @@ exports.resetPW = function (req, res) {
   req.user.resetPasswordToken=undefined
   req.user.hashed_password=req.user.encryptPassword(req.body.password)
   req.user.save(function (err) {
+      var views={
+        user_full_name: req.user.firstname+' '+req.user.lastname
+      }
       sendEmail({
-        email:req.user.email,
-        message: 'Your password has been reset'
+          to: req.user.email
+        , fromname: 'Ching.io' 
+        , from: 'noreply@ching.io'
+        , subject: 'Your Ching.io password has been reset'
+        , message: 'Dear '+req.user.firstname+' '+req.user.lastname+',%0AYour password has been reset'
+        , html:Mustache.render(emailTmplPwResetConfirm, views)
       }, function(err, json, b){
         req.logIn(req.user, function(err) {
           if (err) return next(err)
@@ -146,8 +160,6 @@ exports.reset = function (req, res, next) {
   var email = req.body.email,
       options = { email: email }
   User.userEmail(options,function(err, user){
-
-      console.log(err, user)
         if (!user){
           req.flash('error', 'No email found.')
           return res.redirect('/reset')    
@@ -158,14 +170,20 @@ exports.reset = function (req, res, next) {
           var token = buf.toString('hex');
           user.resetPasswordToken=token;
           user.resetPasswordExpires=Date.now() + 3600000;
-          user.save(function (err) {        
+          user.save(function (err) {    
+            views={
+              reset_link: domain+'/reset/'+token
+              , user_full_name: user.firstname+' '+user.lastname
+            };   
+
+
             sendEmail({
                 to:email
               , from: 'noreply@ching.io'
               , message: domain+'/reset/'+token
               , subject:'Reser your Ching.io Password'
               , fromname:'Ching.io'
-              , html : domain+'/reset/'+token
+              , html:Mustache.render(emailTmplPwReset, views)
             }
               , function(err, json){
                 if (err){ return next(err)};
