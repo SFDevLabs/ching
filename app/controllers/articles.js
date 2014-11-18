@@ -60,7 +60,7 @@ exports.uploadcsv = function(req, res, next){
               if (err) return next(err);     
               return res.send({
                    data:json
-                  ,status: 'StuffU ploaded!'
+                  ,status: 'stuff uploaded!'
                 });
             });
           } else {
@@ -471,7 +471,7 @@ exports.show = function(req, res, next){
 
   if (req.article.user.id===req.user.id){
     var invoiceType='sent'
-  }else{
+  } else {
     var invoiceType='recieved'
   }
   res.render('articles/show', {
