@@ -16,7 +16,7 @@ nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
           a(href="/articles/new", title="New Invoice") 
             span.typcn.typcn-plus
               |  New
-        - if (req.isAuthenticated())
+        - if (req.isAuthenticated() && !req.token)
           //- if the user has received any invoices
           li
             a(href="/", title="Invoices")
