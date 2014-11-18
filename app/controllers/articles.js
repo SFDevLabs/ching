@@ -346,12 +346,51 @@ exports.edit = function (req, res) {
 }
 
 /**
+ * Pay Invoice
+ */
+exports.payed = function(req, res){
+  var article = req.article
+
+  //article = extend(article, req.body)
+  article.paymentVerified=true;
+  article.paidOn=new Date();
+
+  article.save(function(err) {
+    if (err) {
+      res.flash('error','Something Went Wrong')
+    }
+
+    var redirect = '/articles/' + article._id;
+    if (req.token){redirect+='/token/'+req.token};
+    res.redirect(redirect)
+
+  })
+}
+
+/**
+ * UnPay Invoice
+ */
+exports.unpayed = function(req, res){
+  var article = req.article
+
+  article.paymentVerified=false;
+  article.paidOn=null;
+
+  article.save(function(err) {
+    if (err) {
+      res.flash('error','Something Went Wrong')
+    }
+    res.redirect('/articles/' + article._id)
+  })
+}
+
+/**
  * Update article
  */
 
 exports.update = function(req, res){
   var article = req.article
-  console.log(req.body,article)
+  console.log(req.body)
 
   article = extend(article, req.body)
 
@@ -367,6 +406,10 @@ exports.update = function(req, res){
     })
   })
 }
+
+/**
+ * Pay article
+ */
 
 exports.pay = function(req, res){
   var article = req.article

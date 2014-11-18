@@ -17,8 +17,16 @@ block main
 
           a.btn(href=actionPDF)
             span.typcn.typcn-document-text
-            |  Download PDF 
+            |  Download PDF
 
+          - if (article.paymentVerified && invoiceType == "sent")
+            button.btn.btn-danger.btn-confirm-payed
+              span.typcn.typcn-mail
+                |  Mark as Not Paid
+          -else if(!article.paymentVerified)
+            button.btn.btn-confirm-payed
+              span.typcn.typcn-mail
+                |  Mark as Payed
           //- a.btn(href="/articles/" + article._id + "/pdf")
           //-   span.typcn.typcn-document-text
           //-   |  Download CSV
@@ -28,11 +36,7 @@ block main
               span.typcn.typcn-mail
                 |  Delete
 
-          -if (invoiceType == "recieved")
-            button.btn.subtle.btn-confirm-payed
-              span.typcn.typcn-mail
-                |  Mark As Payed
-          -else if (invoiceType=='sent' && article.status === 'draft' )
+          -if (invoiceType=='sent' && article.status === 'draft' )
             button.btn.subtle.btn-confirm-send
               span.typcn.typcn-mail
                 |  Send
@@ -266,6 +270,29 @@ block content
             include ../comments/form
 
 block subfoot
+
+  .modal.confirm-payed-modal
+    .container
+      .modal-wrap.col-lg-8
+        span.close-button
+          span.typcn.typcn-delete
+        p Do you want to mark this invoice as payed? An email will be sent to the sender.
+        - if (article.paymentVerified)
+          form.form-inline(role="form", method="post", action="/articles/"+article._id+"/uppayed")
+            button.btn.btn-danger.subtle.btn-confirm
+              span.typcn.typcn-document-text
+                |  Mark as Not Payed  
+        - else if (req.token)
+          form.form-inline(role="form", method="post", action="/articles/"+article._id+"/token/"+req.token+"/payed")
+            button.btn.btn-confirm
+              span.typcn.typcn-document-text
+                |  Mark as Payed
+        -else
+          form.form-inline(role="form", method="post", action="/articles/"+article._id+"/payed")
+            button.btn.btn-confirm
+              span.typcn.typcn-document-text
+                |  Mark as Payed
+
   .modal.confirm-send-modal
     .container
       .modal-wrap.col-lg-8
@@ -289,21 +316,6 @@ block subfoot
             button.btn.subtle(type='submit')
               span.typcn.typcn-mail
                 |  Re-Send
-
-  .modal.confirm-payed-modal
-    .container
-      .modal-wrap.col-lg-8
-        span.close-button
-          span.typcn.typcn-delete
-        p Do you want to mark this invoice as payed? An email will be sent to the sender.
-        form(action="/articles/"+article.id+'/payed', method="post")
-          input(type='hidden', name='_csrf', value="#{csrf_token}")
-          input(type="hidden", name="_method", value="POST")
-          button.btn.subtle(type='submit')
-            span.typcn.typcn-mail
-              |  It's Payed
-
-
 
   .modal.confirm-delete-modal
     .container
@@ -335,7 +347,7 @@ block subfoot
 
           .form-group
             label.control-label(for='desc') Description
-            textarea.form-control#desc(rows="5", name="description")=article.body
+            textarea.form-control#desc(rows="5", name="description")=article.description
 
           .form-group
             label.control-label(for='tags') Tags
@@ -346,13 +358,13 @@ block subfoot
             input.form-control#date.date(type='text', name="dueOn", value=date, placeholder='Due Date')
           .form-group.quickdates
             a(value='15') 15 Days
-            &nbsp|&nbsp&nbsp
+              | &nbsp|&nbsp&nbsp
             a(value='30') 30 Days
-            &nbsp|&nbsp&nbsp
+              | &nbsp|&nbsp&nbsp
             a(value='60') 60 Days
-            &nbsp|&nbsp&nbsp
+              | &nbsp|&nbsp&nbsp
             a(value='90') 90 Days
-            span.muted &nbsp&nbsp(from today)
+              span.muted &nbsp
           .form-group
             button.right-float.btn.action(type='submit')
               span.typcn.typcn-tick
@@ -402,6 +414,10 @@ block subfoot
 
       $("body").on("click", ".btn-confirm-delete", function() {
         $(".confirm-delete-modal").fadeIn();
+      });
+
+      $("body").on("click", ".confirm-payed-modal .close-button", function() {
+        $(".confirm-payed-modal").fadeOut();
       });
 
       $("body").on("click", ".confirm-payed-modal .close-button", function() {

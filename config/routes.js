@@ -136,8 +136,11 @@ module.exports = function (app, passport) {
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
 
-  app.post('/articles/:id/payed', viewerAuth, articles.pay)
+  //articles.record
+  app.post('/articles/:id/token/:token/payed', viewerAuthToken, articles.payed)
+  app.post('/articles/:id/payed', viewerAuth, articles.payed)
 
+  app.post('/articles/:id/uppayed', viewerAuth, articles.unpayed)
 
   app.post('/articles/:id/upload', articles.uploadcsv);//upload 
 

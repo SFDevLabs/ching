@@ -65,7 +65,7 @@ exports.article = {
   hasViewAuthorizationToken:function(req, res, next){
     var auth = req.article.viewers.some(function(user,i){//iterate through the viewers with 'some' and return true if we have a valid token to view the invoice
       if (req.token===user.id){
-        req.articleViewer=user;
+        req.user=user;
         return true
       };
     });
