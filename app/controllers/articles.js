@@ -385,8 +385,14 @@ exports.show = function(req, res, next){
     var title = capitalize(req.article.status) + " - Invoice";
   }
 
+  if (req.article.user.id===req.user.id){
+    var invoiceType='sent'
+  }else{
+    var invoiceType='recieved'
+  }
   res.render('articles/show', {
     title: title,
+    invoiceType:invoiceType,
     article: req.article,
     bodyClass: bodyClass
   })
