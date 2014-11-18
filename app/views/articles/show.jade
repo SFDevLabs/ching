@@ -18,9 +18,8 @@ block main
           a.btn(href=actionPDF)
             span.typcn.typcn-document-text
             |  Download PDF
-
           - if (article.paymentVerified && invoiceType == "sent")
-            button.btn.btn-danger.btn-confirm-payed
+            button.btn.btn-danger.subtle.btn-confirm-payed
               span.typcn.typcn-mail
                 |  Mark as Not Paid
           -else if(!article.paymentVerified)
@@ -30,13 +29,12 @@ block main
           //- a.btn(href="/articles/" + article._id + "/pdf")
           //-   span.typcn.typcn-document-text
           //-   |  Download CSV
-          
-          -if (article.invoiceType == "sent")
+          -if (invoiceType == "sent")
             button.btn.btn-danger.subtle.btn-confirm-delete
               span.typcn.typcn-mail
                 |  Delete
 
-          -if (invoiceType=='sent' && article.status === 'draft' )
+          -if (invoiceType=='sent' && article.invoicedOn === null )
             button.btn.subtle.btn-confirm-send
               span.typcn.typcn-mail
                 |  Send
@@ -188,7 +186,7 @@ block content
           br
           .col-md-12
             .col-md-6
-              -if (article.invoiceType == "sent")
+              -if (invoiceType == "sent")
                 button#add_car_time.btn.btn-default
                   span.typcn.typcn-watch
                   |  Add Time
