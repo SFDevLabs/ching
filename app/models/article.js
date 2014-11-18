@@ -113,12 +113,12 @@ ArticleSchema
   //   this.salt = this.makeSalt()
   //   this.hashed_password = this.encryptPassword(password)
   // })
-  .get(function() { 
+  .get(function() {
      var val
-      if (this.invoicedOn===null)
-        val='draft'
-      else if (this.paidOn!==null){
+      if (this.paidOn!==null){
         val='paid'
+      }else if (this.invoicedOn===null){
+        val='draft'
       }else if (this.paidOn===null && this.dueOn && new Date()>this.dueOn){
         val='overdue'
       } else if (this.invoicedOn!==null){
