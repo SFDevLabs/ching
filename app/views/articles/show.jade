@@ -22,18 +22,21 @@ block main
           //- a.btn(href="/articles/" + article._id + "/pdf")
           //-   span.typcn.typcn-document-text
           //-   |  Download CSV
-
           
+          -if (article.invoiceType == "sent")
+            button.btn.btn-danger.subtle.btn-confirm-delete
+              span.typcn.typcn-mail
+                |  Delete
 
-          button.btn.btn-danger.subtle.btn-confirm-delete
-            span.typcn.typcn-mail
-              |  Delete
-
-          -if ( article.status === 'draft' )
+          -if (invoiceType == "recieved")
+            button.btn.subtle.btn-confirm-send
+              span.typcn.typcn-mail
+                |  Mark As Payed
+          -else if (invoiceType=='sent' && article.status === 'draft' )
             button.btn.subtle.btn-confirm-send
               span.typcn.typcn-mail
                 |  Send
-          -else 
+          -else if (invoiceType=='sent')
             button.btn.subtle.btn-confirm-send
               span.typcn.typcn-mail
                 |  Re-Send
@@ -61,10 +64,11 @@ block content
                 h2(class="#{article.status} #{hasImage}") Overdue #{pastDue} days
               -else
                 h2(class="#{article.status} #{hasImage}") #{article.status}
+  
 
               -if (article.description)
                 P=article.description
-              -else
+              -else if (article.invoiceType == "sent")
                 br
                 a.btn-edit Add a description...
                     
@@ -127,11 +131,12 @@ block content
                         p=viewer.user.email
                         p.gray='Organization: '
                         p=viewer.user.organization
-                        form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id)
-                          input(type='hidden', name='_csrf', value="#{csrf_token}")
-                          input(type="hidden", name="_method", value="DELETE")
-                          button.close-button(type="submit")
-                            span.typcn.typcn-delete
+                        -if (article.invoiceType == "sent")
+                          form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id)
+                            input(type='hidden', name='_csrf', value="#{csrf_token}")
+                            input(type="hidden", name="_method", value="DELETE")
+                            button.close-button(type="submit")
+                              span.typcn.typcn-delete
 
         - if (req.user && req.article && req.article.user.id===req.user.id)
           .col-md-4
@@ -180,12 +185,13 @@ block content
           br
           .col-md-12
             .col-md-6
-              button#add_car_time.btn.btn-default
-                span.typcn.typcn-watch
-                |  Add Time
-              button#add_car_item.btn.btn-default
-                span.typcn.typcn-plus
-                |  Add Item
+              -if (article.invoiceType == "sent")
+                button#add_car_time.btn.btn-default
+                  span.typcn.typcn-watch
+                  |  Add Time
+                button#add_car_item.btn.btn-default
+                  span.typcn.typcn-plus
+                  |  Add Item
             .col-md-6
               div#total
                 span
