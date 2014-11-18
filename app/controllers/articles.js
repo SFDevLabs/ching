@@ -512,13 +512,6 @@ var formateDate = function(d){
 }
 
 exports.pdf = function(req, res){
-
-    console.log(req.article.title)
-    //return res.send('!ha');
-
-
-
-
     // Create PDF
     var doc = new pdfDocument();
     var m=doc.font('Times-Roman', 12)
