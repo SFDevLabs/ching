@@ -86,10 +86,10 @@ block content
                 span.btn.btn-default.btn-edit
                   span.typcn.typcn-edit
                   |  Edit
-              h4.mini  InvoiceNumber: #{article.number}
+              h4.mini  InvoiceNumber: #{formatInvoiceNumber(article.number)}
               if (article.dueOn)
                 h4.mini Due Date: #{formatDate(article.dueOn)}  
-              else
+              else if (req.article.user.id===req.user.id)
                  h4.mini Due Date: 
                   a.btn-edit Add Due Date
               if (article.invoicedOn)
@@ -275,9 +275,9 @@ block subfoot
         span.close-button
           span.typcn.typcn-delete
         p Do you want to mark this invoice as payed? An email will be sent to the sender.
-        - if (article.paymentVerified)
+        - if (article.paymentVerified && invoiceType == "sent")
           form.form-inline(role="form", method="post", action="/articles/"+article._id+"/uppayed")
-            button.btn.btn-danger.subtle.btn-confirm
+            button.btn.btn-danger.btn-confirm-payed
               span.typcn.typcn-document-text
                 |  Mark as Not Payed  
         - else if (req.token)
@@ -307,7 +307,7 @@ block subfoot
               span.typcn.typcn-mail
                 |  Send
         -else
-          p Do you want to Re-send this invoice to #{article.viewers.length} recipient(s)?
+          p Do you want to re-send this invoice to #{article.viewers.length} recipient(s)?
           form(action="/articles/"+article.id+'/send', method="post")
             input(type='hidden', name='_csrf', value="#{csrf_token}")
             input(type="hidden", name="_method", value="POST")
