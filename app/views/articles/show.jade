@@ -69,7 +69,7 @@ block content
 
               -if (article.description)
                 P=article.description
-              -else if (article.invoiceType == "sent")
+              -else if (req.article.user.id===req.user.id)
                 br
                 a.btn-edit Add a description...
                     
@@ -117,7 +117,6 @@ block content
       hr
       .row
         .col-md-8
-
           .meta.clear.show-view
             div.view-content
               - if (article.user)
@@ -132,7 +131,7 @@ block content
                         p=viewer.user.email
                         p.gray='Organization: '
                         p=viewer.user.organization
-                        -if (article.invoiceType == "sent")
+                        -if (req.article.user.id===req.user.id)
                           form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id)
                             input(type='hidden', name='_csrf', value="#{csrf_token}")
                             input(type="hidden", name="_method", value="DELETE")
@@ -213,7 +212,7 @@ block content
             .col-md-6#csv-file
               h3 
                 | Import from 
-                a(target="_blank", href='http://en.wikipedia.org/wiki/Comma-separated_values') Comma-separated values
+                a(target="_blank", href='http://en.wikipedia.org/wiki/Comma-separated_values') CSV
               .csv-drop-file
                 p
                   input(id="fileupload", type="file", name="files[]", multiple)
