@@ -510,6 +510,7 @@ footer {
           margin: 0 auto;
           float: none;
           z-index: 1000;
+          min-width: 300px;
         }
       }
 
@@ -537,7 +538,7 @@ footer {
       width: 50%;
       height: 5em;
       top: 50%;
-      margin-top: -5em;
+      margin-top: -8.5em;
       span {
         display: block;
         position: absolute;
@@ -556,7 +557,7 @@ footer {
       height: 5em;
       top: 50%;
       right: 0;
-      margin-top: -6.25em;
+      margin-top: -8.5em;
       img {
         display: block;
         max-width: 100px;

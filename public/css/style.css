@@ -131,7 +131,7 @@ a {
     .btn.action:hover, a.button.action:hover, .button.action:hover {
       -webkit-transition: all 0.5s ease-in-out;
       transition: all 0.5s ease-in-out;
-      background: #019138;
+      background: #01913a;
       border-top-color: rgba(0, 0, 0, 0.25);
       border-bottom-color: transparent; }
   .btn.btn-danger, a.button.btn-danger, .button.btn-danger {
@@ -139,15 +139,15 @@ a {
     border-color: #F92700;
     color: #F92700; }
     .btn.btn-danger:hover, a.button.btn-danger:hover, .button.btn-danger:hover {
-      color: #c61e00;
-      border-color: #c61e00; }
+      color: #c61f00;
+      border-color: #c61f00; }
   .btn.subtle, .btn.subtle.btn-danger, a.button.subtle, a.button.subtle.btn-danger, .button.subtle, .button.subtle.btn-danger {
     background: none;
     border-color: #02c34e;
     color: #02c34e; }
     .btn.subtle:hover, .btn.subtle.btn-danger:hover, a.button.subtle:hover, a.button.subtle.btn-danger:hover, .button.subtle:hover, .button.subtle.btn-danger:hover {
-      color: #019138;
-      border-color: #019138; }
+      color: #01913a;
+      border-color: #01913a; }
   .btn.subtle.btn-danger, a.button.subtle.btn-danger, .button.subtle.btn-danger {
     background: none;
     border: 2px solid rgba(0, 0, 0, 0.25);
@@ -340,7 +340,8 @@ footer {
         width: 40%;
         margin: 0 auto;
         float: none;
-        z-index: 1000; }
+        z-index: 1000;
+        min-width: 300px; }
   .landing header .ground {
     position: absolute;
     bottom: 0;
@@ -356,7 +357,7 @@ footer {
     width: 50%;
     height: 5em;
     top: 50%;
-    margin-top: -5em; }
+    margin-top: -8.5em; }
     .landing header .junk span {
       display: block;
       position: absolute;
@@ -371,7 +372,7 @@ footer {
     height: 5em;
     top: 50%;
     right: 0;
-    margin-top: -6.25em; }
+    margin-top: -8.5em; }
     .landing header .invoices img {
       display: block;
       max-width: 100px;
@@ -696,9 +697,11 @@ div.tagsinput span.tag {
     margin-top: 0; }
 
 @media (min-width: 1300px) {
+
   .landing-wrap {
     box-sizing: border-box;
     position: relative;
     margin: 0 auto;
     float: left;
-    padding: 2.5em 0; } }
+    padding: 2.5em 0; }
+ }
