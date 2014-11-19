@@ -2,11 +2,12 @@ extends auth
 
 block auth
   .row.sign-up
+    br
+    h2.center= title
     form.large.col.col-lg-5.center-block(action="/users", method="post", role="form")
       div.logo.center-block
         a(href="/")
           img(src="./img/logo.png")
-      h1.center= title
       input(type='hidden', name='_csrf', value="#{csrf_token}")
 
       .form-group

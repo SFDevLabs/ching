@@ -47,7 +47,7 @@ exports.savepw = function (req, res, next) {
 
 exports.login = function (req, res) {
 
-  var bodyClass = "login";
+  //var bodyClass = "login";
  
   var savedbody = req.flash('savedbody'),
       password = savedbody.length && savedbody[0].password?savedbody[0].password:'',
@@ -58,7 +58,7 @@ exports.login = function (req, res) {
     message: req.flash('error'),
     password: password,
     email: email,
-    bodyClass: bodyClass
+   // bodyClass: bodyClass
   })
 }
 
@@ -67,10 +67,10 @@ exports.login = function (req, res) {
  */
 
 exports.signup = function (req, res) {
-  var bodyClass = "signup";
+  //var bodyClass = "signup";
   res.render('users/signup', {
     title: 'Sign up',
-    bodyClass: bodyClass,
+    //bodyClass: bodyClass,
     user: new User()
   })
 }
