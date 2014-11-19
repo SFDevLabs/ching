@@ -413,6 +413,8 @@ nav.navbar {
     width: 30px;
     float: left;
     margin-top: -2px;
+    height: 30px;
+    margin-right: 5px;
   }
 }
 .login {
@@ -538,7 +540,7 @@ footer {
       width: 50%;
       height: 5em;
       top: 50%;
-      margin-top: -8.5em;
+      margin-top: -8em;
       span {
         display: block;
         position: absolute;
@@ -627,6 +629,9 @@ footer {
     padding: 3.75em 0 2.5em 0;
     border-top: 1px solid darken($block, 7%);
     border-bottom: 1px solid darken($block, 7%);
+    .features li{
+      margin-top: 40px;
+    }
     .icon {
       font-size: 5em;
       color: darken($block, 20%);
