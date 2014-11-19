@@ -54,7 +54,7 @@ exports.create = function (req, res) {
          user = new User(req.body);
          user.save();//create a new user
        } else {
-        req.flash('info', 'We found ching user with this email!'); ///inform the use that 
+       // req.flash('info', 'We found ching user with this email!'); ///inform the use that 
         duplicate = req.article.viewers.some(function(val,i){//Check to see if we have already shared with this person
           if (String(user._id)===String(val.user._id)){
             return true
@@ -153,7 +153,7 @@ exports.destroy = function (req, res) {
     if (err) {
       req.flash('error', 'Oops! The viewer was not found')
     } else {
-      req.flash('success', 'Viewer Removed')
+      req.flash('success', 'Invoice recipient removed.')
     }
     res.redirect('/articles/' + article.id)
   })
