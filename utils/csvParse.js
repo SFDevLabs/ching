@@ -148,7 +148,7 @@
               return {
                     date: val.Date?new Date(val.Date.split('-')):null
                   , qty : 1
-                  , cost : val.Amount?Number(val.Amount.replace(',','')):null
+                  , cost : val.Amount?Number(val.Amount):null
                   , item : val.Category?val.Category:''
                   , type : 'Item'
                   , note : (val.Notes?val.Notes:'')+' - '+(val.Vendor?val.Vendor:'')+' - '+(val.Project?val.Project:'')
@@ -158,7 +158,6 @@
             break;
           case "freshbooksTime":
             rule=function(val){
-              console.log(val.Rate)
               return {
                     date: val['Invoice Date']?new Date(val['Invoice Date'].split('/')):null
                   , qty : val.Hours?Number(val.Hours):null
