@@ -48,8 +48,7 @@
     "csvtojson":"latest",
     "underscore" : "latest",
     "pdfkit":"latest",
-    "node-sass":"latest"
-
+    "node-sass-middleware":"latest"
   },
   "devDependencies": {
     "supertest": "latest",
