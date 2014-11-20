@@ -160,7 +160,7 @@ exports.sendInvoice=function(req, res){
           if (sent.length===articleJSON.viewers.length){
             article.invoicedOn=new Date();
             article.save();
-            req.flash('success', 'Invoice Sent to '+articleJSON.viewers.length+' people.')
+            req.flash('success', 'Success! '+articleJSON.viewers.length+' recipent(s) will recieve invoices.')
             res.redirect('/articles/'+ article.id)            
           }
         });//email
