@@ -84,9 +84,11 @@ block content
                 span Total: &nbsp;
                 span(href="/users/"+article.user._id)= formatCurrency(article.total)
                 span=article.net
-                -if (article.tags)
-                  - each tag in article.tags.split(',')
-                    span.tag #{tag}
+                .tags
+                  | Tags:&nbsp;
+                  -if (article.tags)
+                    - each tag in article.tags.split(',')
+                      span.tag #{tag}&nbsp;
               p.date
                 | Created: 
                 span.dim= formatDatetime(article.createdAt)
