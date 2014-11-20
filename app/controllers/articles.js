@@ -535,7 +535,7 @@ var formateDate = function(d){
 exports.pdf = function(req, res){
     // Create PDF
     var doc = new pdfDocument();
-    var m=doc.font('Times-Roman', 12)
+    var m=doc.font('Helvetica', 12)
     var drawRows = function(rows, margin,rowHeight,colPadding){
         var keys = _.keys(itemsSchema).sort(function(key,keyTwo){
               return itemsSchema[key].columnPosition>itemsSchema[keyTwo].columnPosition
@@ -549,7 +549,7 @@ exports.pdf = function(req, res){
             var rowWidth =itemsSchema[key].printColWidth;
                 console.log(key,colIndex,rowWidth,rowWidthIndexHeader)
 
-            m.text(key?String(key):''
+            m.fillColor('#888888').text(key?String(key):''
               , margin.left+rowWidthIndexHeader
               , margin.top 
               , {width: rowWidth,
@@ -580,7 +580,7 @@ exports.pdf = function(req, res){
                   }
 
                   
-                  doc.text(
+                  doc.fillColor('black').text(
                     content, 
                     margin.left+rowWidthIndex, 
                     (margin.top+rowHeight)+(rowHeight*rowIndex), 
@@ -599,18 +599,23 @@ exports.pdf = function(req, res){
 
      
 
-   doc.text('Invoice')
+   doc.font('Helvetica', 30).text('Invoice',{align: 'center'})
      
-   doc.text('Number: '+req.article.number)
+   doc.font('Helvetica', 15).fillColor('#787878 ').text('#'+utils.formatInvoiceNumber(req.article.number))
    doc.text('Name: '+req.article.user.firstname+" "+req.article.user.lastname)
-   if (req.article.user.Organization){
-     doc.text('Organization: '+req.article.user.Organization);
+   if (req.article.user.organization){
+     doc.text('Organization: '+req.article.user.organization);
    }
    
+   if (req.article.invoicedOn){   
+    doc.text('Invoiced On: '+ formateDate(req.article.invoicedOn));
+   }   
+
    
-   
-   doc.moveTo(0, 170)
-      .lineTo(700, 170)
+   doc.moveTo(0, 185)
+      .lineTo(700, 185)
+      .strokeColor('#eee')
+      .lineWidth(5)
       .stroke() 
 
     var articles = req.article.items
@@ -622,6 +627,8 @@ exports.pdf = function(req, res){
       , marginFirst = {left:50,top:200}
       , lastIndex = 0
       , nextIndex = articles.length<=perPageFirst?articles.length:perPageFirst;
+    
+    doc.font('Helvetica', 12).fillColor('black')
     req.article.items.forEach(function(val, i){
 
 
@@ -636,11 +643,7 @@ exports.pdf = function(req, res){
 
     });
    doc.addPage()
-   doc.text('Invoice Total: '+utils.formatCurrency(req.article.total))
-   
-   if (req.article.invoicedOn){   
-    doc.text('Invoiced On: '+ formateDate(req.article.invoicedOn));
-   }
+   doc.font('Helvetica', 18).text('Total: '+utils.formatCurrency(req.article.total),{align: 'right'})
 
     // req.article.items.forEach(function(rowObj, rowIndex){
 
@@ -652,10 +655,13 @@ exports.pdf = function(req, res){
     // });
 
     // Write headers
+    // 
+    var filename = req.article.user.firstname +'_'+ req.article.user.lastname
+    if (req.article.user.organization!==null){filename+=req.article.user.organization}
     res.writeHead(200, {
         'Content-Type': 'application/pdf',
         'Access-Control-Allow-Origin': '*',
-        'Content-Disposition': 'attachment; filename='+req.article.title+'.pdf',
+        'Content-Disposition': 'attachment; filename='+filename+'_'+utils.formatInvoiceNumber(req.article.number)+'.pdf',
     });
 
 
