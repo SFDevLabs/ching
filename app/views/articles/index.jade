@@ -82,7 +82,8 @@ block content
 
               .meta
                 span Total: &nbsp;
-                span(href="/users/"+article.user._id)= formatCurrency(article.total)
+                if (article.total)
+                  span(href="/users/"+article.user._id)= formatCurrency(article.total)
                 span=article.net
                 .tags
                   | Tags:&nbsp;
