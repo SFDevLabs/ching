@@ -254,7 +254,7 @@
   var apiRoute=function(route){
     console.log(route)
     return function(req, res, next){
-          Analytics('event',{type:route, user:req.user.id})
+          Analytics('event',{type:route, user:req.user?req.user.id:null})
           next();
     }
   }
