@@ -398,12 +398,12 @@ footer {
     .landing header .more span {
       display: block; }
   .landing header .tagline, .landing header div > p {
-    font-size: 1.25em;
+    font-size: 1.4em;
     line-height: 1.5em; }
   .landing header p.tagline {
-    line-height: 1.25em;
+    line-height: 1.5em;
     font-weight: 600;
-    margin-bottom: 0.625em; }
+    margin-bottom: 0.925em; }
 .landing .landing-content {
   position: absolute;
   top: 100%;
