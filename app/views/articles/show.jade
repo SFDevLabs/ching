@@ -93,7 +93,7 @@ block content
                  h4.mini Due Date: 
                   a.btn-edit Add Due Date
               if (article.invoicedOn)
-                h4.mini Invoiced On: #{formatDate(article.invoicedOn)}
+                h4.mini Invoice Sent On: #{formatDate(article.invoicedOn)}
               if (article.paidOn)
                 h4.mini Paid On: #{formatDate(article.paidOn)}   
               h4.gray
@@ -222,8 +222,14 @@ block content
               .csv-paste-text
                 textarea#csv-ajax(placeholder="paste csv text here!")
                 a.btn.subtle(onclick="post()") Submit
-              a.click(href='#none') &nbsp (toggle textarea and file upload)
-    
+              .col-md-6
+                a.click(href='#none') &nbsp (toggle textarea and file upload)
+              
+    //- .container
+    //-   .row
+    //-     .col-md-12
+    //-       button.pop.btn.btn-default(type='button', title="Popover title" , data-container='body', data-toggle='popover', data-placement='right', data-content='Vivamus sagittis lacus vel augue laoreet rutrum faucibus.')
+    //-         | Popover on left
     -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
       .container
         .row
