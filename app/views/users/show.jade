@@ -17,12 +17,14 @@ block main
 
     .row
       .col-md-4
+        h4.label
+          | Send me a Password Reset Email:
         form.form-horizontal(action="/reset", method="post", role="form")
           input(type='hidden', name='_csrf', value="#{csrf_token}")
           input#email.form-control(type='hidden', placeholder="Your Email", name="email" value=user.email)
           button.btn.btn-primary(type='submit')
             span(class="typcn typcn-mail")
-              |  Send Reset Email
+              |  Send
 block subfoot
   - var action = '/users/' + user.id
   .modal.edit-profile-modal
