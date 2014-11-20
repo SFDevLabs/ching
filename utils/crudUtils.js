@@ -232,6 +232,33 @@
   }
 
 
+  var Keen = require('keen.io');
+
+  var client = Keen.configure({
+      projectId: "546dc37b36bca44b4bfcaf3e",
+      writeKey: "8af6a1cc9a40021100e789f9010922a866fc7cafaeef7556217dd596738d779b0210ba1c45d11b5690865525fe9c05360e5aa344847617486eee4efe1a14575ecad3fce442b2c6c707c482b1c3a824914a216f64c76da2afbcde668c0095788281eb33f6c286678e43ad328eb0996717",
+      readKey: "f631dfd829dba39d1d8efa8b22b6397ba7276991180db8733dbf354d2b645ef4b916bb3e71b9f6309a6181664a5ab2fb823cfdc3a3adec14a6e30dcbcb9783054cbdb4d8b5d1e97c14fca2a0a78abd793184a018057dd9e8b997196bd619984fb2ff3faa93a37580976b86b24658c1d2",
+      masterKey: "56431B491A7ADDAA1DACA079F6165952"
+  });
+
+  var Analytics = function(collection, keyVals, cb){
+    client.addEvent(collection, keyVals, function(err, res) {
+      if (err && cb) {
+        cb(err, null)
+          console.log("Oh no, an error!", err);
+      } else if (cb) {
+        cb(null, res)
+      }
+    });
+  }
+  var apiRoute=function(route){
+    console.log(route)
+    return function(req, res, next){
+          Analytics('event',{type:route, user:req.user.id})
+          next();
+    }
+  }
+
   exports.initRoutesForModel = function (app, auth) {
     var model = Article
       , path
@@ -252,14 +279,14 @@
 
 
 
-    app.get(path+'/api', viewerAuth, getListController(model));
-    app.get(path+'/api/token/:token', viewerAuthToken, getListController(model));
-    app.post(path+'/api', articleAuth, getCreateController(model));
-    app.get(pathWithId, articleAuth, getReadController(model));
-    app.put(path+'/api', articleAuth, getUpdateController(model));
-    app.put(pathWithId, articleAuth, getUpdateItemController(model));
-    app.del(path, articleAuth, getDeleteController(model));
-    app.del(pathWithId, articleAuth, getItemDeleteController(model));
+    app.get(path+'/api', viewerAuth, apiRoute('API_ItemsList'), getListController(model));
+    app.get(path+'/api/token/:token', apiRoute('API_ItemsList_Token'), viewerAuthToken, getListController(model));
+    app.post(path+'/api', articleAuth, apiRoute('API_PostItems'), getCreateController(model));
+    app.get(pathWithId, articleAuth, apiRoute('API_GetItemsById'), getReadController(model));
+    //app.put(path+'/api', articleAuth, apiRoute('API_PutAllItems'), getUpdateController(model));
+    app.put(pathWithId, articleAuth, apiRoute('API_PutById'), getUpdateItemController(model));
+    //app.del(path, articleAuth, apiRoute('API_Delete'), getDeleteController(model)); //Depricated
+    app.del(pathWithId, articleAuth, apiRoute('API_DeletebyId'), getItemDeleteController(model));
   };
 
 }(exports));

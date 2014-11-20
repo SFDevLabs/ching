@@ -20,10 +20,32 @@ var mongoose = require('mongoose')
   , emailTmplPaid = fs.readFileSync('./app/views/email/paid.html','utf8')
   , Mustache = require('mustache');
 
+
+var Keen = require('keen.io');
+
+var client = Keen.configure({
+    projectId: "546dc37b36bca44b4bfcaf3e",
+    writeKey: "8af6a1cc9a40021100e789f9010922a866fc7cafaeef7556217dd596738d779b0210ba1c45d11b5690865525fe9c05360e5aa344847617486eee4efe1a14575ecad3fce442b2c6c707c482b1c3a824914a216f64c76da2afbcde668c0095788281eb33f6c286678e43ad328eb0996717",
+    readKey: "f631dfd829dba39d1d8efa8b22b6397ba7276991180db8733dbf354d2b645ef4b916bb3e71b9f6309a6181664a5ab2fb823cfdc3a3adec14a6e30dcbcb9783054cbdb4d8b5d1e97c14fca2a0a78abd793184a018057dd9e8b997196bd619984fb2ff3faa93a37580976b86b24658c1d2",
+    masterKey: "56431B491A7ADDAA1DACA079F6165952"
+});
+
+var Analytics = function(collection, keyVals, cb){
+  client.addEvent(collection, keyVals, function(err, res) {
+    if (err && cb) {
+      cb(err, null)
+        console.log("Oh no, an error!", err);
+    } else if (cb) {
+      cb(null, res)
+    }
+  });
+}
+
 /*
  * upload
  */
 exports.uploadcsv = function(req, res, next){
+
 
     getcsv(req.files, req.body, function(err, data){
 
@@ -50,8 +72,9 @@ exports.uploadcsv = function(req, res, next){
           }    
 
 
-          console.log(mapper)
+          //This check to see if we have keys.
           if (mapper){
+            Analytics('event', {type:'csvUpload', user:req.user.id});
 
             req.article.items=req.article.items.concat(convertedJson)
 
@@ -246,10 +269,16 @@ var indexSent = exports.indexSent = function(req, res){
 exports.new = function(req, res){
 
 
+  Analytics('event', {type:'NewInvoice', user:req.user.id});
+
   Article.highestNumber(req.user.id, function(err, number){
 
     var article = new Article({user:req.user.id, number:number});
     req.article = article;
+
+    req.article.items.push({});//Add One of each type to get the started
+    req.article.items.push({type:'Item'});
+    
     article.save(function(err){
         if (err) {
           req.flash('error', 'No email')
@@ -534,20 +563,24 @@ var formateDate = function(d){
 
 exports.pdf = function(req, res){
     // Create PDF
+    // I know I need to commenbt this so here I go!
+    // 
+    Analytics('event', {type:'pdf', user:req.user.id});
+
     var doc = new pdfDocument();
     var m=doc.font('Helvetica', 12)
     var drawRows = function(rows, margin,rowHeight,colPadding){
         var keys = _.keys(itemsSchema).sort(function(key,keyTwo){
               return itemsSchema[key].columnPosition>itemsSchema[keyTwo].columnPosition
             });
-            console.log(keys)
+            //console.log(keys)
 
         var rowWidthIndexHeader = 0;
         keys.forEach(function(key, colIndex){
 
             //var colIndex = itemsSchema[key].columnPosition,
             var rowWidth =itemsSchema[key].printColWidth;
-                console.log(key,colIndex,rowWidth,rowWidthIndexHeader)
+                //console.log(key,colIndex,rowWidth,rowWidthIndexHeader)
 
             m.fillColor('#888888').text(key?String(key):''
               , margin.left+rowWidthIndexHeader
