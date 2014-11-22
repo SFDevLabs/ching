@@ -160,7 +160,7 @@ exports.token  = function(req, res, next, token){
 
 exports.indexRecieved = function(req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
-  var perPage = 10,
+  var perPage = 12,
       userID=req.user?req.user._id:null;
   var options = {
     perPage: perPage,
@@ -217,7 +217,7 @@ var indexSent = exports.indexSent = function(req, res){
   var bodyClass = "list";
 
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
-  var perPage = 10,
+  var perPage = 12,
       userID=req.user?req.user._id:null,
       time = new Date();
       time.setDate(time.getDate()-30);// set the date 30 days in the past 
@@ -230,7 +230,7 @@ var indexSent = exports.indexSent = function(req, res){
     user: userID
   }
 
-
+//this is the abandoned logic to show the total amounts of paid overdue etc.
 // Article.aggregate([
 // //  { $match: { status: "A" } },
 //   { $group: { _id: "$user", total: { $sum: "$total" } } },
