@@ -4,8 +4,7 @@ html, body, header {
   height: 100%; }
 
 body {
-  font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  line-height: 1.4em;
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: #fff;
   color: #666;
   margin: 0 auto;
@@ -109,8 +108,8 @@ em strong, strong em {
 
 a {
   text-decoration: none;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: opacity all 0.5s ease-in-out;
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: opacity color 0.5s ease-in-out;
   color: #0085c3; }
   a:active {
     color: #F92700; }
@@ -123,8 +122,8 @@ a {
   border: 2px solid rgba(0, 0, 0, 0.25);
   color: rgba(0, 0, 0, 0.35);
   text-shadow: none;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: color 0.5s ease-in-out;
   text-decoration: none;
   padding: 0.4375em 2.5em 0.625em 2.5em;
   line-height: 1em;
@@ -132,8 +131,8 @@ a {
   border-radius: 3px;
   cursor: pointer; }
   .btn:hover, a.button:hover, .button:hover {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: opacity all 0.5s ease-in-out;
+    -webkit-transition: color 0.5s ease-in-out;
+    transition: opacity color 0.5s ease-in-out;
     border-color: #02c34e;
     color: #02c34e; }
   .btn.action, a.button.action, .button.action {
@@ -280,8 +279,7 @@ nav.navbar p, nav.navbar ul li {
   margin-bottom: 0; }
 
 .navbar-header .navbar-brand {
-  display: block;
-  width: 300px; }
+  display: block; }
 .navbar-header .logo, .navbar-header .logo img {
   display: block;
   width: 30px;
@@ -517,8 +515,7 @@ body.login {
   .list .article .status {
     text-transform: capitalize;
     padding: 10px 15px;
-    color: rgba(0, 0, 0, 0.5);
-    margin: 0; }
+    color: rgba(0, 0, 0, 0.5); }
   .list .article .content {
     position: relative;
     min-height: 13.75em;
@@ -528,7 +525,7 @@ body.login {
   .list .article .date {
     position: absolute;
     bottom: 0px;
-    left: 15px; }
+    margin-right: 15px; }
   .list .article .dim {
     color: #bbb; }
 
@@ -556,19 +553,15 @@ body.login {
   .overdue .status {
     background: #F92700; }
 
-.draft, .sent, .paid, .overdue {
-  text-transform: capitalize;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out; }
-  .draft h2, .draft h2.dim, .draft .status, .draft .date, .sent h2, .sent h2.dim, .sent .status, .sent .date, .paid h2, .paid h2.dim, .paid .status, .paid .date, .overdue h2, .overdue h2.dim, .overdue .status, .overdue .date {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out; }
-  .draft:hover, .sent:hover, .paid:hover, .overdue:hover {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
-    border-color: #0085c3; }
-    .draft:hover h2, .draft:hover h2.dim, .draft:hover .status, .draft:hover .date, .sent:hover h2, .sent:hover h2.dim, .sent:hover .status, .sent:hover .date, .paid:hover h2, .paid:hover h2.dim, .paid:hover .status, .paid:hover .date, .overdue:hover h2, .overdue:hover h2.dim, .overdue:hover .status, .overdue:hover .date {
-      color: #0085c3; }
+.draft h2, .draft h2.dim, .draft .status, .draft .date, .sent h2, .sent h2.dim, .sent .status, .sent .date, .paid h2, .paid h2.dim, .paid .status, .paid .date, .overdue h2, .overdue h2.dim, .overdue .status, .overdue .date {
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: color 0.5s ease-in-out; }
+.draft:hover, .sent:hover, .paid:hover, .overdue:hover {
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: color 0.5s ease-in-out;
+  border-color: #0085c3; }
+  .draft:hover h2, .draft:hover h2.dim, .draft:hover .status, .draft:hover .date, .sent:hover h2, .sent:hover h2.dim, .sent:hover .status, .sent:hover .date, .paid:hover h2, .paid:hover h2.dim, .paid:hover .status, .paid:hover .date, .overdue:hover h2, .overdue:hover h2.dim, .overdue:hover .status, .overdue:hover .date {
+    color: #0085c3; }
 
 .controls {
   background: #e6e6e6;
@@ -685,11 +678,11 @@ div.tags span.tag {
   width: 0.85em;
   line-height: 0.75em;
   text-indent: -0.04em;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out; }
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: color 0.5s ease-in-out; }
   .close-button span:hover {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transition: color 0.5s ease-in-out;
+    transition: color 0.5s ease-in-out;
     color: #F92700; }
 
 .table-container {
@@ -790,3 +783,15 @@ div.tags span.tag {
   background-color: #f7f7f7;
   border-bottom: 1px solid #ebebeb;
   border-radius: 5px 5px 0 0; }
+
+.pages {
+  text-align: center; }
+
+ul.pagination {
+  text-align: center; }
+  ul.pagination li {
+    display: inline;
+    padding: 3px;
+    font-size: 1.5em; }
+    ul.pagination li i {
+      font-size: 1.25em; }

@@ -45,8 +45,7 @@ header {
 }
 
 body {
-  font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  line-height: 1.4em;
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;  
   background: $bg;
   color: $text;
   margin: 0 auto;
@@ -180,8 +179,8 @@ strong em {
 
 a {
   text-decoration: none;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition:opacity all 0.5s ease-in-out;
+  -webkit-transition: color 0.5s ease-in-out;
+  transition:opacity color 0.5s ease-in-out;
   color: $link;
   &:active {
     color: #F92700;
@@ -199,8 +198,8 @@ a.button,
   border: 2px solid rgba(0,0,0,0.25);
   color: rgba(0,0,0,0.35);
   text-shadow: none;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: color 0.5s ease-in-out;
   text-decoration: none; 
   padding: 0.4375em 2.5em 0.625em 2.5em;
   line-height: 1em;
@@ -209,8 +208,8 @@ a.button,
   cursor: pointer;
 
   &:hover {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition:opacity all 0.5s ease-in-out;
+    -webkit-transition: color 0.5s ease-in-out;
+    transition:opacity color 0.5s ease-in-out;
     border-color: $actionbg;
     color: $actionbg;
   }
@@ -431,7 +430,6 @@ nav.navbar {
 .navbar-header {
   .navbar-brand {
     display: block;
-    width: 300px;  
   }
   .logo,
   .logo img {
@@ -783,7 +781,6 @@ body.login {
       text-transform: capitalize;
       padding: 10px 15px;
       color: rgba(0,0,0,0.5);
-      margin: 0;
     }
     .content {
       position: relative;
@@ -791,12 +788,11 @@ body.login {
       background: #f7f7f7;
       border-bottom: 2px solid;
       padding: 15px;
-
     }
     .date {
       position: absolute;
       bottom: 0px;
-      left: 15px;
+      margin-right: 15px;
     }
     .dim {
       color: $lightgray;
@@ -841,19 +837,18 @@ body.login {
 .sent,
 .paid,
 .overdue {
-  text-transform: capitalize;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
+  //-webkit-transition: all 0.5s ease-in-out;
+  //transition: all 0.5s ease-in-out;
   h2,
   h2.dim,
   .status,
   .date {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;  
+    -webkit-transition: color 0.5s ease-in-out;
+    transition: color 0.5s ease-in-out;  
   }
   &:hover {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transition: color 0.5s ease-in-out;
+    transition: color 0.5s ease-in-out;
     h2,
     h2.dim,
     .status,
@@ -1028,11 +1023,11 @@ font-size: 13px;
   width: 0.85em;
   line-height: 0.75em;
   text-indent: -0.04em;
-  -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
+  -webkit-transition: color 0.5s ease-in-out;
+  transition: color 0.5s ease-in-out;
   &:hover {
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transition: color 0.5s ease-in-out;
+    transition: color 0.5s ease-in-out;
     color: $warnbg;
   }
 }
@@ -1160,4 +1155,20 @@ font-size: 14px;
 background-color: #f7f7f7;
 border-bottom: 1px solid #ebebeb;
 border-radius: 5px 5px 0 0;
+}
+
+.pages{
+  text-align:center;
+}
+ul.pagination{
+  text-align: center;
+  li{
+    display: inline;
+    padding: 3px;
+    font-size: 1.5em;
+    i{
+      font-size: 1.25em;
+    }
+  }
+
 }
