@@ -96,8 +96,18 @@ block content
 
 
       - if (pages > 1)
-        ul.pagination.row
-          != createPagination(pages, page)
+        div.pages
+          ul.pagination
+            if (page!==1)
+              li
+                a(href="?page="+(page-1))
+                  i.typcn.typcn-chevron-left
+            != createPagination(pages, page)
+            if (pages!==page)
+              li
+                a(href="?page="+pages)
+                  i.typcn.typcn-chevron-right
+
   - else
     .container.list
       header.row
