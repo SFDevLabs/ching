@@ -65,31 +65,31 @@ block content
               else
                 span #{article.status}
                 
-              span.right # #{article.number}
+              span.right # #{formatInvoiceNumber(article.number)}
 
             .content
               if (article.title)
                 h4=article.title
               else
                 br
-              if (article.viewers[0])
-                span recipients:
+
+              if (article.viewers[0]!==Undefined && invoiceType==='sent')
+                span Recipients:
                 h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
+              else if (invoiceType==='recieved')
+                span From: #{article.user.firstname} #{article.user.lastname}
               if (article.viewers[1])
                 h4.dim #{article.viewers[1].user.organization}
               if (article.viewers[3])
                 h4.dim more...
-
+              if (article.tags && article.tags.length > 0)
+                .tags
+                  - each tag in article.tags.split(',')
+                    span.tag 
+                      span #{tag}&nbsp;
               .meta
                 span Total: &nbsp;
-                if (article.total)
-                  span(href="/users/"+article.user._id)= formatCurrency(article.total)
-                span=article.net
-                .tags
-                  | Tags:&nbsp;
-                  -if (article.tags)
-                    - each tag in article.tags.split(',')
-                      span.tag #{tag}&nbsp;
+                span(href="/users/"+article.user._id)= formatCurrency(article.total)
               p.date
                 | Created: 
                 span.dim= formatDatetime(article.createdAt)
@@ -99,9 +99,11 @@ block content
         ul.pagination.row
           != createPagination(pages, page)
   - else
-    h2.gray No invoices yet...
-    p
-      a(href="/articles/new", class="button") Create an Invoice
+    .container.list
+      header.row
+        h2.gray No invoices yet...
+      p
+        a(href="/articles/new", class="button") Create an Invoice
 
 block subfoot
   script(type="text/javascript", src='/js/vendor/d3.js')
