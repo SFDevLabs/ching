@@ -2,11 +2,12 @@ doctype html
 html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.facebook.com/2008/fbml', itemscope='itemscope', itemtype='http://schema.org/Product')
   include ../includes/head
   body(class=bodyClass)
-    include ../includes/header
-    -if (info.length>0 || errors.length>0 || success.length>0 || warning.length>0)
-      include ../includes/messages
-    block main
-    block content
+    .page-wrap
+      include ../includes/header
+      -if (info.length>0 || errors.length>0 || success.length>0 || warning.length>0)
+        include ../includes/messages
+      block main
+      block content
     -if (req.isAuthenticated()) 
       include ../includes/footer
     include ../includes/foot
