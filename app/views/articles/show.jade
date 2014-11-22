@@ -5,12 +5,13 @@ block extrahead
   link(rel='stylesheet', href='/css/jquery.handsontable.full.css')
   link(rel='stylesheet', href='/css/jquery-ui.min.css')
   link(rel='stylesheet', href='/css/jquery-ui.ching.theme.css')
+  link(rel="stylesheet", href="/css/app.css")
 
 block main
   .controls
     .container
       .row
-        .col-md-12
+        .col-md-12.invoice-bar
 
           - var actionPDF = "/articles/"+article._id+"/pdf"
           -if(req.token){actionPDF+= '/token/'+req.token}          
@@ -24,14 +25,14 @@ block main
                 |  Mark as Not Paid
           -else if(!article.paymentVerified)
             button.btn.btn-confirm-payed
-              span.typcn.typcn-mail
+              span.typcn.typcn-bell
                 |  Mark as Payed
           //- a.btn(href="/articles/" + article._id + "/pdf")
           //-   span.typcn.typcn-document-text
           //-   |  Download CSV
           -if (invoiceType == "sent")
             button.btn.btn-danger.subtle.btn-confirm-delete
-              span.typcn.typcn-mail
+              span.typcn.typcn-trash
                 |  Delete
 
           -if (invoiceType=='sent' && article.invoicedOn === null )
@@ -222,14 +223,14 @@ block content
               .csv-paste-text
                 textarea#csv-ajax(placeholder="paste csv text here!")
                 a.btn.subtle(onclick="post()") Submit
-              .col-md-6
-                a.click(href='#none') &nbsp (toggle textarea and file upload)
+              //- .col-md-6
+              //-   a.click(href='#none') &nbsp (toggle textarea and file upload)
               
-    //- .container
-    //-   .row
-    //-     .col-md-12
-    //-       button.pop.btn.btn-default(type='button', title="Popover title" , data-container='body', data-toggle='popover', data-placement='right', data-content='Vivamus sagittis lacus vel augue laoreet rutrum faucibus.')
-    //-         | Popover on left
+    .container
+      .row
+        .col-md-12
+          button.pop.btn.btn-default(type='button', title="Popover title" , data-container='body', data-toggle='popover', data-placement='right', data-content='Vivamus sagittis lacus vel augue laoreet rutrum faucibus.')
+            | Popover on left
     -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
       .container
         .row

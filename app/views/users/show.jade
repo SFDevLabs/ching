@@ -18,10 +18,11 @@ block main
     .row
       .col-md-4
         h4.label
-          | Send me a Password Reset Email:
+          | Send me a password reset email:
         form.form-horizontal(action="/reset", method="post", role="form")
           input(type='hidden', name='_csrf', value="#{csrf_token}")
           input#email.form-control(type='hidden', placeholder="Your Email", name="email" value=user.email)
+          br
           button.btn.btn-primary(type='submit')
             span(class="typcn typcn-mail")
               |  Send
