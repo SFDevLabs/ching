@@ -76,9 +76,10 @@ exports.uploadcsv = function(req, res, next){
             var data = {
               type:'csv_upload'
               , user:req.user.id
-              , parser:parser.keyString
+              , csvParser:parser.keyString
               , session:req.sessionID?req.sessionID:null
               }
+              console.log(data)
             utils.keenAnalytics('user_event', data);///Send data to the analytics engine
             req.article.items=req.article.items.concat(convertedJson)//We have the parsed and mapped data now to add it to the model!
             req.article.save(function(err){
@@ -93,9 +94,10 @@ exports.uploadcsv = function(req, res, next){
             var data = {
                 type:'csv_upload'
               , user:req.user.id
-              , parser:parser.keyString
+              , csvParser:parser.keyString
               , session:req.sessionID?req.sessionID:null
               }
+              console.log(data)
             utils.keenAnalytics('user_event', data);///Send data to the analytics engine
             return res.send({
                  data:json

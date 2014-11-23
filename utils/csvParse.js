@@ -194,5 +194,9 @@
             }
             break;
         }
-        return rule;//We returnt he rule for building the JSON
+        return {
+           mapper:rule
+          ,keyString :key
+
+        };//We returnt he rule for building the JSON
       };
