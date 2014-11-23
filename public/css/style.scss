@@ -51,7 +51,6 @@ body {
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  padding-top: 3.125em;
   position: absolute;
 }
 
@@ -460,6 +459,11 @@ nav.navbar {
   opacity: 0.45;
 }
 
+.login, .sign-up{
+  padding-top: 2.5em;
+
+}
+
 
 footer {
   //margin: 5em 0 0 0;
@@ -564,7 +568,7 @@ footer {
       width: 50%;
       height: 5em;
       top: 50%;
-      margin-top: -8em;
+      margin-top: -7em;
       span {
         display: block;
         position: absolute;
@@ -583,7 +587,7 @@ footer {
       height: 5em;
       top: 50%;
       right: 0;
-      margin-top: -8.5em;
+      margin-top: -6.5em;
       img {
         display: block;
         max-width: 100px;
