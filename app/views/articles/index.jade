@@ -40,9 +40,6 @@ block content
             | Paid (#{paidCount})
           li.overdue
             | Overdue (#{overdueCount})
-        div.col-lg-12
-          hr
-
       .row
         //- if this is the received invoices page
         -if (articles.invoiceType == "received")
@@ -64,23 +61,19 @@ block content
                   | Recieved
               else
                 span #{article.status}
-                
               span.right # #{formatInvoiceNumber(article.number)}
-
             .content
-              if (article.title)
-                h4=article.title
-              else
-                br
-
               if (article.viewers[0]!==Undefined && invoiceType==='sent')
                 span Recipients:
                 h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
-              else if (invoiceType==='recieved')
+              
+              if (invoiceType==='received')
                 span From: #{article.user.firstname} #{article.user.lastname}
+                if(article.user.organization)
+                  |  - #{article.user.organization}
               if (article.viewers[1])
                 h4.dim #{article.viewers[1].user.organization}
-              if (article.viewers[3])
+              if (article.viewers[2])
                 h4.dim more...
               if (article.tags && article.tags.length > 0)
                 .tags
@@ -105,7 +98,7 @@ block content
             != createPagination(pages, page)
             if (pages!==page)
               li
-                a(href="?page="+pages)
+                a(href="?page="+(page+1))
                   i.typcn.typcn-chevron-right
 
   - else
