@@ -1,3 +1,6 @@
+html, body, header {
+  height: 100%; }
+
 #area-chart {
   font-size: 10px; }
   #area-chart .axis path, #area-chart .axis line {

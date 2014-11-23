@@ -3,7 +3,6 @@ extends ../layouts/default
 block main
   link(rel='stylesheet', href='/css/index-page.css')
 
-
 block content
   - if (articles.length)
     - var draftCount = 0;
@@ -66,7 +65,6 @@ block content
               if (article.viewers[0]!==Undefined && invoiceType==='sent')
                 span Recipients:
                 h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
-              
               if (invoiceType==='received')
                 span From: #{article.user.firstname} #{article.user.lastname}
                 if(article.user.organization)

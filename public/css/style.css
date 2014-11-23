@@ -1,7 +1,6 @@
 html, body, header {
   width: 100%;
-  overflow-x: hidden;
-  height: 100%; }
+  overflow-x: hidden; }
 
 body {
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -21,7 +20,7 @@ body {
 .page-wrap {
   min-height: 100%;
   margin-bottom: -150px;
-  margin-top: 51px; }
+  padding-top: 51px; }
 
 .page-wrap:after {
   content: "";

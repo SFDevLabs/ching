@@ -41,7 +41,6 @@ body,
 header {
   width: 100%;
   overflow-x: hidden;
-  height: 100%;
 }
 
 body {
@@ -69,7 +68,7 @@ body {
 .page-wrap{
     min-height: 100%;
     margin-bottom: -150px;
-    margin-top: 51px;
+    padding-top: 51px;
 }
 
 
