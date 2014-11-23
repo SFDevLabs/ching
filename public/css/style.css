@@ -185,9 +185,9 @@ h1, h2, h3, h4, h5, h6 {
   color: #333; }
 
 h1 {
-  font-size: 3.75em;
+  font-size: 4em;
   line-height: 1em;
-  margin-bottom: 0.625em;
+  margin-bottom: 0.325em;
   /*&:first-child {
     margin-top: 0.625em;
   }
@@ -344,7 +344,7 @@ footer {
       text-align: center;
       clear: both;
       width: 100%;
-      font-weight: 800;
+      font-weight: 900;
       color: #FF9B00;
       margin-bottom: 0.3125em; }
     .landing header .header-content .computer {
