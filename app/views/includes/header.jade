@@ -22,10 +22,19 @@ nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
             a(href="/", title="Invoices")
               span.typcn.typcn-document-text
               |  Invoices  
-          li
-            a(href="/recieved", title="Recieved Invoices")
-              span.typcn.typcn-mail
-              |  Inbox 
+          
+          if (received>0)
+            li
+              a(href="/recieved", title="Recieved Invoices")
+                span.typcn.typcn-mail
+                strong 
+                  | Inbox 
+                strong='('+received+')'
+          else
+            li
+              a(href="/recieved", title="Recieved Invoices")
+                span.typcn.typcn-mail
+                |  Inbox 
           li
             a(href="/users/"+req.user.id, title="Profile")
               span.typcn.typcn-user

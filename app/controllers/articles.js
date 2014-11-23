@@ -174,8 +174,8 @@ exports.indexRecieved = function(req, res){
 
   Article.list(options, function(err, articles) {
     if (err) return res.render('500')
-    Article.count({paidOn:null,'viewers':{$elemMatch: {user:userID} } }).exec(function(errR, countReceived){
-    Article.count().exec(function (err, countT) {
+    Article.count(options.criteria).exec(function (err, countT) {
+      console.log()
       res.render('articles/index', {
         invoiceType: 'received',
         title: 'Received Invoices',
@@ -184,10 +184,9 @@ exports.indexRecieved = function(req, res){
         pages: Math.ceil(countT / perPage),
         count: countT,
         bodyClass: bodyClass,
-        received:countReceived,
+        received:req.countReceived,
         sent:countT
       })
-    })
     })
   })
 }
@@ -231,7 +230,6 @@ var indexSent = exports.indexSent = function(req, res){
   }
   options.criteria={
     user: userID,
-    
   }
 
 //this is the abandoned logic to show the total amounts of paid overdue etc.
@@ -247,9 +245,8 @@ var indexSent = exports.indexSent = function(req, res){
 
   Article.list(options, function(err, articles) {
     if (err) return res.render('500')
-    Article.count({paidOn:null,'viewers':{$elemMatch: {user:userID} } }).exec(function(errR, countReceived){
-    Article.count().exec(function (errC, count) {
-      console.log(errR, countReceived)
+    Article.count(options.criteria).exec(function (errC, count) {
+     // console.log(errR, countReceived)
       res.render('articles/index', {
         bodyClass: bodyClass,
         invoiceType: 'sent',
@@ -257,11 +254,11 @@ var indexSent = exports.indexSent = function(req, res){
         articles: articles,
         page: page + 1,
         pages: Math.ceil(count / perPage),
-        received:countReceived,
+        received:req.countReceived,
         sent:count
       })
     })//Count All articles
-    })//Count Inbox aka viewers
+
   })
 }
 
