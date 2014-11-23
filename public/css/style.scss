@@ -70,7 +70,9 @@ body {
 .page-wrap{
     min-height: 100%;
     margin-bottom: -150px;
+    margin-top: 51px;
 }
+
 
 .page-wrap:after {
   content: "";
@@ -146,6 +148,10 @@ body.landing {
 }
 .clear {
   clear: both;
+}
+
+a {
+   text-decoration:none !important;//The only way I can get it to not show up.
 }
 
 em {
@@ -458,12 +464,6 @@ nav.navbar {
 .logo img {
   opacity: 0.45;
 }
-
-.login, .sign-up{
-  padding-top: 2.5em;
-
-}
-
 
 footer {
   //margin: 5em 0 0 0;

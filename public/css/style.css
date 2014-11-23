@@ -21,7 +21,8 @@ body {
 
 .page-wrap {
   min-height: 100%;
-  margin-bottom: -150px; }
+  margin-bottom: -150px;
+  margin-top: 51px; }
 
 .page-wrap:after {
   content: "";
@@ -81,6 +82,9 @@ body.landing {
 
 .clear {
   clear: both; }
+
+a {
+  text-decoration: none !important; }
 
 em {
   font-style: italic; }
@@ -300,9 +304,6 @@ nav.navbar p, nav.navbar ul li {
 
 .logo img {
   opacity: 0.45; }
-
-.login, .sign-up {
-  padding-top: 2.5em; }
 
 footer {
   padding: 2em 0 0 0;
