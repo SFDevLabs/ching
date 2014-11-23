@@ -31,21 +31,32 @@ var mongoose = require('mongoose')
 module.exports = function (app, passport) {
 
   // put user into res.locals for easy access from templates
+  // This does not seem to do that.
+  // app.get('*', function(req, res, next) {
+  //   var userID=req.user?req.user._id:null;
+  //   var criteria={
+  //     'viewers':{$elemMatch: {user:userID}} 
+  //   }
+  //   Article.list(criteria, function(err, articles) {
+  //     var count = Article.count();
+  //     if (count > 0) {
+  //       res.locals.received = "yes";
+  //     }
+  //     else {
+  //       res.locals.received = "no";
+  //     }
+  //     next();
+  //   });
+  // });
+
+  // put user into res.locals for easy access from templates
   app.get('*', function(req, res, next) {
     var userID=req.user?req.user._id:null;
-    var criteria={
-      'viewers':{$elemMatch: {user:userID}} 
-    }
-    Article.list(criteria, function(err, articles) {
-      var count = Article.count();
-      if (count > 0) {
-        res.locals.received = "yes";
-      }
-      else {
-        res.locals.received = "no";
-      }
-      next();
-    });
+    Article.count({paidOn:null,'viewers':{$elemMatch: {user:userID} } }).exec(function(errR, countReceived){
+        
+        req.countReceived=countReceived;
+        next()
+    })//Count Inbox aka viewers
   });
 
   // user routes
