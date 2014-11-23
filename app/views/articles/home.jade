@@ -130,7 +130,7 @@ block content
 					li.col.col-lg-3.expensify(title="Expensify")
 						img(src="/img/logo-expensify.png")
 					li.col.col-lg-3.excel(title="Excel")
-						img(src="/img/logo-excel.png")
+						img(src="/img/logo-excel-text.png")
 		div.cta
 			div.container.details
 				h2.mini Dead Simple Invoicing.
@@ -139,14 +139,14 @@ block content
 		include ../includes/footer
 block subfoot
 	script(src="/js/jquery.easing.js")
-	//script(src="/js/jquery.scrollTo.min.js")
+	script(src="/js/jquery.scrollTo.min.js")
 	script.
 		$( document ).on("ready", function() {
 
-			//- $(".more").on("click", function(e) {
-			//- 	e.preventDefault();
-			//- 	$("body").scrollTo("#more", 500);
-			//- });
+			$(".more").on("click", function(e) {
+				e.preventDefault();
+				$("body").scrollTo("#more", 500);
+			});
 			$(".junk").removeClass('hide');///This removes the hide class so they dont appear till we move them
 			$(".junk span").each(function() {
 				var width = $(window).width() / 1000;

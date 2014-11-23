@@ -51,7 +51,6 @@ body {
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  position: absolute;
 }
 
 .invoice-bar{
@@ -996,6 +995,10 @@ body.show {
     }
   }
 
+}
+
+.tags{
+  margin-top: 10px;
 }
 
 div.tags span.tag {

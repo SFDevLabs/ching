@@ -9,8 +9,7 @@ body {
   color: #666;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  position: absolute; }
+  text-rendering: optimizeLegibility; }
 
 .invoice-bar .typcn:before {
   font-size: 1.5em;
@@ -652,6 +651,9 @@ body.show {
         top: -0.3125em; }
   .invoice-form .to-block .close-button span {
     display: none; }
+
+.tags {
+  margin-top: 10px; }
 
 div.tags span.tag {
   border: 1px solid #a5d24a;
