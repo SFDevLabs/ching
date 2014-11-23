@@ -212,7 +212,16 @@
                 App.disableSave=true; ///Turn off saving so we can save in a batch on "afterChange"
                 cars.add(addList);
                 App.handsonContainer.handsontable("render");
-             }            
+             }
+          if(keenClient){
+            keenClient.addEvent("user_event",{
+                type:'cut_paste_csv_opened'
+              , action: 'paste'
+              , page: '/article/:id'
+              , user:analyticsConstance.uId
+              , session:analyticsConstance.sId
+            });
+          }         
       });
       this.handsonObj.addHook('beforeChange',function(input, type){
         if (input.length>1){ ///Are we chaning more than 1 item.  Lets do it in a batch

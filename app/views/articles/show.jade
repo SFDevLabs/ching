@@ -213,7 +213,7 @@ block content
             .col-md-6#csv-file
               h3 
                 | Import from 
-                a.btn-csv-instrucions(target="_blank", href='javascript:void(0)') CSV
+                a.btn-csv-instrucions(href='javascript:void(0)') CSV
               .csv-drop-file
                 p
                   input(id="fileupload", type="file", name="files[]", multiple)
@@ -404,8 +404,8 @@ block subfoot
   script(type="text/javascript", src="/js/vendor/jquery.iframe-transport.js")
   script(type="text/javascript", src="/js/vendor/jquery.fileupload.js")
   script(type="text/javascript", src="/js/vendor/jquery.timeago.js")
-
   script(type="text/javascript", src="/js/todos.js")
+  script(src='https://d26b395fwzu5fz.cloudfront.net/3.1.0/keen.min.js', type='text/javascript')
   script.
     $( document ).ready(function() {
       //$(".add-recipient-form, .modal").hide();
@@ -437,9 +437,13 @@ block subfoot
             dateDiv.datepicker('setDate',myDate);
       })
 
+      $(".csv-instrucions").fadeIn();
       $("body").on("click", ".btn-csv-instrucions", function() {
         $(".csv-instrucions").fadeIn();
       });
+
+
+
 
       $("body").on("click", ".btn-confirm-payed", function() {
         $(".confirm-payed-modal").fadeIn();
@@ -455,6 +459,14 @@ block subfoot
 
       $("body").on("click", ".csv-instrucions .close-button", function() {
         $(".csv-instrucions").fadeOut();
+          if(keenClient){ //collect data for opening modal
+            keenClient.addEvent("user_event",{
+                type:'modal_csv_opened'
+              , page: '/article/:id'
+              , user:analyticsConstance.uId
+              , session:analyticsConstance.sId
+            });
+          }
       });
 
       $("body").on("click", ".confirm-payed-modal .close-button", function() {
@@ -477,4 +489,29 @@ block subfoot
         $(".edit-properties-modal").fadeOut();
       });
 
+      //Keen Anatalytics
+      keenClient = new Keen({
+        projectId: '#{keenConfigObj.projectId}',       // String (required)
+        writeKey: '#{keenConfigObj.writeKey}', // String (required for sending data)
+        //readKey: "your_project_read_key",   // String (required for querying data)
+        //protocol: "https",                  // String (optional: https | http | auto)
+        //host: "api.keen.io/3.0",            // String (optional)
+        //requestType: "jsonp"                // String (optional: jsonp, xhr, beacon)
+      });
+      analyticsConstance ={
+          uId:'#{req.user.id}'
+        , sId :'#{req.sessionID}'
+      }
+
+      $(window).bind('copy cut paste', function(event) { //see if they are copying and pasting.
+          if(keenClient && event.target.className=='copyPaste'){
+            keenClient.addEvent("user_event",{
+                type:'cut_paste_csv_opened'
+              , action: event.type?event.type:null
+              , page: '/article/:id'
+              , user:analyticsConstance.uId
+              , session:analyticsConstance.sId
+            });
+          }  
+      });
     });

@@ -520,7 +520,8 @@ exports.show = function(req, res, next){
     title: title,
     invoiceType:invoiceType,
     article: req.article,
-    bodyClass: bodyClass
+    bodyClass: bodyClass,
+    keenConfigObj:utils.keenConfigObj
   })
 }
 
