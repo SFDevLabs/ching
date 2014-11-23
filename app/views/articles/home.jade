@@ -147,7 +147,7 @@ block subfoot
 			//- 	e.preventDefault();
 			//- 	$("body").scrollTo("#more", 500);
 			//- });
-			$(".junk").removeClass('hide')
+			$(".junk").removeClass('hide');///This removes the hide class so they dont appear till we move them
 			$(".junk span").each(function() {
 				var width = $(window).width() / 1000;
 				var top = Math.floor((Math.random() * 100) + 1) + "%";
