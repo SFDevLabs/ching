@@ -499,20 +499,9 @@ var renderCSV = function(data, status){
 }
 ///turn on date picker
 $('.date').datepicker()
- $("abbr.timeago").timeago();
+$("abbr.timeago").timeago();
 
-$('.quickdates a').on('click',function(){
-  var val = $(this).attr('value'),
-      dateDiv = $('#date'),
-      myDate = new Date();//dateDiv.datepicker('getDate');
 
-      myDate.setDate(myDate.getDate() + Number(val));
-      dateDiv.datepicker('setDate',myDate);
-})
-
-$('#csv-file a').on('click',function(){
-  $('#csv-file').toggleClass('visible');
-});
 
 // var swap=function(x,y){
 //   var m =$('#example').data('handsontable')
