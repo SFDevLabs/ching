@@ -139,14 +139,14 @@ block content
 		include ../includes/footer
 block subfoot
 	script(src="/js/jquery.easing.js")
-	script(src="/js/jquery.scrollTo.min.js")
+	//script(src="/js/jquery.scrollTo.min.js")
 	script.
 		$( document ).on("ready", function() {
 
-			$(".more").on("click", function(e) {
-				e.preventDefault();
-				$("body").scrollTo("#more", 500);
-			});
+			//- $(".more").on("click", function(e) {
+			//- 	e.preventDefault();
+			//- 	$("body").scrollTo("#more", 500);
+			//- });
 			$(".junk span").each(function() {
 				var width = $(window).width() / 1000;
 				var top = Math.floor((Math.random() * 100) + 1) + "%";

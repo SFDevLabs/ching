@@ -430,6 +430,8 @@ footer {
   text-align: center; }
   .landing .details .button {
     margin: 0 1.25em; }
+  .landing .details ul li {
+    margin-top: 2em; }
 .landing .feature-list {
   padding: 3.75em 0 2.5em 0;
   border-top: 1px solid #dedede;
