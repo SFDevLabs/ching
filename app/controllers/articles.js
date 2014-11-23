@@ -74,7 +74,7 @@ exports.uploadcsv = function(req, res, next){
          
           if (parser.mapper){ //This check to see if we have keys and can parse the CSV into the article model.
             var data = {
-              type:'csv_upload'
+                type:'csv_upload'
               , user:req.user.id
               , csvParser:parser.keyString
               , session:req.sessionID?req.sessionID:null
@@ -279,7 +279,11 @@ var indexSent = exports.indexSent = function(req, res){
 
 exports.new = function(req, res){
 
-  utils.keenAnalytics('user_event', {type:'new_invoice', user:req.user.id});
+  utils.keenAnalytics('user_event', {
+      type:'new_invoice'
+    , user:req.user.id
+    , session:req.sessionID?req.sessionID:null
+  });
   Article.highestNumber(req.user.id, function(err, number){
 
     var article = new Article({user:req.user.id, number:number});
@@ -579,6 +583,7 @@ exports.pdf = function(req, res){
       , article_owner:req.article.user.id
       , type:'download_pdf'
       , user:req.user.id
+      , session:req.sessionID?req.sessionID:null
     }
     utils.keenAnalytics('user_event', data);
 

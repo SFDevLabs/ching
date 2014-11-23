@@ -239,7 +239,6 @@
             , user:req.user?req.user.id:null
             , session:req.sessionID?req.sessionID:null
           }
-          console.log(req.sessionID)
           utils.keenAnalytics(collection,data)
           next();
     }
