@@ -21,31 +21,30 @@ var mongoose = require('mongoose')
   , Mustache = require('mustache');
 
 
-var Keen = require('keen.io');
+// var Keen = require('keen.io');
 
-var client = Keen.configure({
-    projectId: "546dc37b36bca44b4bfcaf3e",
-    writeKey: "8af6a1cc9a40021100e789f9010922a866fc7cafaeef7556217dd596738d779b0210ba1c45d11b5690865525fe9c05360e5aa344847617486eee4efe1a14575ecad3fce442b2c6c707c482b1c3a824914a216f64c76da2afbcde668c0095788281eb33f6c286678e43ad328eb0996717",
-    readKey: "f631dfd829dba39d1d8efa8b22b6397ba7276991180db8733dbf354d2b645ef4b916bb3e71b9f6309a6181664a5ab2fb823cfdc3a3adec14a6e30dcbcb9783054cbdb4d8b5d1e97c14fca2a0a78abd793184a018057dd9e8b997196bd619984fb2ff3faa93a37580976b86b24658c1d2",
-    masterKey: "56431B491A7ADDAA1DACA079F6165952"
-});
+// var client = Keen.configure({
+//     projectId: "546dc37b36bca44b4bfcaf3e",
+//     writeKey: "8af6a1cc9a40021100e789f9010922a866fc7cafaeef7556217dd596738d779b0210ba1c45d11b5690865525fe9c05360e5aa344847617486eee4efe1a14575ecad3fce442b2c6c707c482b1c3a824914a216f64c76da2afbcde668c0095788281eb33f6c286678e43ad328eb0996717",
+//     readKey: "f631dfd829dba39d1d8efa8b22b6397ba7276991180db8733dbf354d2b645ef4b916bb3e71b9f6309a6181664a5ab2fb823cfdc3a3adec14a6e30dcbcb9783054cbdb4d8b5d1e97c14fca2a0a78abd793184a018057dd9e8b997196bd619984fb2ff3faa93a37580976b86b24658c1d2",
+//     masterKey: "56431B491A7ADDAA1DACA079F6165952"
+// });
 
-var Analytics = function(collection, keyVals, cb){
-  client.addEvent(collection, keyVals, function(err, res) {
-    if (err && cb) {
-      cb(err, null)
-        console.log("Oh no, an error!", err);
-    } else if (cb) {
-      cb(null, res)
-    }
-  });
-}
+// var Analytics = function(collection, keyVals, cb){
+//   client.addEvent(collection, keyVals, function(err, res) {
+//     if (err && cb) {
+//       cb(err, null)
+//         console.log("Oh no, an error!", err);
+//     } else if (cb) {
+//       cb(null, res)
+//     }
+//   });
+// }
 
 /*
  * upload
  */
 exports.uploadcsv = function(req, res, next){
-
 
     getcsv(req.files, req.body, function(err, data){
 
@@ -60,37 +59,47 @@ exports.uploadcsv = function(req, res, next){
 
           //we need logic to figure out when something gets parsed correctly.
           var keys = Object.keys(json[0])
-              , mapper = csvParse.parseRules(keys);
+              ,parser = csvParse.parseRules(keys);
 
             
-          if (mapper){
+          if (parser.mapper){
             convertedJson =  json.map(function(val){
-              return mapper(val);
+              return parser.mapper(val);
             });  
           } else {
             convertedJson = json
           }    
 
 
-          //This check to see if we have keys.
-          if (mapper){
-            Analytics('event', {type:'csvUpload', user:req.user.id});
-
-            req.article.items=req.article.items.concat(convertedJson)
-
-            
+         
+          if (parser.mapper){ //This check to see if we have keys and can parse the CSV into the article model.
+            var data = {
+              type:'csv_upload'
+              , user:req.user.id
+              , parser:parser.keyString
+              , session:req.sessionID?req.sessionID:null
+              }
+            utils.keenAnalytics('user_event', data);///Send data to the analytics engine
+            req.article.items=req.article.items.concat(convertedJson)//We have the parsed and mapped data now to add it to the model!
             req.article.save(function(err){
               if (err) return next(err);     
               return res.send({
                    data:json
-                  ,status: 'stuff uploaded!'
+                  ,status: 'csv_parsed'
                 });
             });
-          } else {
-
+          } else { //We have no data we just sned back the csv json.
+            
+            var data = {
+                type:'csv_upload'
+              , user:req.user.id
+              , parser:parser.keyString
+              , session:req.sessionID?req.sessionID:null
+              }
+            utils.keenAnalytics('user_event', data);///Send data to the analytics engine
             return res.send({
                  data:json
-                ,status: 'raw data'
+                ,status: 'raw_data'
               });
 
           }
@@ -268,9 +277,7 @@ var indexSent = exports.indexSent = function(req, res){
 
 exports.new = function(req, res){
 
-
-  Analytics('event', {type:'NewInvoice', user:req.user.id});
-
+  utils.keenAnalytics('user_event', {type:'new_invoice', user:req.user.id});
   Article.highestNumber(req.user.id, function(err, number){
 
     var article = new Article({user:req.user.id, number:number});
@@ -565,7 +572,13 @@ exports.pdf = function(req, res){
     // Create PDF
     // I know I need to commenbt this so here I go!
     // 
-    Analytics('event', {type:'pdf', user:req.user.id});
+    var data={
+        is_owner:req.article.user.id==req.user.id
+      , article_owner:req.article.user.id
+      , type:'download_pdf'
+      , user:req.user.id
+    }
+    utils.keenAnalytics('user_event', data);
 
     var doc = new pdfDocument();
     var m=doc.font('Helvetica', 12)
