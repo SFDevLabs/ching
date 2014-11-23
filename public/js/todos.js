@@ -422,29 +422,28 @@ $('#dropzone').on('dragleave drop',function(e){
   $(this).removeClass('dragging');
 });
 
-$('#destroyPreview').on('click', function(e){
+$('#destroyPreview').on('click', function(e){  //this is depricated.
   $('#preview').data('handsontable').destroy();
 });
 
-// ///copy paste info box
+// ///copy paste info box//this is depricated.
 // $(window).on('cut', function(e){
 //   if (App.handsonObj.getSelected()){
 //       alert('Use Command & x to cut a cell');
 //   }
 // });
-// $(window).on('copy', function(e){
+// $(window).on('copy', function(e){//this is depricated.
 //   if (App.handsonObj.getSelected()){
 //       alert('Use Command & c to copy a cell');
 //   }
 // });
-// $(window).on('paste', function(e){
+// $(window).on('paste', function(e){//this is depricated.
 //   if (App.handsonObj.getSelected()){
 //       alert('Use Command & p to paste into the grid');
 //   }
 // });
 // 
 var post = function(){
-
   $.ajax({
     type: "POST",
     url: aId+'/upload',
@@ -457,7 +456,6 @@ var post = function(){
     dataType: 'json'
   });
   $('#csv-ajax').val('');
-
 }
 
 $('#fileupload').fileupload({
@@ -477,64 +475,27 @@ $('#fileupload').fileupload({
         ,previewCrop: true
     })
     .on('fileuploaddone', function (e, data) {
-        
         renderCSV( data.result.data, data.result.status)
-     
-      
-        
-        //var addRowCount=App.handsonObj.getColHeader().length-keys.length;
-
-        // for (var i = addRowCount - 1; i >= 0; i--) {
-        //    var length= $('#example').data('handsontable').countCols()
-
-        //   $('#example').data('handsontable').alter(
-
-        //     'insert_col',
-        //     length
-        //     )
-
-        // };
-
-
-
-          // var headers = $('#example').data('handsontable').getColHeader()
-
-          // headers.forEach(function(val, i){
-
-          //   if (headers.length===i+1){return};
-          //   var a = $('<a>').html(i);
-          //   //<a>'+i+'</a>
-          //     a.on('click', function(){
-          //         var i =$(this).data('swapIndex');
-          //           swap(i,i+1);
-          //     });
-          //     a.data('swapIndex',i)
-
-          //   $('#exampleAfter').append($('<span>').append(a));
-          // })
-
-      });
+     });
 
 var renderCSV = function(data, status){
-
-          if (!data.length){
+        if (!data.length){
           return false
         };
-
-
         var keys = _.keys(data[0])
             , values = _.map(data,function(val){ return _.values(val) });
 
-        if (status!=='raw data'){//
+        if (status!=='raw_data'){//
                   cars.fetch();
-            } else {
-                $('#preview').handsontable({
-                  data: values
-                  ,minSpareRows: 1
-                  ,colHeaders: keys
-                  ,columnSorting: true
-                });
-        }
+            } 
+          //   else { //
+          //       // $('#preview').handsontable({
+          //       //   data: values
+          //       //   ,minSpareRows: 1
+          //       //   ,colHeaders: keys
+          //       //   ,columnSorting: true
+          //       // });
+          // }
 }
 ///turn on date picker
 $('.date').datepicker()
