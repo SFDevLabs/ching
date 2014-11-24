@@ -50,6 +50,8 @@ exports.destroy = function (req, res) {
     } else {
       req.flash('info', 'Removed comment')
     }
-    res.redirect('/articles/' + article.id)
+    var redirect='/articles/' + article.id
+    if (req.token){redirect+='/token/'+req.token}
+    res.redirect(redirect)
   })
 }
