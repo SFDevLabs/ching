@@ -230,7 +230,7 @@
             });
           }  
       });
-      this.handsonObj.addHook('afterSelection',function(y1, x1, y2, x2){
+      this.handsonObj.addHook('afterSelectionEnd',function(y1, x1, y2, x2){
           if(keenClient && (x1!==x2 || y1!==y2)){
             keenClient.addEvent("user_event",{
                 type:'grid_selection'
