@@ -69,6 +69,7 @@ block content
                 h2(class="#{article.status} #{hasImage}") #{article.status}
 
               -if (article.description)
+                br
                 P=article.description
               -else if (req.article.user.id===req.user.id)
                 br
@@ -288,27 +289,66 @@ block subfoot
           li Ding
         
 
+  //- .modal.confirm-payed-modal
+  //-   .container
+  //-     .modal-wrap.col-lg-8
+  //-       span.close-button
+  //-         span.typcn.typcn-delete
+  //-       p Do you want to mark this invoice as payed? An email will be sent to the sender.
+  //-       - if (article.paymentVerified && invoiceType == "sent")
+  //-         form.form-inline(role="form", method="post", action="/articles/"+article._id+"/uppayed")
+  //-           button.btn.btn-danger.btn-confirm-payed
+  //-             span.typcn.typcn-document-text
+  //-               |  Mark as Not Payed  
+  //-       - else if (req.token)
+  //-         form.form-inline(role="form", method="post", action="/articles/"+article._id+"/token/"+req.token+"/payed")
+  //-           button.btn.btn-confirm
+  //-             span.typcn.typcn-document-text
+  //-               |  Mark as Payed
+  //-       -else
+  //-         form.modal-wrap col-lg-8.block.form-inline(role="form", method="post", action="/articles/"+article._id+"/payed")
+  //-           - var action = "/articles/"+article._id+"/comments"
+  //-           -if(req.token){action+= '/'+req.token}
+  //-           input(type='hidden', name='_csrf', value="#{csrf_token}")
+  //-           .form-group
+  //-             textarea.form-control(type='text', rows="6", name="body", placeholder='Add your comment')
+  //-             br
+  //-             button.btn.btn-primary(type='submit') Mark as Payed
+
   .modal.confirm-payed-modal
     .container
       .modal-wrap.col-lg-8
         span.close-button
           span.typcn.typcn-delete
-        p Do you want to mark this invoice as payed? An email will be sent to the sender.
+        - var action, button
         - if (article.paymentVerified && invoiceType == "sent")
-          form.form-inline(role="form", method="post", action="/articles/"+article._id+"/uppayed")
-            button.btn.btn-danger.btn-confirm-payed
-              span.typcn.typcn-document-text
-                |  Mark as Not Payed  
+          - action = "/articles/"+article._id+"/uppayed"
+          - button = "Mark as Not Payed"
         - else if (req.token)
-          form.form-inline(role="form", method="post", action="/articles/"+article._id+"/token/"+req.token+"/payed")
-            button.btn.btn-confirm
-              span.typcn.typcn-document-text
-                |  Mark as Payed
+          - action = "/articles/"+article._id+"/token/"+req.token+"/payed"
+          - button = "Mark as Payed"       
         -else
-          form.form-inline(role="form", method="post", action="/articles/"+article._id+"/payed")
-            button.btn.btn-confirm
-              span.typcn.typcn-document-text
-                |  Mark as Payed
+          - action = "/articles/"+article._id+"/payed"
+          - button = "Mark as Payed"
+        h4
+          | Payment
+        form(class="block edit-content", method="post", action=action, enctype="multipart/form-data", role="form")
+          input(type="hidden", name="_csrf", value="#{csrf_token}")
+
+          //- - if (!article.isNew)
+          //-   input(type="hidden", name="_method", value="PUT")
+
+          //- .form-group
+          //-   label.control-label(for='file') Image
+          //-   input.form-control#file(type='file', name="image[]")
+
+          .form-group
+            label.control-label(for='desc') Add Comment
+            textarea.form-control#desc(rows="5", name="description", placeholder="Add a note to this action.")
+          .form-group
+            button.btn(type='submit')
+              span.typcn.typcn-mail=button
+
 
   .modal.confirm-send-modal
     .container
@@ -437,7 +477,7 @@ block subfoot
             dateDiv.datepicker('setDate',myDate);
       })
 
-      $(".csv-instrucions").fadeIn();
+      //$(".csv-instrucions").fadeIn();
       $("body").on("click", ".btn-csv-instrucions", function() {
         $(".csv-instrucions").fadeIn();
       });
