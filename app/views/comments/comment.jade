@@ -1,8 +1,10 @@
 
 - if (comment && comment.user)
   .comment
+    - var action = "/articles/" + article._id + "/comments/" + comment._id
+    -if(req.token){action+= '/'+req.token}
     -if (comment.user.id==req.user.id)
-      form.form-inline.right(role="form", method="post", action="/articles/" + article._id + "/comments/" + comment._id, onsubmit="return confirm('Are you sure?')")
+      form.form-inline.right(role="form", method="post", action=action, onsubmit="return confirm('Are you sure?')")
         input(type='hidden', name='_csrf', value="#{csrf_token}")
         input(type="hidden", name="_method", value="DELETE")
         button.btn.btn-danger.btn-link.error(type="submit") delete
