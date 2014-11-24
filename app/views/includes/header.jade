@@ -23,13 +23,13 @@ nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
               span.typcn.typcn-document-text
               |  Invoices  
           
-          if (received>0)
+          if (req.countReceived>0)
             li
               a(href="/recieved", title="Recieved Invoices")
                 span.typcn.typcn-mail
                 strong 
                   | Inbox 
-                strong='('+received+')'
+                strong='('+req.countReceived+')'
           else
             li
               a(href="/recieved", title="Recieved Invoices")
@@ -43,6 +43,10 @@ nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
             a(href="/logout", title="Logout")
               span.typcn.typcn-eject
               |  Logout
+          //- li
+          //-   a
+          //-     span
+          //-       |#{req.user.firstname} #{req.user.lastname}
         - else
           li(class=isActive('/login') ? 'active' : '')
             a(href="/login", title="Login") Login
