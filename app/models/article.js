@@ -192,20 +192,10 @@ ArticleSchema.methods = {
    */
 
   addComment: function (user, comment, cb) {
-    var notify = require('../mailer')
-
     this.comments.push({
       body: comment.body,
       user: user._id
     })
-
-    //if (!this.user.email) this.user.email = 'email@product.com'
-    // notify.comment({
-    //   article: this,
-    //   currentUser: user,
-    //   comment: comment.body
-    // })
-
     this.save(cb)
   },
 
@@ -349,7 +339,66 @@ ArticleSchema.statics = {
       .limit(options.perPage)
       .skip(options.perPage * options.page)
       .exec(cb)
+  },
+
+
+  /**
+   * Total articles
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  total: function (options,req, cb) {
+    var criteria = options.criteria || {}
+
+    // this.aggregate( [ { $match : options.criteria}
+    //                   ,{ $unwind : "$items" }
+    //                   ,{ $group : { _id : null , total : { $sum : '$items.total' } } }
+    //                   //{ $group: { _id: null, count: { $sum: 1 } } }
+    //                  ] ).exec(function(err,res, res2){
+    //                     console.log(err,res,res2, 'agg')
+                       
+    //                    });
+    
+    this.find(options.criteria)
+      // .or([
+      //     options.criteria
+      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
+      // ])
+      // .where('viewers')
+      // .in([options.criteria.user])
+      // .populate('user', 'firstname email lastname organization')
+      // .populate('viewers.user', 'firstname email lastname organization')
+      // .sort({'createdAt': -1}) // sort by date
+ //     .limit(options.perPage)
+ //     .skip(options.perPage * options.page)
+      .exec(function(err, results){
+        console.log(results)
+        if (results.length){
+          var total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+        }//check for luncg before we map reduce
+        if (total && total>=0){req.total=total}
+        console.log(total, results.length)
+        cb(null, total);
+
+      })
   }
+
+//   var total = function(req, criteria, cb){
+//   var userID=req.user?req.user._id:null;
+
+//   console.log(criteria)
+//   Article.find(criteria, function(err, results) {
+
+//     var total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+//     if (total>=0){req.total=total}
+//     console.log(total, results.length)
+//     cb();
+//   });
+
+// }
 
 }
 
