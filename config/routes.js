@@ -18,6 +18,7 @@ var users = require('../app/controllers/users')
 */
   , articleAuth = [auth.requiresLogin, auth.article.hasEditAuthorization]
   , commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization]
+  , commentAuthToken = [auth.article.hasViewAuthorizationToken, auth.comment.hasAuthorization]
   , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization]
   , viewerAuthToken = [auth.article.hasViewAuthorizationToken]
   , userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
@@ -38,16 +39,24 @@ module.exports = function (app, passport) {
   //     'viewers':{$elemMatch: {user:userID}} 
   //   }
   //   Article.list(criteria, function(err, articles) {
-  //     var count = Article.count();
-  //     if (count > 0) {
-  //       res.locals.received = "yes";
-  //     }
-  //     else {
-  //       res.locals.received = "no";
-  //     }
+  //     // var count = Article.count();
+  //     // if (count > 0) {
+  //     //   res.locals.received = "yes";
+  //     // }
+  //     // else {
+  //     //   res.locals.received = "no";
+  //     // }
+
+
+  //     var total = articles.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+
+  //     console.log(total, articles.length)
+
   //     next();
   //   });
   // });
+
+
 
   // put user into res.locals for easy access from templates
   app.get('*', function(req, res, next) {
@@ -136,7 +145,6 @@ module.exports = function (app, passport) {
 
   // article routes
   app.param('id', articles.load)
-  app.get('/articles', auth.requiresLogin, articles.indexSent)
   app.get('/articles/new', auth.requiresLogin, articles.new)
   //app.post('/articles', auth.requiresLogin, articles.create)
 
@@ -173,7 +181,7 @@ module.exports = function (app, passport) {
 
   // home route
   app.get('/',  articles.homeOrSent)
-  app.get('/sent', auth.requiresLogin,  articles.indexSent)
+  app.get('/sent', auth.requiresLogin, articles.indexSent)
   app.get('/recieved', auth.requiresLogin,  articles.indexRecieved)
 
 
@@ -184,6 +192,7 @@ module.exports = function (app, passport) {
   app.post('/articles/:id/comments/:token', viewerAuthToken, comments.create)
   app.get('/articles/:id/comments', auth.requiresLogin, comments.create)
   app.del('/articles/:id/comments/:commentId', commentAuth, comments.destroy)
+  app.del('/articles/:id/comments/:commentId/:token', commentAuthToken, comments.destroy)
 
   crudUtils.initRoutesForModel(app, auth);
 
