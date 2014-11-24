@@ -154,6 +154,9 @@ exports.load = function(req, res, next, id){
   })
 }
 
+
+
+
 /**
  * Token
  */
@@ -241,7 +244,20 @@ var indexSent = exports.indexSent = function(req, res){
   }
   options.criteria={
     user: userID,
+    //number:7 //search for a number
+    //viewers: {$elemMatch:[{user:'541479be4b4b3f00000603db'}]}  //find a viewer
+    //invoicedOn: null //find drafts
+    //paidOn: null //find unpaid
+    //dueOn: {$lt :new Date()}  //find overdue
+
+    //$or:[{dueOn: {$gt :new Date()} }, {dueOn: null}]
+    //paymentVerified: true //find veridfied payment
   }
+  // invoicedOn:{type : Date, default : null},
+  // paidOn:{type : Date, default : null},
+  // paymentVerified : { type: Boolean, default: false },
+  // dueOn:{type : Date, default : null},
+
 
 //this is the abandoned logic to show the total amounts of paid overdue etc.
 // Article.aggregate([
@@ -254,10 +270,14 @@ var indexSent = exports.indexSent = function(req, res){
 //   res.send(results)
 // });
 
+  Article.total(options,req, function(){
+
+
+
   Article.list(options, function(err, articles) {
     if (err) return res.render('500')
     Article.count(options.criteria).exec(function (errC, count) {
-     // console.log(errR, countReceived)
+      console.log(err, req.total, count)
       res.render('articles/index', {
         bodyClass: bodyClass,
         invoiceType: 'sent',
@@ -266,11 +286,14 @@ var indexSent = exports.indexSent = function(req, res){
         page: page + 1,
         pages: Math.ceil(count / perPage),
         received:req.countReceived,
-        sent:count
+        sentCount:count,
+        totalCount:req.total>=0?req.total:null
       })
     })//Count All articles
 
   })
+})//total
+
 }
 
 /**
@@ -553,7 +576,7 @@ exports.destroy = function(req, res){
   var article = req.article
   article.remove(function(err){
     req.flash('info', 'Deleted successfully')
-    res.redirect('/articles')
+    res.redirect('/')
   })
 }
 
