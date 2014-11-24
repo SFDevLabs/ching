@@ -213,21 +213,37 @@
                 cars.add(addList);
                 App.handsonContainer.handsontable("render");
              }
-          if(keenClient){
-            keenClient.addEvent("user_event",{
-                type:'cut_paste_csv_opened'
-              , action: 'paste'
-              , page: '/article/:id'
-              , user:analyticsConstance.uId
-              , session:analyticsConstance.sId
-            });
-          }         
+
       });
       this.handsonObj.addHook('beforeChange',function(input, type){
         if (input.length>1){ ///Are we chaning more than 1 item.  Lets do it in a batch
           App.disableSave=true;
         }
       });
+      this.handsonObj.addHook('beforeAutofill',function(input, type){
+          if(keenClient){
+            keenClient.addEvent("user_event",{
+                type:'autofill'
+              , page: '/article/:id'
+              , user:analyticsConstance.uId
+              , session:analyticsConstance.sId
+            });
+          }  
+      });
+      this.handsonObj.addHook('afterSelection',function(y1, x1, y2, x2){
+          if(keenClient && (x1!==x2 || y1!==y2)){
+            keenClient.addEvent("user_event",{
+                type:'grid_selection'
+              , selection: {y1:y1, x1:x1, y2:y2, x2:x2}
+              , multiple: true
+              , page: '/article/:id'
+              , user:analyticsConstance.uId
+              , session:analyticsConstance.sId
+            });
+          }  
+      });
+
+
       this.handsonObj.addHook('afterChange',function(input, type){
         if (App.disableSave){
           cars.each(function(model){
