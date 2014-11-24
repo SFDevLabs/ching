@@ -5,40 +5,40 @@ block main
 
 block content
   - if (articles.length)
-    - var draftCount = 0;
-    - var sentCount = 0;
-    - var paidCount = 0;
-    - var overdueCount = 0;
-    -each article in articles
-      -if (article.status == "draft")
-        -  draftCount++
-      -else if (article.status == "sent")
-        -  sentCount++
-      -else if (article.status == "paid")
-        -  paidCount++
-      -else if (article.status == "overdue")
-        -  overdueCount++
+    //- - var draftCount = 0;
+    //- - var sentCount = 0;
+    //- - var paidCount = 0;
+    //- - var overdueCount = 0;
+    //- -each article in articles
+    //-   -if (article.status == "draft")
+    //-     -  draftCount++
+    //-   -else if (article.status == "sent")
+    //-     -  sentCount++
+    //-   -else if (article.status == "paid")
+    //-     -  paidCount++
+    //-   -else if (article.status == "overdue")
+    //-     -  overdueCount++
     - var totalSent = paidCount + sentCount + overdueCount;
     - var total = totalSent + draftCount;
     .container.list
       header.row
         h2.left.col-md-5=title
-        ul.right.counts.col-md-7
-          li.all
-            | All (#{total})
-          if (articles.invoiceType == "sent")
-            li.draft
-              | Drafts (#{draftCount})
-          if (articles.invoiceType == "sent")
-            li.sent
-              | Sent (#{sentCount})
-          else
-            li.sent
-              | Recieved (#{sentCount})
-          li.paid
-            | Paid (#{paidCount})
-          li.overdue
-            | Overdue (#{overdueCount})
+        //- ul.right.counts.col-md-7
+        //-   li.all
+        //-     | All (#{totalCount})
+        //-   if (articles.invoiceType == "sent")
+        //-     li.draft
+        //-       | Drafts (#{draftCount})
+        //-   if (articles.invoiceType == "sent")
+        //-     li.sent
+        //-       | Sent (#{sentCount})
+        //-   else
+        //-     li.sent
+        //-       | Recieved (#{sentCount})
+        //-   li.paid
+        //-     | Paid (#{paidCount})
+        //-   li.overdue
+        //-     | Overdue (#{overdueCount})
       .row
         //- if this is the received invoices page
         -if (articles.invoiceType == "received")
@@ -85,7 +85,8 @@ block content
                 | Created: 
                 span.dim= formatDatetime(article.createdAt)
 
-
+      p='totalRecords: '+sentCount
+      p='sum of invoices: '+totalCount
       - if (pages > 1)
         div.pages
           ul.pagination
