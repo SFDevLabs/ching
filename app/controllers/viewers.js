@@ -122,9 +122,9 @@ exports.sendInvoice=function(req, res){
   //         }, function(err, json){
   //           console.log(err, json)
   //         })
-  //console.log(emailTmpl)
-  //
 
+
+  // we should create token here for each time we send the invoice! see authorization js line 67
   articleJSON.viewers.forEach(function(viewer, i){
         var views={
             sender: viewer.user.firstname +' '+ viewer.user.lastname
