@@ -490,7 +490,7 @@ block subfoot
       });
 
       //Keen Anatalytics
-      keenClient = new Keen({
+      window.keenClient = new Keen({
         projectId: '#{keenConfigObj.projectId}',       // String (required)
         writeKey: '#{keenConfigObj.writeKey}', // String (required for sending data)
         //readKey: "your_project_read_key",   // String (required for querying data)
@@ -498,7 +498,7 @@ block subfoot
         //host: "api.keen.io/3.0",            // String (optional)
         //requestType: "jsonp"                // String (optional: jsonp, xhr, beacon)
       });
-      analyticsConstance ={
+      window.analyticsConstance ={
           uId:'#{req.user.id}'
         , sId :'#{req.sessionID}'
       }
