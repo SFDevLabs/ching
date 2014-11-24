@@ -506,7 +506,7 @@ body.login {
     margin-left: 1.25em;
     font-weight: 600; }
 .list .chart-wrapper {
-  height: 200px;
+  height: 0px;
   margin-bottom: 2.5em;
   overflow: hidden; }
   .list .chart-wrapper #area-chart {
@@ -586,6 +586,9 @@ body.login {
   width: 100%;
   height: 100%;
   z-index: 10000; }
+  .modal .modal-header {
+    padding: 0px;
+    margin-bottom: 10px; }
   .modal .modal-wrap {
     position: absolute;
     top: 5em;

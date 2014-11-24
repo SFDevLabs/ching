@@ -769,7 +769,7 @@ body.login {
   }
 
   .chart-wrapper {
-    height: 200px;
+    height: 0px;
     margin-bottom: 2.5em;
     overflow: hidden;
     #area-chart {
@@ -883,6 +883,10 @@ body.login {
 }
 
 .modal {
+  .modal-header{
+    padding:0px;
+    margin-bottom: 10px;
+  }
   display: none;
   background: rgba(0,0,0,0.9);
   position: fixed;

@@ -23,6 +23,12 @@ block content
     .container.list
       header.row
         h2.left.col-md-5=title
+        .right
+          a(href="javascript:$(\'.chart-wrapper\').height(\'100%\')")
+            | Chart
+          |&nbsp;|&nbsp;
+          a(href="javascript:$(\'.chart-wrapper\').height(\'0\')")
+            | Chart Hide
         //- ul.right.counts.col-md-7
         //-   li.all
         //-     | All (#{totalCount})
@@ -46,10 +52,9 @@ block content
         -else
           //- show flow bar chart for incoming cash
           //- this chart needs to be way shorter. like half its current height.
-          - if (articles.length)
-            -if (totalSent > 1)
-              //.chart-wrapper.col-md-12
-                //#area-chart
+
+        .chart-wrapper.col-md-12
+          #area-chart
       .row
         - each article in articles
           - var viewer = article.viewers[0]? article.viewers[0].user.organization:'';
@@ -109,4 +114,4 @@ block content
 
 block subfoot
   script(type="text/javascript", src='/js/vendor/d3.js')
-  //script(type="text/javascript", src='/js/index-page.js')
+  script(type="text/javascript", src='/js/index-page.js')

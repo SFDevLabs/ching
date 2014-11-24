@@ -179,6 +179,9 @@ block content
       .row
         .col-md-12
           .col-md-12.table-container
+            #tooltipSelection(style="width: 1px;height: 1px;")
+            #tooltipCopyCut(style="width: 1px;height: 1px;")
+            #tooltipAutofill(style="width: 1px;height: 1px;")
             #grid
             table.remove-sidebar
               tbody
@@ -232,6 +235,13 @@ block content
         .col-md-12
           button.pop.btn.btn-default(type='button', title="Popover title" , data-container='body', data-toggle='popover', data-placement='right', data-content='Vivamus sagittis lacus vel augue laoreet rutrum faucibus.')
             | Popover on left
+      .popover.right
+          .arrow
+            h3.popover-title Popover right
+            .popover-content
+              p
+                | Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+
     -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
       .container
         .row
@@ -281,13 +291,29 @@ block subfoot
       .modal-wrap.col-lg-8
         span.close-button
           span.typcn.typcn-delete
-        h4 CSV Upload instructions
-        p Upload CSV from the other expense and time traking tools.  
-        p Instructions for each service are below.
+        .modal-header
+          h4 CSV upload instructions
+      
+        p You can Upload 
+          strong
+            | CSV 
+          | files from the other expense and time traking tools.
+        p What beter we will automatically add them to your invoice! See instruction on where to get CSV file below:
+        
         ul
           li Freshbooks
           li Ding
-        
+          li Bigtime
+          li Expensify
+          li Shoebox
+          li Paymo
+          li Pivotal Tracker
+          li Toggl
+            a(href='https://www.toggl.com/app/reports/detailed/')
+              |Stuff
+          li Harvest
+            a(href='https://www.toggl.com/app/reports/detailed/')
+              |Stuff
 
   //- .modal.confirm-payed-modal
   //-   .container
@@ -477,7 +503,6 @@ block subfoot
             dateDiv.datepicker('setDate',myDate);
       })
 
-      //$(".csv-instrucions").fadeIn();
       $("body").on("click", ".btn-csv-instrucions", function() {
         $(".csv-instrucions").fadeIn();
       });

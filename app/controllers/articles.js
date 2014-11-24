@@ -230,6 +230,7 @@ exports.homeOrSent = function(req, res){
 var indexSent = exports.indexSent = function(req, res){
   var bodyClass = "list";
 
+
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
   var perPage = 12,
       userID=req.user?req.user._id:null,
@@ -240,6 +241,11 @@ var indexSent = exports.indexSent = function(req, res){
     page: page,
     firstDate: time
   }
+
+  //here we need logic to properly parse out a search API.
+  //http://localhost:4000/?stuff=testtest
+  console.log(req.param('stuff'))
+
   options.criteria={
     user: userID,
     //number:7 //search for a number
