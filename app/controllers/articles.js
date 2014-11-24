@@ -79,7 +79,6 @@ exports.uploadcsv = function(req, res, next){
               , csvParser:parser.keyString
               , session:req.sessionID?req.sessionID:null
               }
-              console.log(data)
             utils.keenAnalytics('user_event', data);///Send data to the analytics engine
             req.article.items=req.article.items.concat(convertedJson)//We have the parsed and mapped data now to add it to the model!
             req.article.save(function(err){
@@ -189,7 +188,6 @@ exports.indexRecieved = function(req, res){
   Article.list(options, function(err, articles) {
     if (err) return res.render('500')
     Article.count(options.criteria).exec(function (err, countT) {
-      console.log()
       res.render('articles/index', {
         invoiceType: 'received',
         title: 'Received Invoices',
@@ -277,7 +275,7 @@ var indexSent = exports.indexSent = function(req, res){
   Article.list(options, function(err, articles) {
     if (err) return res.render('500')
     Article.count(options.criteria).exec(function (errC, count) {
-      console.log(err, req.total, count)
+      //console.log(err, req.total, count)
       res.render('articles/index', {
         bodyClass: bodyClass,
         invoiceType: 'sent',

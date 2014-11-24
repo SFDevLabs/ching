@@ -350,7 +350,7 @@ ArticleSchema.statics = {
    * @api private
    */
 
-  total: function (options,req, cb) {
+  total: function (options,req, cb) {//@TODO clean me up
     var criteria = options.criteria || {}
 
     // this.aggregate( [ { $match : options.criteria}
@@ -375,12 +375,12 @@ ArticleSchema.statics = {
  //     .limit(options.perPage)
  //     .skip(options.perPage * options.page)
       .exec(function(err, results){
-        console.log(results)
+        //console.log(results)
         if (results.length){
           var total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
         }//check for luncg before we map reduce
         if (total && total>=0){req.total=total}
-        console.log(total, results.length)
+        //console.log(total, results.length)
         cb(null, total);
 
       })
