@@ -349,6 +349,22 @@ ArticleSchema.statics = {
    * @param {Function} cb
    * @api private
    */
+  all:function (options,cb){
+      
+      this.find(options.criteria)
+      // .or([
+      //     options.criteria
+      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
+      // ])
+      // .where('viewers')
+      // .in([options.criteria.user])
+      .populate('user', 'firstname email lastname organization')
+      .populate('viewers.user', 'firstname email lastname organization')
+      .sort({'createdAt': -1}) // sort by date
+      //.limit(options.perPage)
+      //.skip(options.perPage * options.page)
+      .exec(cb)
+  },
 
   total: function (options,req, cb) {//@TODO clean me up
     var criteria = options.criteria || {}

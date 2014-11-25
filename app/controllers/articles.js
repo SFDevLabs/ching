@@ -244,7 +244,9 @@ var indexSent = exports.indexSent = function(req, res){
 
   //here we need logic to properly parse out a search API.
   //http://localhost:4000/?stuff=testtest
-  console.log(req.param('stuff'))
+  console.log(req.param('recipient'))
+
+
 
   options.criteria={
     user: userID,
@@ -273,14 +275,19 @@ var indexSent = exports.indexSent = function(req, res){
 
 //   res.send(results)
 // });
+req.param('recipient')
+  Article.all(options, function(err, results){
 
-  Article.total(options,req, function(){
+    var count = results.length
+    , firstpage = page*perPage
+    , lastpage = (page+1)*perPage
+    , articles = results.slice(firstpage,lastpage)
+    , total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
 
 
-
-  Article.list(options, function(err, articles) {
-    if (err) return res.render('500')
-    Article.count(options.criteria).exec(function (errC, count) {
+ // Article.list(options, function(err, articles) {
+ //   if (err) return res.render('500')
+//    Article.count(options.criteria).exec(function (errC, count) {
       //console.log(err, req.total, count)
       res.render('articles/index', {
         bodyClass: bodyClass,
@@ -291,13 +298,14 @@ var indexSent = exports.indexSent = function(req, res){
         pages: Math.ceil(count / perPage),
         received:req.countReceived,
         sentCount:count,
-        totalCount:req.total>=0?req.total:null
+        totalCount:total>=0?total:null
       })
-    })//Count All articles
+  //  })//Count All articles
 
-  })
-})//total
+ // })
+//})//total
 
+})
 }
 
 /**
