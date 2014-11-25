@@ -12,6 +12,8 @@ body {
 .invoice-bar .typcn:before {
   font-size: 1.5em;
   line-height: 1em; }
+.invoice-bar .btn {
+  margin-top: 5px; }
 
 .container {
   position: relative; }
@@ -590,7 +592,7 @@ body.login {
   text-align: center; }
   .controls form, .controls .btn {
     display: inline-block;
-    margin: 0 1.25em; }
+    margin: 1 1.25em 0; }
 
 .modal {
   display: none;
@@ -734,24 +736,6 @@ div.tags span.tag {
     margin-bottom: 1.25em; }
   .meta hr {
     margin-top: 0; }
-
-@media (max-width: 1200px) {
-  .table-container {
-    overflow-x: scroll; }
-    .table-container::-webkit-scrollbar {
-      display: none; }
- }
-
-/* overflow-x: scroll; */
-@media (min-width: 1300px) {
-
-  .landing-wrap {
-    box-sizing: border-box;
-    position: relative;
-    margin: 0 auto;
-    float: left;
-    padding: 2.5em 0; }
- }
 
 .popover {
   position: absolute;
