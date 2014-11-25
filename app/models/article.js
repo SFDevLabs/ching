@@ -333,6 +333,7 @@ ArticleSchema.statics = {
       // ])
       // .where('viewers')
       // .in([options.criteria.user])
+      // 
       .populate('user', 'firstname email lastname organization')
       .populate('viewers.user', 'firstname email lastname organization')
       .sort({'createdAt': -1}) // sort by date
@@ -366,40 +367,46 @@ ArticleSchema.statics = {
       .exec(cb)
   },
 
-  total: function (options,req, cb) {//@TODO clean me up
+  total: function (options, cb) {//@TODO clean me up
     var criteria = options.criteria || {}
 
-    // this.aggregate( [ { $match : options.criteria}
-    //                   ,{ $unwind : "$items" }
-    //                   ,{ $group : { _id : null , total : { $sum : '$items.total' } } }
-    //                   //{ $group: { _id: null, count: { $sum: 1 } } }
-    //                  ] ).exec(function(err,res, res2){
-    //                     console.log(err,res,res2, 'agg')
-                       
-    //                    });
+    this.aggregate( [ { $match : options.criteria}
+                      ,{ $unwind : "$items" }
+                      ,{ $group : { _id : null , total : { $sum : '$items.total' } } }
+                      //{ $group: { _id: null, count: { $sum: 1 } } }
+                     ] ).exec(function(err,res, res2){
+                        // console.log(err,res,res2, 'agg')
+                        var total;
+                        if (res[0]){
+                         total = res[0].total;
+                        }else{
+                          total=0;
+                        }
+                        cb(null, total);
+                       });
     
-    this.find(options.criteria)
-      // .or([
-      //     options.criteria
-      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
-      // ])
-      // .where('viewers')
-      // .in([options.criteria.user])
-      // .populate('user', 'firstname email lastname organization')
-      // .populate('viewers.user', 'firstname email lastname organization')
-      // .sort({'createdAt': -1}) // sort by date
- //     .limit(options.perPage)
- //     .skip(options.perPage * options.page)
-      .exec(function(err, results){
-        //console.log(results)
-        if (results.length){
-          var total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
-        }//check for luncg before we map reduce
-        if (total && total>=0){req.total=total}
-        //console.log(total, results.length)
-        cb(null, total);
+ //    this.find(options.criteria)
+ //      // .or([
+ //      //     options.criteria
+ //      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
+ //      // ])
+ //      // .where('viewers')
+ //      // .in([options.criteria.user])
+ //      // .populate('user', 'firstname email lastname organization')
+ //      // .populate('viewers.user', 'firstname email lastname organization')
+ //      // .sort({'createdAt': -1}) // sort by date
+ // //     .limit(options.perPage)
+ // //     .skip(options.perPage * options.page)
+ //      .exec(function(err, results){
+ //        //console.log(results)
+ //        if (results.length){
+ //          var total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+ //        }//check for luncg before we map reduce
+ //        if (total && total>=0){req.total=total}
+ //        //console.log(total, results.length)
+ //        cb(null, total);
 
-      })
+ //      })
   }
 
 //   var total = function(req, criteria, cb){

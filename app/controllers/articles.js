@@ -4,6 +4,7 @@
 
 var mongoose = require('mongoose')
   , Article = mongoose.model('Article')
+  , User = mongoose.model('User')
   , utils = require('../../lib/utils')
   , csvParse = require('../../utils/csvParse')
   , validateEmail = utils.validateEmail
@@ -18,7 +19,8 @@ var mongoose = require('mongoose')
   , config = require('../../config/config')[env]
   , domain = config.rootHost
   , emailTmplPaid = fs.readFileSync('./app/views/email/paid.html','utf8')
-  , Mustache = require('mustache');
+  , Mustache = require('mustache')
+  , async = require('async');
 
 
 // var Keen = require('keen.io');
@@ -197,7 +199,8 @@ exports.indexRecieved = function(req, res){
         count: countT,
         bodyClass: bodyClass,
         received:req.countReceived,
-        sent:countT
+        sent:countT,
+        totalCount:0
       })
     })
   })
@@ -276,18 +279,81 @@ var indexSent = exports.indexSent = function(req, res){
 //   res.send(results)
 // });
 req.param('recipient')
-  Article.all(options, function(err, results){
 
-    var count = results.length
-    , firstpage = page*perPage
-    , lastpage = (page+1)*perPage
-    , articles = results.slice(firstpage,lastpage)
-    , total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+  //Article.all(options, function(err, results){
+
+   //  var param  =  req.param('recipient')
+   // // if (param){
+   //    var articles = results.filter(function(val){
+   //      console.log(val.viewers[0].firstname, val.viewers[0].firstname.search(new RegExp(param,'i')))
+   //      if(val.user.firstname.search(new RegExp(param,'i'))!==-1){
+   //        return true
+   //      } else if(val.user.lastname.search(new RegExp(param,'i'))!==-1){
+   //        return true
+   //      } else{
+   //        return false
+   //      }
+        
+   //    })
+   // // }
+   //  console.log(articles.length)
 
 
- // Article.list(options, function(err, articles) {
+    // var count = results.length
+    // , firstpage = page*perPage
+    // , lastpage = (page+1)*perPage
+    // //, articles = results.slice(firstpage,lastpage)
+    // , total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+
+    //placeholder for when we need this
+    // an example using an object instead of an array
+    async.series({
+        user: function(callback){
+                callback(null, 1);
+        },
+        list: function(callback){
+            setTimeout(function(){
+                callback(null, 2);
+            }, 100);
+        },
+        count: function(callback){
+            setTimeout(function(){
+                callback(null, 2);
+            }, 100);
+        },
+        total: function(callback){
+            setTimeout(function(){
+                callback(null, 2);
+            }, 100);
+        }
+    },
+    function(err, results) {
+        // results is now equal to: {one: 1, two: 2}
+        console.log(results)
+    });
+    ///
+
+    var q = req.param('recipient')? req.param('recipient'):null;
+  User.find({$or:[{firstname:q},{lastname:req.param('recipient')}]}).exec(function(err, uRes){
+    console.log(err, uRes)
+
+    var uID=uRes.map(function(val){ return val.id})
+  
+    //hacky parmeter stuff
+    if (uRes[0] && q && q.length>0)options.criteria['viewers']={$elemMatch:{user:uRes[0].id}};//'54147c9f4d28350000cb8e50'}}
+
+    console.log(  options.criteria)
+
+
+  Article.list(options, function(err, articles) {
+
+
+  Article.count(options.criteria).exec(function(err, count){
+
+    console.log(count)
+
  //   if (err) return res.render('500')
-//    Article.count(options.criteria).exec(function (errC, count) {
+    Article.total(options, function (err, total) {
       //console.log(err, req.total, count)
       res.render('articles/index', {
         bodyClass: bodyClass,
@@ -297,15 +363,18 @@ req.param('recipient')
         page: page + 1,
         pages: Math.ceil(count / perPage),
         received:req.countReceived,
-        sentCount:count,
+        count:count,
         totalCount:total>=0?total:null
       })
-  //  })//Count All articles
+  //})//Count All articles
 
  // })
-//})//total
+})//total
 
-})
+  });//count
+}) //list
+
+})//user search
 }
 
 /**
