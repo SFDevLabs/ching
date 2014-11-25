@@ -186,8 +186,8 @@
         contextMenu: true,
         columns: columns,
         colHeaders: colHeaders,
-        colWidths: colWidth//[180, 100, 160, 160, 80, 80, 80, 180, 100],  //TODO add to api
-
+        colWidths: colWidth,//[180, 100, 160, 160, 80, 80, 80, 180, 100],  //TODO add to api
+        manualColumnResize: true
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
       });
       this.handsonObj = this.handsonContainer.data('handsontable')
@@ -264,6 +264,10 @@
         $('.remove-sidebar tr td a').removeClass('visible')
       })
 
+    },
+    tableResize: function(){//enneded now but this is a clever way to remove col and make the grid resize dynamically
+      App.handsonObj.manualColumnWidths=[1000,200];
+      App.handsonObj.render();
     },
     //scrollPasteHack Found at: http://stackoverflow.com/questions/24593357/handsontable-disable-auto-scroll-up-when-pasting-into-a-cell
     scrollPasteHack:function(){
