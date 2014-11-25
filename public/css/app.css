@@ -79,8 +79,8 @@ button.error {
   color: inherit; }
 
 #dropzone {
-  width: 500px;
-  height: 100px; }
+/*  width: 500px;
+*/  height: 100px; }
   #dropzone.dragging {
     border: 5px dashed; }
 

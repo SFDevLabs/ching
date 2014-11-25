@@ -22,13 +22,34 @@ block content
     - var total = totalSent + draftCount;
     .container.list
       header.row
-        h2.left.col-md-5=title
-        .right
-          a(href="javascript:$(\'.chart-wrapper\').height(\'100%\')")
-            | Chart
-          |&nbsp;|&nbsp;
-          a(href="javascript:$(\'.chart-wrapper\').height(\'0\')")
-            | Chart Hide
+        .col-md-7
+          h2.left=title
+        .col-md-5
+          .input-group.search
+              input.form-control(type='text')
+              .input-group-btn
+                button.btn.btn-default(type='button', tabindex='-1') 
+                  | 
+                  i.typcn-zoom-outline.typcn.search-icon
+                button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='false')
+                  span.caret
+                  span.sr-only Toggle Dropdown
+                ul.dropdown-menu.dropdown-menu-right(role='menu')
+                  li
+                    a(href='#') Client Name or Org.
+                  li
+                    a(href='#') Invoice Number
+                  li
+                    a(href='#') Invoice Total
+                  li.divider
+                  li
+                    a(href='#') Advanced Search
+              .graph-buttons
+                button.btn.btn-default(onclick="$(\'.chart-wrapper\').height(\'100%\')")
+                  i.typcn.typcn-chart-bar
+                button.btn.btn-default.hidden(onclick="$(\'.chart-wrapper\').height(\'0\')")
+                  i.typcn.typcn-chart-bar-outline
+
         //- ul.right.counts.col-md-7
         //-   li.all
         //-     | All (#{totalCount})
