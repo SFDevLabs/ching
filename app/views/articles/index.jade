@@ -22,13 +22,19 @@ block content
     - var total = totalSent + draftCount;
     .container.list
       header.row
-        .col-md-7
+        .title-row
           h2.left=title
-        .col-md-5
-          .input-group.search
-              input.form-control(type='text')
+        .midle-row
+          .middle-buttons
+            button.btn.btn-default(onclick="$(\'.chart-wrapper\').height(\'100%\')")
+              i.typcn.typcn-chart-bar
+            button.btn.btn-default.hidden(onclick="$(\'.chart-wrapper\').height(\'0\')")
+              i.typcn.typcn-chart-bar-outline
+        .right-row
+          form.input-group.search
+              input.form-control(type='text' name="recipient")
               .input-group-btn
-                button.btn.btn-default(type='button', tabindex='-1') 
+                button.btn.btn-default(type='submit', tabindex='-1') 
                   | 
                   i.typcn-zoom-outline.typcn.search-icon
                 button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='false')
@@ -44,11 +50,6 @@ block content
                   li.divider
                   li
                     a(href='#') Advanced Search
-              .graph-buttons
-                button.btn.btn-default(onclick="$(\'.chart-wrapper\').height(\'100%\')")
-                  i.typcn.typcn-chart-bar
-                button.btn.btn-default.hidden(onclick="$(\'.chart-wrapper\').height(\'0\')")
-                  i.typcn.typcn-chart-bar-outline
 
         //- ul.right.counts.col-md-7
         //-   li.all
@@ -110,9 +111,15 @@ block content
               p.date
                 | Created: 
                 span.dim= formatDatetime(article.createdAt)
+      .row
+        .right
+          | Total Records: 
+          strong.muted
+            | #{sentCount} 
+          | | Invoices Total: 
+          strong.muted
+            |#{formatCurrency(totalCount)}
 
-      p='totalRecords: '+sentCount
-      p='sum of invoices: '+totalCount
       - if (pages > 1)
         div.pages
           ul.pagination

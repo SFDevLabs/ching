@@ -501,11 +501,18 @@ body.login {
   font-size: 1.2em;
   line-height: 1em; }
 
-.graph-buttons {
+header > div {
+  float: left; }
+header .title-row {
+  width: 45%; }
+header .right-row {
+  width: 45%;
   float: right; }
-  .graph-buttons button {
-    padding: 6px; }
-  .graph-buttons i {
+header .middle-buttons {
+  padding: 0px 5px; }
+  header .middle-buttons button {
+    padding: 5px 5px 2px; }
+  header .middle-buttons i {
     font-size: 1.3em; }
 
 .list header.row {

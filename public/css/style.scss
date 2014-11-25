@@ -750,6 +750,7 @@ body.login {
     // margin-bottom: 0.5em;
 }
 
+
 .search{
   button{
     padding: 0px 10px;
@@ -763,15 +764,32 @@ body.login {
     line-height: 1em;
   }
 }
-.graph-buttons{
+
+
+
+header{
+
+>div{
+  float:left;
+}
+.title-row{
+  width:45%;
+}
+
+.right-row{
+  width:45%;
   float: right;
+}
+
+.middle-buttons{
+  padding: 0px 5px;
   button{
-    padding:6px;
+    padding: 5px 5px 2px;
   }
   i{
     font-size: 1.3em
   }
-}
+}}
 
 // list
 .list {
