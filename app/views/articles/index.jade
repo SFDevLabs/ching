@@ -4,7 +4,7 @@ block main
   link(rel='stylesheet', href='/css/index-page.css')
 
 block content
-  - if (articles.length)
+
     //- - var draftCount = 0;
     //- - var sentCount = 0;
     //- - var paidCount = 0;
@@ -67,78 +67,79 @@ block content
         //-     | Paid (#{paidCount})
         //-   li.overdue
         //-     | Overdue (#{overdueCount})
-      .row
-        //- if this is the received invoices page
-        -if (articles.invoiceType == "received")
-          //- let's put something here like number of days left until the next invoice is due and for how much?
-        -else
-          //- show flow bar chart for incoming cash
-          //- this chart needs to be way shorter. like half its current height.
+      - if (articles.length)
+        .row
+          //- if this is the received invoices page
+          -if (articles.invoiceType == "received")
+            //- let's put something here like number of days left until the next invoice is due and for how much?
+          -else
+            //- show flow bar chart for incoming cash
+            //- this chart needs to be way shorter. like half its current height.
 
-        .chart-wrapper.col-md-12
-          #area-chart
-      .row
-        - each article in articles
-          - var viewer = article.viewers[0]? article.viewers[0].user.organization:'';
-          a(href='/articles/'+article._id, class="#{article.status} article col-md-3 block")
-            .status 
-              if (article.status=='sent' && invoiceType==='received')
-                span 
-                  | Recieved
-              else
-                span #{article.status}
-              span.right # #{formatInvoiceNumber(article.number)}
-            .content
-              if (article.viewers[0]!==Undefined && invoiceType==='sent')
-                span Recipients:
-                h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
-              if (invoiceType==='received')
-                span From: #{article.user.firstname} #{article.user.lastname}
-                if(article.user.organization)
-                  |  - #{article.user.organization}
-              if (article.viewers[1])
-                h4.dim #{article.viewers[1].user.organization}
-              if (article.viewers[2])
-                h4.dim more...
-              if (article.tags && article.tags.length > 0)
-                .tags
-                  - each tag in article.tags.split(',')
-                    span.tag 
-                      span #{tag}&nbsp;
-              .meta
-                span Total: &nbsp;
-                span(href="/users/"+article.user._id)= formatCurrency(article.total)
-              p.date
-                | Created: 
-                span.dim= formatDatetime(article.createdAt)
-      .row
-        .right
-          | Total Records: 
-          strong.muted
-            | #{sentCount} 
-          | | Invoices Total: 
-          strong.muted
-            |#{formatCurrency(totalCount)}
+          .chart-wrapper.col-md-12
+            #area-chart
+        .row
+          - each article in articles
+            - var viewer = article.viewers[0]? article.viewers[0].user.organization:'';
+            a(href='/articles/'+article._id, class="#{article.status} article col-md-3 block")
+              .status 
+                if (article.status=='sent' && invoiceType==='received')
+                  span 
+                    | Recieved
+                else
+                  span #{article.status}
+                span.right # #{formatInvoiceNumber(article.number)}
+              .content
+                if (article.viewers[0]!==Undefined && invoiceType==='sent')
+                  span Recipients:
+                  h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
+                if (invoiceType==='received')
+                  span From: #{article.user.firstname} #{article.user.lastname}
+                  if(article.user.organization)
+                    |  - #{article.user.organization}
+                if (article.viewers[1])
+                  h4.dim #{article.viewers[1].user.organization}
+                if (article.viewers[2])
+                  h4.dim more...
+                if (article.tags && article.tags.length > 0)
+                  .tags
+                    - each tag in article.tags.split(',')
+                      span.tag 
+                        span #{tag}&nbsp;
+                .meta
+                  span Total: &nbsp;
+                  span(href="/users/"+article.user._id)= formatCurrency(article.total)
+                p.date
+                  | Created: 
+                  span.dim= formatDatetime(article.createdAt)
+        .row
+          .right
+            | Total Records: 
+            strong.muted
+              | #{count} 
+            | | Invoices Total: 
+            strong.muted
+              |#{formatCurrency(totalCount)}
 
-      - if (pages > 1)
-        div.pages
-          ul.pagination
-            if (page!==1)
-              li
-                a(href="?page="+(page-1))
-                  i.typcn.typcn-chevron-left
-            != createPagination(pages, page)
-            if (pages!==page)
-              li
-                a(href="?page="+(page+1))
-                  i.typcn.typcn-chevron-right
+        - if (pages > 1)
+          div.pages
+            ul.pagination
+              if (page!==1)
+                li
+                  a(href="?page="+(page-1))
+                    i.typcn.typcn-chevron-left
+              != createPagination(pages, page)
+              if (pages!==page)
+                li
+                  a(href="?page="+(page+1))
+                    i.typcn.typcn-chevron-right
 
-  - else
-    .container.list
-      header.row
-        h2.gray No invoices yet...
-      p
-        a(href="/articles/new", class="button") Create an Invoice
+      - else
+        .container.list
+          header.row
+            h2.gray No invoices yet...
+          p
+            a(href="/articles/new", class="button") Create an Invoice
 
 block subfoot
   script(type="text/javascript", src='/js/vendor/d3.js')
