@@ -483,7 +483,9 @@ exports.new = function(req, res){
     var article = new Article({user:req.user.id, number:number});
     req.article = article;
 
-    req.article.items.push({});//Add One of each type to get the started
+    req.article.items.push({});//Add Tow of each type to get the started
+    req.article.items.push({});
+    req.article.items.push({type:'Item'});
     req.article.items.push({type:'Item'});
     
     article.save(function(err){
