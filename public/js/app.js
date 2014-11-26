@@ -10,7 +10,7 @@ $(document).ready(function () {
    $('#tooltipCopyCut').popover({content:'<p>tooltipCopyCut<a class="next2">go!</a></p>',html:true,title:'CopyCut', trigger:'manual'})
    $('#tooltipAutofill').popover({content:'tooltipAutofill',html:true, trigger:'manual'})
 
-    $('#tooltipSelection').popover('show')
+  //$('#tooltipSelection').popover('show')
  //   // $('#tooltipCopyCut').popover('show')
  //   // $('#tooltipAutofill').popover('show')
 	// // $('.pop').popover('hide')
