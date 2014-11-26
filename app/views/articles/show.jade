@@ -231,17 +231,17 @@ block content
               //- .col-md-6
               //-   a.click(href='#none') &nbsp (toggle textarea and file upload)
               
-    .container
-      .row
-        .col-md-12
-          button.pop.btn.btn-default(type='button', title="Popover title" , data-container='body', data-toggle='popover', data-placement='right', data-content='Vivamus sagittis lacus vel augue laoreet rutrum faucibus.')
-            | Popover on left
-      .popover.right
-          .arrow
-            h3.popover-title Popover right
-            .popover-content
-              p
-                | Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+    //- .container
+    //-   .row
+    //-     .col-md-12
+    //-       button.pop.btn.btn-default(type='button', title="Popover title" , data-container='body', data-toggle='popover', data-placement='right', data-content='Vivamus sagittis lacus vel augue laoreet rutrum faucibus.')
+    //-         | Popover on left
+    //-   .popover.right
+    //-       .arrow
+    //-         h3.popover-title Popover right
+    //-         .popover-content
+    //-           p
+    //-             | Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
 
     -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
       .container
