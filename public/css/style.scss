@@ -40,7 +40,6 @@ html,
 body, 
 header {
   width: 100%;
-//  overflow-x: hidden;
 }
 
 body {
@@ -1043,8 +1042,12 @@ body.show {
       }
     }
     
-    .close-button span {
-      display: none;
+    .close-button {
+      visibility: hidden;
+      span {
+        display: none;
+        visibility: visible;
+      }
     }
   }
 

@@ -676,8 +676,11 @@ body.show {
         display: block;
         right: -0.3125em;
         top: -0.3125em; }
-  .invoice-form .to-block .close-button span {
-    display: none; }
+  .invoice-form .to-block .close-button {
+    visibility: hidden; }
+    .invoice-form .to-block .close-button span {
+      display: none;
+      visibility: visible; }
 
 .tags {
   margin-top: 10px; }

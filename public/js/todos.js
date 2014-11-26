@@ -71,7 +71,7 @@
       cars.each(function(todo,i){
             var height = App.handsonObj.getRowHeight(i)
               , tr = $('<tr index="'+i+'"><td><a href="">X</a></td></tr>')
-                  .height(height)
+                  .height(height+.5)
                   .data('handsonPosition',i)
                   .on('click', function(e){
                     e.preventDefault();
@@ -186,6 +186,7 @@
         contextMenu: true,
         columns: columns,
         colHeaders: colHeaders,
+        rowHeaders: true,
         colWidths: colWidth,//[180, 100, 160, 160, 80, 80, 80, 180, 100],  //TODO add to api
         manualColumnResize: true
         //minSpareRows: 1 //see notes on the left for `minSpareRows`
