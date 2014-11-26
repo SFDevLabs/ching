@@ -27,7 +27,7 @@
       cars.bind('sync', this.renderAfterSync);
       cars.bind('remove', this.renderAfterSync);
       cars.bind('add', this.renderAfterSync);
-      cars.bind('change reset fetch',this.totalCalculation)
+      cars.bind('change reset fetch remove',this.totalCalculation)
 
 
       this.footer = this.$('footer');
