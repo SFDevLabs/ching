@@ -32,7 +32,7 @@ block content
               i.typcn.typcn-chart-bar-outline
         .right-row
           form.input-group.search
-              input.form-control(type='text' name="recipient")
+              input.form-control(type='text' name="all" value=query)
               .input-group-btn
                 button.btn.btn-default(type='submit', tabindex='-1') 
                   | 
@@ -134,7 +134,17 @@ block content
                   a(href="?page="+(page+1))
                     i.typcn.typcn-chevron-right
 
-      - else
+      - else if(query.length)
+        .container.list
+          header.row
+            h2.gray No Results.
+          .row
+            if (invoiceType='sent')
+              a(href="/", class="button") Clear Your Search
+            else
+              a(href="/received", class="button") Clear Your Search
+
+      -else
         .container.list
           header.row
             h2.gray No invoices yet...
