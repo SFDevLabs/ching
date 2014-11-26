@@ -376,6 +376,8 @@ req.param('recipient')
           if (qRegex){
             createOr();
             options.criteria.$or.push({description:qRegex})
+            options.criteria.$or.push({tags:qRegex})
+
           }
           var num = Number(q);
           if (!isNaN(num) && q.length>0){
