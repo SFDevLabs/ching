@@ -247,12 +247,13 @@ var indexSent = exports.indexSent = function(req, res){
 
   //here we need logic to properly parse out a search API.
   //http://localhost:4000/?stuff=testtest
-  console.log(req.param('recipient'))
+  //console.log(req.param('recipient'))
 
 
 
   options.criteria={
     user: userID,
+    
     //number:7 //search for a number
     //viewers: {$elemMatch:[{user:'541479be4b4b3f00000603db'}]}  //find a viewer
     //invoicedOn: null //find drafts
@@ -307,74 +308,161 @@ req.param('recipient')
 
     //placeholder for when we need this
     // an example using an object instead of an array
-    async.series({
-        user: function(callback){
-                callback(null, 1);
+    // 
+    var createOr=function(){
+      if (!options.criteria.$or)options.criteria.$or=[];
+    }
+    var q = req.param('all')
+        , qRegex;
+
+    ///(?=.*u)|(?=.*i)|(?=.*i).*/i
+
+    if (q===""){return res.redirect('/')};///
+
+    if (q){
+          var words = q.split(' '),
+              regexPart='',
+              regex;
+
+
+          for (var i = words.length - 1; i >= 0; i--) {
+
+
+            regexPart+='(?=.*'+words[i]+')';
+            regexPart+=(i===0)?'':'|';
+
+          };
+          
+
+          regex=new RegExp(regexPart+'.*','i') 
+          qRegex=regex;
+
+          console.log(regexPart,regex,'regex','dd'.search(regex))
+
+    }
+
+
+
+
+    async.waterfall([
+        function(callback){
+          var asyncResult={};
+            if (!q){
+               callback(null, asyncResult)
+            }
+            else
+            User.find({$or:[{firstname:qRegex},{lastname:qRegex}, {organization:qRegex}]}).exec(function(err, users){
+             // console.log(err, users)
+
+              var uID=users.map(function(val){ return val.id})
+            
+              var viewerQueary = {viewers:{$elemMatch:{user: {$in:uID} } }};
+              console.log(err, users)
+              //hacky parmeter stuff
+              
+              if (users[0] && q && q.length>0){
+                createOr();
+                options.criteria.$or.push(viewerQueary);//'54147c9f4d28350000cb8e50'}}
+              }
+              //console.log(options.criteria)
+              asyncResult.users=users
+              callback(null, asyncResult);
+            })//user search
+
         },
-        list: function(callback){
-            setTimeout(function(){
-                callback(null, 2);
-            }, 100);
+        function(asyncResult, callback){//List
+
+          //console.log(!isNaN(Number(q)))
+          if (qRegex){
+            createOr();
+            options.criteria.$or.push({description:qRegex})
+          }
+          var num = Number(q);
+          if (!isNaN(num) && q.length>0){
+            createOr();
+            options.criteria.$or.push({number:num})
+            options.criteria.$or.push({total:num})
+          }
+
+          console.log(options.criteria)
+          // if (asyncResult.users && asyncResult.users.length===0){
+          //    asyncResult.list=[];
+          //    callback(null, asyncResult)
+          // }
+          //else
+          Article.list(options, function(err, articles) {
+            console.log(err)
+            
+            asyncResult.list=articles;
+            callback(null, asyncResult);
+
+          }); 
         },
-        count: function(callback){
-            setTimeout(function(){
-                callback(null, 2);
-            }, 100);
+        function(asyncResult, callback){ //count
+
+          if (!asyncResult.list || asyncResult.list.length==0){
+            asyncResult.count=0;
+            callback(null, asyncResult)
+          }
+          else
+          Article.count(options.criteria).exec(function(err, count){
+
+                asyncResult.count=count;
+                callback(null, asyncResult);
+          });
         },
-        total: function(callback){
-            setTimeout(function(){
-                callback(null, 2);
-            }, 100);
+        function(asyncResult, callback){
+
+           if (!asyncResult.count || asyncResult.count==0){
+            asyncResult.total=0;
+            callback(null, asyncResult)
+          }
+          else
+          Article.total(options, function (err, total) {
+              asyncResult.total=total;
+              callback(null, asyncResult);
+          })//total
         }
-    },
+    ],
     function(err, results) {
         // results is now equal to: {one: 1, two: 2}
-        console.log(results)
+        console.log(results.length)
+
+   
+
+        
+
+
+          // console.log(count)
+
+       //   if (err) return res.render('500')
+            //console.log(err, req.total, count)
+            res.render('articles/index', {
+              bodyClass: bodyClass,
+              invoiceType: 'sent',
+              title: 'Sent Invoices',
+              articles: results.list,
+              page: page + 1,
+              pages: Math.ceil(results.count / perPage),
+              received:req.countReceived,
+              count:results.count,
+              totalCount:results.total,
+              query:q
+            })
+
+
+        
+     
+
+
     });
     ///
 
-    var q = req.param('recipient')? req.param('recipient'):null;
-  User.find({$or:[{firstname:q},{lastname:req.param('recipient')}]}).exec(function(err, uRes){
-    console.log(err, uRes)
-
-    var uID=uRes.map(function(val){ return val.id})
-  
-    //hacky parmeter stuff
-    if (uRes[0] && q && q.length>0)options.criteria['viewers']={$elemMatch:{user:uRes[0].id}};//'54147c9f4d28350000cb8e50'}}
-
-    console.log(  options.criteria)
+    
 
 
-  Article.list(options, function(err, articles) {
 
 
-  Article.count(options.criteria).exec(function(err, count){
-
-    console.log(count)
-
- //   if (err) return res.render('500')
-    Article.total(options, function (err, total) {
-      //console.log(err, req.total, count)
-      res.render('articles/index', {
-        bodyClass: bodyClass,
-        invoiceType: 'sent',
-        title: 'Sent Invoices',
-        articles: articles,
-        page: page + 1,
-        pages: Math.ceil(count / perPage),
-        received:req.countReceived,
-        count:count,
-        totalCount:total>=0?total:null
-      })
-  //})//Count All articles
-
- // })
-})//total
-
-  });//count
-}) //list
-
-})//user search
 }
 
 /**

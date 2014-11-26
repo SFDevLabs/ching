@@ -73,37 +73,34 @@ var ArticleSchema = new Schema({
     createdAt: { type : Date, default : Date.now }
   }],
   tags: {type: [], get: getTags, set: setTags},
-  image: {
-    cdnUri: String,
-    files: []
-  },
   createdAt  : {type : Date, default : Date.now},
   items: [itemsSchema],
   invoicedOn:{type : Date, default : null},
   paidOn:{type : Date, default : null},
   paymentVerified : { type: Boolean, default: false },
   dueOn:{type : Date, default : null},
-  address: {type : String, default : '', trim : true},
+  //address: {type : String, default : '', trim : true},
   currency: {type : String, default : 'USD', trim : true},
+  total:{type : Number, default : 0},
 });
 
-ArticleSchema
-  .virtual('total')
-  // .set(function(password) {
-  //   this._password = password
-  //   this.salt = this.makeSalt()
-  //   this.hashed_password = this.encryptPassword(password)
-  // })
-  .get(function() { 
-    var val
-    if (this.items.length){
-      val = this.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
-    }else{
-      val = 0;
-    }
-    return val
+// ArticleSchema
+//   .virtual('total')
+//   // .set(function(password) {
+//   //   this._password = password
+//   //   this.salt = this.makeSalt()
+//   //   this.hashed_password = this.encryptPassword(password)
+//   // })
+//   .get(function() { 
+//     var val
+//     if (this.items.length){
+//       val = this.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+//     }else{
+//       val = 0;
+//     }
+//     return val
 
-  })
+//   })
 
 
 ArticleSchema

@@ -77,6 +77,10 @@
         }
       }
       var newItem = req.article.items.push(item);
+
+      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      console.log(req.article, 'total')
+
       req.article.save(function(err){
           if (!err) {
             res.send( req.article.items[newItem-1].toJSON() );
@@ -109,8 +113,11 @@
   function getUpdateController(model) {
     return function (req, res) {
 
-      req.article.items=req.body;
-      
+      req.article.items=req.body;   
+
+      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      console.log(req.article, 'total')  
+
       req.article.save(function(err){
           if (!err) {
             res.send( req.article.toJSON() );
@@ -136,6 +143,9 @@
         }
       }
 
+      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      console.log(req.article, 'total')   
+
       req.article.save(function(err){
           if (!err) {
             res.send( req.article.items[index].toJSON() );
@@ -157,6 +167,7 @@
           res.send(errMsg(err));
         } else {
           result.remove();
+
           result.save(function (err) {
             if (!err) {
               res.send({});
@@ -177,6 +188,10 @@
       var key,
           items=req.article.items;
       items.pull(req.idt)
+      
+      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      console.log(req.article, 'total');
+
       req.article.save(function(err){
           if (!err) {
             res.send(204);
