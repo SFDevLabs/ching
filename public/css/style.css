@@ -441,7 +441,7 @@ footer {
   .landing .feature-list .features li {
     margin-top: 40px; }
   .landing .feature-list .icon {
-    font-size: 5em;
+    font-size: 6.5em;
     color: #bdbdbd;
     vertical-align: bottom;
     line-height: 0.625em; }
@@ -504,9 +504,9 @@ body.login {
 header > div {
   float: left; }
 header .title-row {
-  width: 45%; }
+  width: 60%; }
 header .right-row {
-  width: 45%;
+  width: 35%;
   float: right; }
 header .middle-buttons {
   padding: 0px 5px; }
