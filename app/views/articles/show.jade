@@ -556,14 +556,18 @@ block subfoot
       });
 
       //Keen Anatalytics
-      window.keenClient = new Keen({
-        projectId: '#{keenConfigObj.projectId}',       // String (required)
-        writeKey: '#{keenConfigObj.writeKey}', // String (required for sending data)
-        //readKey: "your_project_read_key",   // String (required for querying data)
-        //protocol: "https",                  // String (optional: https | http | auto)
-        //host: "api.keen.io/3.0",            // String (optional)
-        //requestType: "jsonp"                // String (optional: jsonp, xhr, beacon)
-      });
+      window.keenClient = undefined;
+      if (Keen){
+        window.keenClient = new Keen({
+          projectId: '#{keenConfigObj.projectId}',       // String (required)
+          writeKey: '#{keenConfigObj.writeKey}', // String (required for sending data)
+          //readKey: "your_project_read_key",   // String (required for querying data)
+          //protocol: "https",                  // String (optional: https | http | auto)
+          //host: "api.keen.io/3.0",            // String (optional)
+          //requestType: "jsonp"                // String (optional: jsonp, xhr, beacon)
+        });
+      }
+      
       window.analyticsConstance ={
           uId:'#{req.user.id}'
         , sId :'#{req.sessionID}'
