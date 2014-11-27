@@ -142,34 +142,33 @@ button.error {
     /* IE6-9 */ }
  }
 
-.handsontable col.rowHeader {
-  width: 40px; }
-
-.htCore tbody th {
-  background-color: #fff;
-  border-bottom-color: #fff !important;
-  border-top-color: #fff !important;
-  border-left-color: #fff !important;
-  color: #BEBEBE;
-  font-weight: 400; }
-
-.htCore tbody tr:nth-child(even) td {
-  background-color: #eee; }
-
-.handsontable thead tr:first-child th {
-  border-top: 0px !important;
-  background-color: #CCC;
-  border-right-color: #eee;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  font-weight: 500; }
-
-.htCore thead tr th:first-child {
-  background-color: #fff;
-  border-bottom-color: #fff !important;
-  border-top-color: #fff !important;
-  border-left-color: #fff !important; }
-
-.handsontable .handsontable table {
+.handsontable .htCore {
   -webkit-box-shadow: none !important;
   box-shadow: none !important; }
+  .handsontable .htCore col.rowHeader {
+    width: 30px; }
+  .handsontable .htCore tbody th {
+    background-color: #fff;
+    border-bottom-color: #fff !important;
+    border-top-color: #fff !important;
+    border-left-color: #fff !important;
+    color: #BEBEBE;
+    font-weight: 400; }
+  .handsontable .htCore tbody tr:nth-child(even) td {
+    background-color: #eee; }
+  .handsontable .htCore tbody .htAutocompleteArrow {
+    color: #BEBEBE; }
+  .handsontable .htCore tbody .htAutocomplete {
+    text-align: justify; }
+  .handsontable .htCore thead tr th:first-child {
+    background-color: #fff !important;
+    border-bottom-color: #fff !important;
+    border-top-color: #fff !important;
+    border-left-color: #fff !important; }
+  .handsontable .htCore thead tr:first-child th {
+    border-top: 0px !important;
+    background-color: #CCC;
+    border-right-color: #eee;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-weight: 500; }
