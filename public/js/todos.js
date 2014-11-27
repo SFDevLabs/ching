@@ -34,6 +34,7 @@
       this.main = $('#main');
       this.total = $("#total .amount");
 
+      this.timeZoneOffset=new Date().getTimezoneOffset()/60
       cars.fetch();
     },formatCurrency: function(num) {
         var p = num.toFixed(2).split(".");
@@ -150,15 +151,14 @@
               , type:cars.format[i]
               , source: cars.dropdownOptions[i]
             }
-         } else {
-            columns[pos] =
-              {
-                data:setterFactor(i)
-                , type:this.handsonType( cars.schema[i])
-                , format:cars.format[i]
-                , dateFormat:cars.format[i]
-                , source: cars.dropdownOptions[i]
-              }
+          }else{
+              columns[pos]={
+                  data:setterFactor(i)
+                  , type:this.handsonType( cars.schema[i])
+                  , format:cars.format[i]
+                  //, dateFormat:cars.format[i]
+                  , source: cars.dropdownOptions[i]
+                }
           }
           if(i==='total'){columns[pos].readOnly=true};
         colWidth[pos]=cars.colWidth[i]
@@ -222,7 +222,7 @@
         }
       });
       this.handsonObj.addHook('beforeAutofill',function(input, type){
-          if(keenClient){
+          if(window.keenClient){
             keenClient.addEvent("user_event",{
                 type:'autofill'
               , page: '/article/:id'
@@ -232,7 +232,7 @@
           }  
       });
       this.handsonObj.addHook('afterSelectionEnd',function(y1, x1, y2, x2){
-          if(keenClient && (x1!==x2 || y1!==y2)){
+          if(window.keenClient && (x1!==x2 || y1!==y2)){
             keenClient.addEvent("user_event",{
                 type:'grid_selection'
               , selection: {y1:y1, x1:x1, y2:y2, x2:x2}
@@ -300,7 +300,6 @@
           this.on('change:tax1',this.tax1Formater);
           this.on('change:tax2',this.tax2Formater);
           this.on('change:qty',this.qtyFormater);
-
         },
         tax1Formater:function(todo,val){
             if (typeof val === 'number'){
@@ -359,10 +358,15 @@
               return "Not a valid "+schema+'. Please enter a '+schema;
             }
           }
-
+        },
+        parse:function(response){
+          response.date = this.addHoursToDate(response.date, App.timeZoneOffset)//Add the timezone offset so we always get a cannonical date of the invoice
+          return response;
+        },
+        addHoursToDate:function(date, hours) {
+            date = new Date(date);// conver ttot date object from string
+            return new Date(date.getTime() + hours*3600000);
         }
-
-
    });
 
   var CarCollection = Backbone.Collection.extend({
@@ -377,6 +381,14 @@
       return   base;
     },
     parse : function(response){
+      // var offset = new Date().getTimezoneOffset()/60
+      // response.data = response.data.map(function(val){
+      //   if(val.date){
+      //     val.date = val.date.slice(0,10);
+      //     val.date+="T0"+offset+":00:00.000Z"
+      //   }
+      //   return val;
+      // })
       this.schema=response.schema;
       this.format=response.format;
       this.dropdownOptions=response.dropdownOptions;
@@ -388,8 +400,10 @@
     sync:function(a,b,c){
       if (a==='read')
         Backbone.sync('read',this, c)
-      else
+      else{
+        debugger
         Backbone.sync('update',this, c)
+      }
     }
 
   });
@@ -528,7 +542,7 @@ var renderCSV = function(data, status){
           // }
 }
 ///turn on date picker
-$('.date').datepicker()
+$('.date').datepicker();
 $("abbr.timeago").timeago();
 
 
