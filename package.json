@@ -49,8 +49,7 @@
     "underscore" : "latest",
     "pdfkit":"latest",
     "node-sass-middleware":"latest",
-    "keen.io": "latest",
-    "papercut":"latest"
+    "keen.io": "latest"
   },
   "devDependencies": {
     "supertest": "latest",
