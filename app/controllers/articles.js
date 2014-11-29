@@ -110,40 +110,8 @@ exports.uploadcsv = function(req, res, next){
     });
   }
 
-var papercut = require('papercut');
-
-// papercut.configure(function(){
-//   papercut.set('storage', 'file')
-//   papercut.set('directory', './images/uploads')
-//   papercut.set('url', '/images/uploads')
-// });
-
-papercut.configure('production', function(){
-  papercut.set('storage', 's3')
-  papercut.set('S3_KEY', "AKIAJ73ZJHZB6LY3G7VA")//process.env.S3_KEY||
-  papercut.set('S3_SECRET', "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")//process.env.S3_SECRET||
-  papercut.set('bucket', 'chingio')
-});
-
-papercut.set('production')
-AvatarUploader = papercut.Schema(function(schema){
-  schema.version({
-    name: 'avatar',
-    size: '200x200',
-    process: 'crop'
-  });
-
-  schema.version({
-    name: 'small',
-    size: '50x50',
-    process: 'crop'
-  });
-});
-
-uploader = new AvatarUploader();
-
 /*
- * upload csv
+ * upload Image
  */
 exports.uploadImage = function(req, res){
   var article = req.article;
@@ -151,10 +119,6 @@ exports.uploadImage = function(req, res){
 
     console.log(req.files.files[0].path)
 
-// uploader.process('image1', req.files.files[0].path, function(images){
-//   console.log(images.avatar); // '/images/uploads/image1-avatar.jpg'
-//   console.log(images.small); // '/images/uploads/image1-small.jpg'
-// })
 
   article.uploadAndSave(req.files.files[0], function(err) {
       if (!err) {
@@ -170,17 +134,7 @@ exports.uploadImage = function(req, res){
       //   article: article,
       //   error: err?utils.errors(err.errors || err):null
       // });
-    })
-  
-  // fs.readFile(file.path, {encoding: 'utf-8'}, function(err,data){
-  //       //fs.unlinkSync(file.path);
-  //     //  cb(null,data);
-     
-  //       //console.log()
-   
-  //       res.send(file)
-
-  //     });//file read
+    });
 
 }
 
