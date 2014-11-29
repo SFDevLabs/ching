@@ -213,21 +213,47 @@ block content
       - if (req.user && req.article && req.article.user.id===req.user.id)
         hr
         .row
-          .col-md-12
             .col-md-6
             .col-md-6#csv-file
-              h3 
+              h4 
                 | Import from 
-                a.btn-csv-instrucions(href='javascript:void(0)') CSV
+                a.btn-csv-instrucions(href='javascript:void(0)') 
+                 | CSV
+                span  from  
+                a(href='/tableview' target="_blank")
+                  | other accounting apps
               .csv-drop-file
                 p
-                  input(id="fileupload", type="file", name="files[]", multiple)
-                #dropzone
+                  input.file-uploader(id="fileupload", type="file", name="files[]", multiple)
+                #dropzone.dropzone
                   span.typcn.typcn-folder-open
+                  .muted
+                    | Drag and drop files here.
                 div(id="files", class="files")
+              .csv-open-table-window
+                form(target="_blank" action='/tableview' method="post")
+                  input(type="hidden", name="_csrf", value="#{csrf_token}")
+                  input(type='hidden' value='[["2009",0,2941,4303,354,5814],["2010",5,2905,2867,412,5284],["2011",4,2517,4822,552,6127],["2012",2,2422,5399,776,4151]]' name='csvdata')
+                  button.btn(type='submit')
+                    |csvtest
               .csv-paste-text
                 textarea#csv-ajax(placeholder="paste csv text here!")
                 a.csv-toggle.btn.subtle(onclick="post()") Submit
+        hr
+        .row
+            .col-md-6
+            .col-md-6
+              h3 
+                | Add Images
+              .csv-drop-file
+                p
+                  input.file-uploader(id="fileupload", type="file", name="files[]", multiple)
+                #dropzoneimage.dropzone
+                  span.typcn.typcn-folder-open
+                  .muted
+                    | Drag and drop Images here. 
+                div(id="files", class="files")
+
               //- .col-md-6
               //-   a.click(href='#none') &nbsp (toggle textarea and file upload)
               
@@ -429,10 +455,6 @@ block subfoot
             input(type="hidden", name="_method", value="PUT")
 
           .form-group
-            label.control-label(for='file') Image
-            input.form-control#file(type='file', name="image[]")
-
-          .form-group
             label.control-label(for='desc') Description
             textarea.form-control#desc(rows="5", name="description")=article.description
 
@@ -554,6 +576,15 @@ block subfoot
       $("body").on("click", ".edit-properties-modal .close-button, .edit-properties-modal .cancel.btn", function() {
         $(".edit-properties-modal").fadeOut();
       });
+
+      $('.dropzone').on('click',function(){
+
+          $('.file-uploader', $(this).parent()).addClass("highlight").delay(500).queue(function(next){
+              $(this).removeClass("highlight");
+              next();
+          });
+        })
+
 
       //Keen Anatalytics
       window.keenClient = undefined;
