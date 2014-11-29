@@ -359,6 +359,9 @@
             }
           }
         },
+        // sync:function(a,b,c){
+        //   debugger
+        // },
         parse:function(response){
           response.date = this.addHoursToDate(response.date, App.timeZoneOffset)//Add the timezone offset so we always get a cannonical date of the invoice
           return response;
@@ -397,11 +400,10 @@
       this.colWidth=response.colWidth
       return response.data
     },
-    sync:function(a,b,c){
+    sync:function(a,b,c){  //This makes sure we only update when we need to
       if (a==='read')
         Backbone.sync('read',this, c)
       else{
-        debugger
         Backbone.sync('update',this, c)
       }
     }
