@@ -161,6 +161,9 @@ module.exports = function (app, passport) {
   app.post('/articles/:id/uppayed', viewerAuth, articles.unpayed)
 
   app.post('/articles/:id/upload', articles.uploadcsv);//upload 
+  app.post('/articles/:id/uploadimage', articles.uploadImage);//upload 
+
+  
 
   // viewer routes
   var viewers = require('../app/controllers/viewers')
@@ -184,6 +187,10 @@ module.exports = function (app, passport) {
   app.get('/sent', auth.requiresLogin, articles.indexSent)
   app.get('/recieved', auth.requiresLogin,  articles.indexRecieved)
 
+  //table
+  app.post('/tableview',  articles.tableJSONView);
+
+  
 
   // comment routes
   var comments = require('../app/controllers/comments')

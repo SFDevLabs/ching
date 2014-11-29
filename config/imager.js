@@ -5,10 +5,11 @@ module.exports = {
         detail: "800x600"
       },
       crop: {
-        thumb: "200x200"
+        
       },
       resizeAndCrop: {
-        mini: {resize: "200x150", crop: "100x100"}
+        thumb: {resize: "100x100", crop: "800x600"},
+        mini: {resize: "200x150", crop: "800x600"}
       }
     },
 
@@ -29,12 +30,12 @@ module.exports = {
       container: "CONTAINER_NAME"
     },
     S3: {
-      key: 'API_KEY',
-      secret: 'SECRET',
-      bucket: 'BUCKET_NAME',
-      region: 'REGION'
+      key: 'AKIAITZFPMBD2GIZM5PA',
+      secret: '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',
+      bucket: 'chingapp',
+     // region: 'US Standard'
     }
   },
 
-  debug: true
+  debug: false
 }

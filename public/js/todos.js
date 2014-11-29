@@ -459,10 +459,16 @@ var setterFactor=function(attr){
 
 
 
-$('#dropzone').on('dragenter',function(e){
+$('.dropzone').on('dragenter',function(e){
   $(this).addClass('dragging');
+  $(this).closest('.dropzone').addClass('dragging');
+
+  $(this).delay(2000).queue(function(next){
+    $(this).removeClass('dragging');
+    next();
+  });
 });
-$('#dropzone').on('dragleave drop',function(e){
+$('.dropzone').on('drop',function(e){
   $(this).removeClass('dragging');
 });
 
@@ -522,6 +528,7 @@ $('#fileupload').fileupload({
         renderCSV( data.result.data, data.result.status)
      });
 
+
 var renderCSV = function(data, status){
         if (!data.length){
           return false
@@ -541,6 +548,24 @@ var renderCSV = function(data, status){
           //       // });
           // }
 }
+
+$('#fileupload').fileupload({
+        url: aId+'/uploadimage'
+        ,dataType: 'json'
+        ,autoUpload: true
+        ,dropZone: $('#dropzoneimage')
+      //  acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        ,maxFileSize: 20000000 // 5 MB
+        // Enable image resizing, except for Android and Opera,
+        // which actually support image resizing, but fail to
+        // send Blob objects via XHR requests:
+        ,disableImageResize: /Android(?!.*Chrome)|Opera/
+            .test(window.navigator.userAgent)
+        ,previewMaxWidth: 100
+        ,previewMaxHeight: 100
+        ,previewCrop: true
+    })
+
 ///turn on date picker
 $('.date').datepicker();
 $("abbr.timeago").timeago();

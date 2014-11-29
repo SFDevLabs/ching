@@ -8,7 +8,8 @@ var mongoose = require('mongoose')
   , config = require('../../config/config')[env]
   , Schema = mongoose.Schema
   , utils = require('../../lib/utils')
-
+  , Imager = require('imager')
+  , imagerConfig = require(config.root + '/config/imager.js');
 /**
  * Getters
  */
@@ -161,23 +162,31 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  // uploadAndSave: function (images, cb) {
-  //   if (!images || !images.length) return this.save(cb)
+  uploadAndSave: function (images, cb) {
+          //console.log(images)
 
-  //   var imager = new Imager(imagerConfig, 'S3')
-  //   var self = this
+    //if (!images || !images.length) return this.save(cb);
+     // console.log(images)
 
-  //   this.validate(function (err) {
-  //     if (err) return cb(err);
-  //     imager.upload(images, function (err, cdnUri, files) {
-  //       if (err) return cb(err)
-  //       if (files.length) {
-  //         self.image = { cdnUri : cdnUri, files : files }
-  //       }
-  //       self.save(cb)
-  //     }, 'article')
-  //   })
-  // },
+     console.log(imagerConfig)
+    var imager = new Imager(imagerConfig, 'S3')
+    var self = this
+
+    this.validate(function (err) {
+      console.log(err)
+      if (err) return cb(err);
+      imager.upload([images], function (err, cdnUri, files) {
+
+        console.log(err, cdnUri, files)
+
+        if (err) return cb(err)
+        if (files.length) {
+          self.image = { cdnUri : cdnUri, files : files }
+        }
+        self.save(cb)
+      }, 'article')
+    })
+  },
 
   /**
    * Add comment
