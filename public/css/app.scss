@@ -133,6 +133,7 @@ button.error {
 }
 
 #csv-file{
+
   .csv-drop-file{
 
   }
@@ -146,6 +147,15 @@ button.error {
     .csv-drop-file{
       display:none;
     }
+  }
+}
+
+.file-uploader{
+  -webkit-transition: background-color .5s ease-in-out;
+  transition: background-color .5s ease-in-out;  
+  &.highlight{
+    background-color: rgba(255, 155, 0, 0.5);
+    border-radius: 5px;
   }
 }
 
