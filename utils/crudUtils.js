@@ -208,7 +208,24 @@
   //
   function  getItemAddController(model) {
     return function (req, res) {
-      var key;
+      var key=5;
+
+
+      req.article.update({ "$push": {items:{
+          $each:[{}],
+          $position: 2
+          }
+         }
+        },
+        function(err){
+            console.log('add',err, req.article.items.length)
+
+          if (!err) {
+            res.send(204,'ok');
+          } else {
+            res.send(500,errMsg(err));
+          }
+        });
 
       //req.article.update({ "$push": { "items": { "$each": [{}], "$position": req.idt } } });
 
@@ -280,6 +297,7 @@
 
 
     app.get(path+'/api', viewerAuth, analyticsRoute('user_event','API_ItemsList'), getListController(model));
+    app.post(path+'/api/add', articleAuth, analyticsRoute('user_event','API_AddbyPositionById'), getItemAddController(model));
     app.get(path+'/api/token/:token', analyticsRoute('user_event','API_ItemsList_Token'), viewerAuthToken, getListController(model));
     app.post(path+'/api', articleAuth, analyticsRoute('user_event','API_PostItems'), getCreateController(model));
     app.get(pathWithId, articleAuth, analyticsRoute('user_event','API_GetItemsById'), getReadController(model));
