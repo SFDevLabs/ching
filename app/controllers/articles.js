@@ -117,7 +117,8 @@ exports.uploadImage = function(req, res){
   var article = req.article;
   var file = req.files.files[0];
 
-    console.log(req.files.files[0].path)
+  
+  //make this an array of files console.log(req.files.files[0].path)
 
 
   article.uploadAndSave(req.files.files[0], function(err) {
