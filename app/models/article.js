@@ -35,7 +35,7 @@ var setTags = function (tags) {
 
 var itemsSchema = {
     note:{type : String, default :  null, format: '', typeString:'string',columnPosition:7, displayName:'Note', colWidth:180, printColWidth:80},
-    date: {type: Date, default : null, format: 'mm/dd/yy, D', typeString:'date',columnPosition:3, displayName:'Date', colWidth:135, printColWidth:55},
+    date: {type: Date, default : Date.now, format: 'mm/dd/yy, D', typeString:'date',columnPosition:3, displayName:'Date', colWidth:135, printColWidth:55},
     cost:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:1, displayName:'Unit Price', colWidth:120, printColWidth:60},
     qty:{type : Number, default : null, format: '0,0[.]0000', typeString:'number',columnPosition:2, displayName:'Quantity', colWidth:120, printColWidth:60},
     tax1:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:4, displayName:'Tax (1)', colWidth:60, printColWidth:30},
@@ -71,15 +71,16 @@ var ArticleSchema = new Schema({
   comments: [{
     body: { type : String, default : '' },
     user: { type : Schema.ObjectId, ref : 'User' },
+    isPayment: { type: Boolean, default: false },
     createdAt: { type : Date, default : Date.now }
   }],
   tags: {type: [], get: getTags, set: setTags},
   createdAt  : {type : Date, default : Date.now},
-  items: [itemsSchema],
   invoicedOn:{type : Date, default : null},
   paidOn:{type : Date, default : null},
-  paymentVerified : { type: Boolean, default: false },
+  paymentVerifiedOn : {type : Date, default : null},
   dueOn:{type : Date, default : null},
+  items: [itemsSchema],
   //address: {type : String, default : '', trim : true},
   currency: {type : String, default : 'USD', trim : true},
   total:{type : Number, default : 0},
