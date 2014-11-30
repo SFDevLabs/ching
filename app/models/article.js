@@ -113,7 +113,9 @@ ArticleSchema
   .virtual('status')
   .get(function() {// This logic and the templates that use it could be better thought out.
      var val
-      if (this.paidOn!==null){
+      if (this.paymentVerifiedOn!==null){
+        val='verified'
+      }else if (this.paidOn!==null){
         val='paid'
       }else if (this.invoicedOn===null){
         val='draft'

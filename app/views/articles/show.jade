@@ -19,14 +19,19 @@ block main
           a.btn(href=actionPDF)
             span.typcn.typcn-document-text
             |  Download PDF
-          - if (article.paymentVerified && invoiceType == "sent")
-            button.btn.btn-danger.subtle.btn-confirm-payed
+          - if (article.paidOn)
+            button.btn.btn-danger.subtle.btn-payed
               span.typcn.typcn-mail
                 |  Mark as Not Paid
           -else if(!article.paymentVerified)
-            button.btn.btn-confirm-payed
+            button.btn.btn-payed
               span.typcn.typcn-bell
                 |  Mark as Payed
+          
+          -if(article.paidOn && !article.paymentVerifiedOn)
+            button.btn.btn-confirm-payed
+              span.typcn.typcn-bell
+                |  Confirm Payment
           //- a.btn(href="/articles/" + article._id + "/pdf")
           //-   span.typcn.typcn-document-text
           //-   |  Download CSV
@@ -59,8 +64,10 @@ block content
                 - var hasImage = ""
               -if (article.status == "sent")
                 h2(class="#{article.status} #{hasImage}") Sent on #{formatDate(article.invoicedOn)}
+              -else if(article.status =='verified')
+                h2(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paymentVerifiedOn)}
               -else if (article.status == "paid")
-                h2(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paidOn)}
+                h2(class="#{article.status} #{hasImage}") Payment Sent on #{formatDate(article.paidOn)}
               -else if (article.status == "overdue")
                 -var today = new Date()
                 -var pastDue = Math.round( (today.getTime() - article.dueOn.getTime())/86400000 )
@@ -370,13 +377,13 @@ block subfoot
   //-             br
   //-             button.btn.btn-primary(type='submit') Mark as Payed
 
-  .modal.confirm-payed-modal
+  .modal.payed-modal
     .container
       .modal-wrap.col-lg-8
         span.close-button
           span.typcn.typcn-delete
         - var action, button
-        - if (article.paymentVerified && invoiceType == "sent")
+        - if (article.paidOn)
           - action = "/articles/"+article._id+"/uppayed"
           - button = "Mark as Not Payed"
         - else if (req.token)
@@ -389,6 +396,23 @@ block subfoot
           | Payment
         form(class="block edit-content", method="post", action=action, enctype="multipart/form-data", role="form")
           input(type="hidden", name="_csrf", value="#{csrf_token}")
+          .form-group
+            label.control-label(for='desc') Add Comment
+            textarea.form-control#desc(rows="5", name="description", placeholder="Add a note to this action.")
+          .form-group
+            button.btn(type='submit')
+              span.typcn.typcn-mail=button
+
+  .modal.confirm-payed-modal
+    .container
+      .modal-wrap.col-lg-8
+        span.close-button
+          span.typcn.typcn-delete
+        h4
+          | Confirm
+        form(class="block edit-content", method="post", action="/articles/"+article._id+"/payed", enctype="multipart/form-data", role="form")
+          input(type="hidden", name="_csrf", value="#{csrf_token}")
+
 
           //- - if (!article.isNew)
           //-   input(type="hidden", name="_method", value="PUT")
@@ -396,13 +420,10 @@ block subfoot
           //- .form-group
           //-   label.control-label(for='file') Image
           //-   input.form-control#file(type='file', name="image[]")
-
-          .form-group
-            label.control-label(for='desc') Add Comment
-            textarea.form-control#desc(rows="5", name="description", placeholder="Add a note to this action.")
           .form-group
             button.btn(type='submit')
-              span.typcn.typcn-mail=button
+              span.typcn.typcn-mail
+                |Confirm Payment
 
 
   .modal.confirm-send-modal
@@ -538,6 +559,11 @@ block subfoot
       $("body").on("click", ".btn-confirm-payed", function() {
         $(".confirm-payed-modal").fadeIn();
       });
+      $("body").on("click", ".btn-payed", function() {
+        $(".payed-modal").fadeIn();
+      });
+
+
 
       $("body").on("click", ".btn-confirm-send", function() {
         $(".confirm-send-modal").fadeIn();
@@ -559,9 +585,15 @@ block subfoot
           }
       });
 
+      $("body").on("click", ".payed-modal .close-button", function() {
+        $(".payed-modal").fadeOut();
+      });
+
       $("body").on("click", ".confirm-payed-modal .close-button", function() {
         $(".confirm-payed-modal").fadeOut();
       });
+
+      
 
       $("body").on("click", ".confirm-delete-modal .close-button", function() {
         $(".confirm-delete-modal").fadeOut();

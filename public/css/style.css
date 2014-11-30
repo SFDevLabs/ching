@@ -576,6 +576,12 @@ header .middle-buttons {
   .paid .status {
     background: #02c34e; }
 
+.verified {
+  color: #02c34e;
+  border-bottom-color: #02c34e; }
+  .verified .status {
+    background: #02c34e; }
+
 .overdue {
   color: #F92700;
   border-bottom-color: #F92700; }

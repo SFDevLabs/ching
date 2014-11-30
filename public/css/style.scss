@@ -879,6 +879,14 @@ header{
   }
 }
 
+.verified {
+  color: $actionbg;
+  border-bottom-color: $actionbg;
+  .status {
+    background: $actionbg;
+  }
+}
+
 .overdue {
   color: $warnbg;
   border-bottom-color: $warnbg;

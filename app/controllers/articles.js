@@ -656,7 +656,11 @@ exports.payed = function(req, res){
   var article = req.article
 
   //article = extend(article, req.body)
-  article.paymentVerified=true;
+  //article.paymentVerified=true;
+  //
+  if (req.article.user.id==req.user.id){
+    article.paymentVerifiedOn=new Date();
+  }
   article.paidOn=new Date();
   var views={
             user_full_name: article.user.firstname +' '+ article.user.lastname
@@ -670,7 +674,7 @@ exports.payed = function(req, res){
           , from: 'noreply@ching.io'
           , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been paid.'
           , html : Mustache.render(emailTmplPaid, views)
-          , message: 'Your invoice has been payed!'
+          , message: 'Your invoice has been marked as payed!'
         },
   function(err, json){
     if (err){console.log('Email Error')};
@@ -692,7 +696,7 @@ exports.payed = function(req, res){
 exports.unpayed = function(req, res){
   var article = req.article
 
-  article.paymentVerified=false;
+  article.paymentVerifiedOn=null;
   article.paidOn=null;
 
   article.save(function(err) {
