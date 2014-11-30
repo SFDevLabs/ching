@@ -29,13 +29,13 @@
       cars.bind('add', this.renderAfterSync);
       cars.bind('change reset fetch remove',this.totalCalculation)
 
-
       this.footer = this.$('footer');
       this.main = $('#main');
       this.total = $("#total .amount");
 
       this.timeZoneOffset=new Date().getTimezoneOffset()/60
       cars.fetch();
+
     },formatCurrency: function(num) {
         var p = num.toFixed(2).split(".");
         return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
@@ -57,31 +57,7 @@
       App.total.html(total);
     },
     renderAfterSync: function (todos, response) {  
-      App.handsonContainer.handsontable("render");
-
-      var core = $('.htCore','.ht_master'),
-          sidebar = $('.remove-sidebar'),
-          trs=[];
-
-          //sidebar.width(core.width());
-          App.handsonContainer.width(core.width()+65)
-          App.handsonContainer.append(sidebar)
-
-      //App.handsonContainer.before($('.remove-sidebar'));
-      $('.remove-sidebar').html('');
-      cars.each(function(todo,i){
-            var height = App.handsonObj.getRowHeight(i)
-              , tr = $('<tr index="'+i+'"><td><a href="">X</a></td></tr>')
-                  .height(height+.5)
-                  .data('handsonPosition',i)
-                  .on('click', function(e){
-                    e.preventDefault();
-                    var pos = $(this).data('handsonPosition');
-                    cars.remove(cars.at(pos));
-                });
-            trs.push(tr); 
-      });
-      $('.remove-sidebar').append(trs)
+       App.handsonContainer.handsontable("render");//we need to maunaull rerender after we add an item.
     },
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
@@ -135,7 +111,8 @@
 
     },
     setup:function(){
-
+      cars.unbind('reset', this.setup, this);///we only need to fire setup once;
+      this.setupFlag=true;
       var columns=[]
           , colHeaders=[]
           , colWidth=[]
@@ -151,13 +128,24 @@
               , type:cars.format[i]
               , source: cars.dropdownOptions[i]
             }
+          }else if (cars.format[i]=='buttons'){
+              App.buttonIndex=colPos[i];
+              columns[pos]={
+                  data:function(){return '<a class="grid-buttons add" href="javascript:void(0)"><i class="typcn typcn-plus"></i></a><a class="grid-buttons delete" href="javascript:void(0)"><i class="typcn typcn-delete-outline"></i></a>'}//setterFactor(i)
+                  , type:this.handsonType( cars.schema[i])
+                  , format:cars.format[i]
+                  //, dateFormat:cars.format[i]
+                  //, source: cars.dropdownOptions[i]
+                  , renderer:'html'
+                  , readOnly: true
+                }
           }else{
               columns[pos]={
                   data:setterFactor(i)
                   , type:this.handsonType( cars.schema[i])
                   , format:cars.format[i]
                   //, dateFormat:cars.format[i]
-                  , source: cars.dropdownOptions[i]
+                  //, source: cars.dropdownOptions[i]
                 }
           }
           if(i==='total'){columns[pos].readOnly=true};
@@ -194,7 +182,6 @@
       this.handsonObj = this.handsonContainer.data('handsontable')
       this.handsonObj.contextMenu.disable();//get rid of the context meu
 
-      //this.itemsToAdd=[];
       this.handsonObj.addHook('beforePaste',function(input, cords, type){
             var y = cords[0],
                 x = cords[1],
@@ -241,9 +228,35 @@
               , user:analyticsConstance.uId
               , session:analyticsConstance.sId
             });
-          }  
+          } 
+
+      });
+      this.handsonObj.addHook('afterSelection',function(y1, x1, y2, x2){ //this prevents us from selecting the buttons row. Hard coded to 9;        
+        var index=App.buttonIndex;
+        if (x1===index || x2===index){
+            if (x1===index){x1=index-1};
+            if (x2===index){x2=index-1};
+            App.handsonObj.selectCell(y1, x1, y2, x2);
+        }
       });
 
+      this.handsonObj.addHook('afterSelection',function(y1, x1, y2, x2){
+        var index=App.buttonIndex;
+        if (x1===index || x2===index){
+            var clickedTag = $(event.target).closest('a')
+            if(clickedTag.length!==0 && clickedTag.hasClass('delete')){
+              var r = confirm("Please confirm.\nThis permanently delete this row.")
+              if (r){
+                cars.remove(cars.at(y1));
+              }
+              
+            } else if (clickedTag.length!==0 && clickedTag.hasClass('add')){
+              $.post(aId+'/api/add',{index:y1});
+              cars.fetch();
+            }
+        }
+      });
+      
 
       this.handsonObj.addHook('afterChange',function(input, type){
         if (App.disableSave){
@@ -254,15 +267,16 @@
           App.disableSave=false;
         }
       });
+
+
       this.scrollPasteHack();
 
-
-      this.handsonObj.addHook('afterSelection',function(a, b, c){
-        $('.remove-sidebar tr td a').removeClass('visible')
-        $("[index='"+a+"'] td a").addClass('visible')
+      this.handsonObj.addHook('afterSelection',function(x1, y1){//This sets the selected row buttons to visible.
+        $('#grid tbody td.visible').removeClass('visible');
+        $(App.handsonObj.getCell(x1,y1)).siblings(':last').addClass('visible')
       })
       this.handsonObj.addHook('afterDeselect',function(a, b, c){
-        $('.remove-sidebar tr td a').removeClass('visible')
+        $('#grid tbody td.visible').removeClass('visible');
       })
 
     },
@@ -359,11 +373,10 @@
             }
           }
         },
-        // sync:function(a,b,c){
-        //   debugger
-        // },
         parse:function(response){
-          response.date = this.addHoursToDate(response.date, App.timeZoneOffset)//Add the timezone offset so we always get a cannonical date of the invoice
+          if (response && response.date!==null){
+            response.date = this.addHoursToDate(response.date, App.timeZoneOffset)//Add the timezone offset so we always get a cannonical date of the invoice
+          }
           return response;
         },
         addHoursToDate:function(date, hours) {
@@ -378,20 +391,12 @@
     splice: hacked_splice,
 
     url: function () {
-      var base = '/articles/'+aId+'/api';
-      base += (this.id) ? '/' + this.id : '';
+      var base = '/articles/'+aId+'/api'; //globally defined
+      base += (this.id) ? '/' + this.id : '';//this.id will only exist ifwe are updating a model;
       base += (tokenId) ? '/token/' + tokenId : '';
       return   base;
     },
     parse : function(response){
-      // var offset = new Date().getTimezoneOffset()/60
-      // response.data = response.data.map(function(val){
-      //   if(val.date){
-      //     val.date = val.date.slice(0,10);
-      //     val.date+="T0"+offset+":00:00.000Z"
-      //   }
-      //   return val;
-      // })
       this.schema=response.schema;
       this.format=response.format;
       this.dropdownOptions=response.dropdownOptions;
@@ -510,7 +515,7 @@ var post = function(){
   $('#csv-ajax').val('');
 }
 
-$('#fileupload').fileupload({
+$('#fileuploadcsv').fileupload({
         url: aId+'/upload'
         ,dataType: 'json'
         ,autoUpload: true
@@ -535,23 +540,34 @@ var renderCSV = function(data, status){
         if (!data.length){
           return false
         };
-        var keys = _.keys(data[0])
-            , values = _.map(data,function(val){ return _.values(val) });
 
         if (status!=='raw_data'){//
                   cars.fetch();
             } 
-          //   else { //
-          //       // $('#preview').handsontable({
-          //       //   data: values
-          //       //   ,minSpareRows: 1
-          //       //   ,colHeaders: keys
-          //       //   ,columnSorting: true
-          //       // });
-          // }
+        else { 
+                
+        var  keys = _.keys(data[0])//get an array of keys
+            , values = _.map(data,function(val){ return _.values(val) })  //flatten the array of data to an array of arrays
+            , csvButtonArea = 
+              
+            values.unshift(keys) //add the keys to the front of the top array
+            var json = JSON.stringify(values); //make the jason
+
+            if (json){
+              $('.csv-open-table-window input.data').val(json);
+              $('.csv-open-table-window').addClass('visible');
+            };
+            //
+                // $('#preview').handsontable({
+                //   data: values
+                //   ,minSpareRows: 1
+                //   ,colHeaders: keys
+                //   ,columnSorting: true
+                // });
+          }
 }
 
-$('#fileupload').fileupload({
+$('#fileuploadimage').fileupload({
         url: aId+'/uploadimage'
         ,dataType: 'json'
         ,autoUpload: true
@@ -632,4 +648,3 @@ $("abbr.timeago").timeago();
 
 
 //}(jQuery, _, Backbone));
-

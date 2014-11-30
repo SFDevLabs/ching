@@ -22,6 +22,8 @@ var mongoose = require('mongoose')
   , Mustache = require('mustache')
   , async = require('async');
 
+   itemsSchema['click']={format: 'buttons', typeString:'string',columnPosition:9, displayName:'Clicky', colWidth:50};//Adding a click row to our item schema.
+
 
 // var Keen = require('keen.io');
 
@@ -56,8 +58,16 @@ exports.uploadcsv = function(req, res, next){
         data=data.slice(43)
       }
 
-      csvConverter.fromString(data, function(err, json){
+      csvConverter.fromString(data, function(err, json,b){
           if (err) return next(err);
+
+          console.log(json,b)
+          if (!json || json.length===0){
+            return res.send({
+                   data:[]
+                  ,status: 'parse_error'
+                });            
+          }
 
           //we need logic to figure out when something gets parsed correctly.
           var keys = Object.keys(json[0])
@@ -98,7 +108,6 @@ exports.uploadcsv = function(req, res, next){
               , csvParser:parser.keyString
               , session:req.sessionID?req.sessionID:null
               }
-              console.log(data)
             utils.keenAnalytics('user_event', data);///Send data to the analytics engine
             return res.send({
                  data:json

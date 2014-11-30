@@ -48,7 +48,6 @@
         columnPosition[value]=itemsSchema[value].columnPosition
         displayName[value]=itemsSchema[value].displayName
         colWidth[value]=itemsSchema[value].colWidth
-
       });
 
       var result = {
@@ -70,21 +69,22 @@
   function getCreateController(model) {
     return function (req, res) {
       var item={},
-          key;
+          key,
+          index;
       for (key in req.body) {
         if (key!=='_id' && key!=='createdAt'){
           item[key] = req.body[key];
         }
       }
       var newItem = req.article.items.push(item);
-
       req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
-      console.log(req.article, 'total')
 
       req.article.save(function(err){
           if (!err) {
+            //res.send(200)
             res.send( req.article.items[newItem-1].toJSON() );
           } else {
+            console.log(err)
             res.send(500,errMsg(err));
           }
       })
@@ -116,7 +116,6 @@
       req.article.items=req.body;   
 
       req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
-      console.log(req.article, 'total')  
 
       req.article.save(function(err){
           if (!err) {
@@ -144,7 +143,6 @@
       }
 
       req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
-      console.log(req.article, 'total')   
 
       req.article.save(function(err){
           if (!err) {
@@ -189,8 +187,11 @@
           items=req.article.items;
       items.pull(req.idt)
       
-      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
-      console.log(req.article, 'total');
+      if (req.article.total>0){ //if there is nothing in the array it is a total of Zero.
+        req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      }else{
+        req.article.total=0;
+      }
 
       req.article.save(function(err){
           if (!err) {
@@ -208,35 +209,27 @@
   //
   function  getItemAddController(model) {
     return function (req, res) {
-      var key=5;
+      var key,
+          item={};
 
-
-      req.article.update({ "$push": {items:{
+      for (key in req.body) {
+        if (key!=='_id' && key!=='createdAt'){
+          item[key] = req.body[key];
+        }
+      }
+      req.article.update({ "$push": {items:{ ///mongoose has no $positon support so we just need to add the item and refresh the grid
           $each:[{}],
-          $position: 2
+          $position: item.index && !isNaN(Number(item.index))?Number(item.index):0
           }
          }
         },
         function(err){
-            console.log('add',err, req.article.items.length)
-
           if (!err) {
             res.send(204,'ok');
           } else {
             res.send(500,errMsg(err));
           }
         });
-
-      //req.article.update({ "$push": { "items": { "$each": [{}], "$position": req.idt } } });
-
-      // req.article.save(function(err){
-      //     if (!err) {
-      //       res.send(204);
-      //     } else {
-      //       res.send(500,errMsg(err));
-      //     }
-      // })
-
     };
   }
 
