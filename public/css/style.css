@@ -741,6 +741,11 @@ div.tags span.tag {
     line-height: 80px;
     text-align: center;
     width: 100%; }
+  .dropzone .text {
+    bottom: 0px;
+    right: 0px;
+    position: absolute;
+    font-size: 1em; }
 
 .meta {
   padding-top: 1.25em; }

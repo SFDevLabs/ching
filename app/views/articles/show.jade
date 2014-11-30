@@ -205,11 +205,7 @@ block content
                 span.amount
       
       
-      
-      .row#preview-area
-        .col-md-12
-          #preview
-          a(href='')
+
       - if (req.user && req.article && req.article.user.id===req.user.id)
         hr
         .row
@@ -224,18 +220,24 @@ block content
                   | other accounting apps
               .csv-drop-file
                 p
-                  input.file-uploader(id="fileupload", type="file", name="files[]", multiple)
+                  input.file-uploader#fileuploadcsv(type="file", name="files[]", multiple)
                 #dropzone.dropzone
                   span.typcn.typcn-folder-open
-                  .muted
-                    | Drag and drop files here.
+                  .muted.text
+                    | Drag and drop files here
                 div(id="files", class="files")
               .csv-open-table-window
+                p
+                  | We have parsed your CSV!  You can 
+                  strong
+                    |cut and paste 
+                  | items into your invoice with the link below.
+                  
                 form(target="_blank" action='/tableview' method="post")
                   input(type="hidden", name="_csrf", value="#{csrf_token}")
-                  input(type='hidden' value='[["2009",0,2941,4303,354,5814],["2010",5,2905,2867,412,5284],["2011",4,2517,4822,552,6127],["2012",2,2422,5399,776,4151]]' name='csvdata')
+                  input.data(type='hidden' value='[["2009",0,2941,4303,354,5814],["2010",5,2905,2867,412,5284],["2011",4,2517,4822,552,6127],["2012",2,2422,5399,776,4151]]' name='csvdata')
                   button.btn(type='submit')
-                    |csvtest
+                    | See your data
               .csv-paste-text
                 textarea#csv-ajax(placeholder="paste csv text here!")
                 a.csv-toggle.btn.subtle(onclick="post()") Submit
@@ -247,11 +249,11 @@ block content
                 | Add Images
               .csv-drop-file
                 p
-                  input.file-uploader(id="fileupload", type="file", name="files[]", multiple)
+                  input.file-uploader#fileuploadimage( type="file", name="files[]", multiple)
                 #dropzoneimage.dropzone
                   span.typcn.typcn-folder-open
-                  .muted
-                    | Drag and drop Images here. 
+                  .muted.text
+                    | Drag and drop Images here
                 div(id="files", class="files")
 
               //- .col-md-6

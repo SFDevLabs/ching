@@ -112,13 +112,20 @@ button.error {
   display: block; }
 #csv-file.visible .csv-drop-file {
   display: none; }
+#csv-file .csv-open-table-window {
+  margin-top: 10px;
+  display: none; }
+  #csv-file .csv-open-table-window.visible {
+    display: block; }
 
 .file-uploader {
   -webkit-transition: background-color 0.5s ease-in-out;
-  transition: background-color 0.5s ease-in-out; }
+  transition: background-color 0.5s ease-in-out;
+  border-radius: 5px;
+  padding: 5px 0px 2px 0px;
+  margin: 0px; }
   .file-uploader.highlight {
-    background-color: rgba(255, 155, 0, 0.5);
-    border-radius: 5px; }
+    background-color: rgba(255, 155, 0, 0.5); }
 
 #csv-ajax {
   width: 100%;
@@ -196,3 +203,17 @@ button.error {
     padding-top: 3px;
     padding-bottom: 3px;
     font-weight: 500; }
+
+#grid thead th:nth-child(11) {
+  display: none; }
+#grid tbody tr :nth-child(11) {
+  font-size: 1.5em;
+  display: block;
+  background-color: rgba(255, 255, 255, 0);
+  border: none; }
+  #grid tbody tr :nth-child(11):hover * {
+    display: inline; }
+  #grid tbody tr :nth-child(11) * {
+    display: none; }
+#grid tbody td.visible * {
+  display: inline; }
