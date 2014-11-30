@@ -11,18 +11,16 @@ var mongoose = require('mongoose')
   , extend = require('util')._extend
   , fs    = require('fs')
   , Converter=require("csvtojson").core.Converter
-  , _ = require("underscore")
-  , pdfDocument = require( "pdfkit")
-  , itemsSchema = require('../models/article').itemsSchema
   , sendEmail = utils.sendEmail
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
   , domain = config.rootHost
   , emailTmplPaid = fs.readFileSync('./app/views/email/paid.html','utf8')
   , Mustache = require('mustache')
-  , async = require('async');
+  , async = require('async')
+  , itemsSchema = require('../models/article').itemsSchemaExport();
 
-   itemsSchema['click']={format: 'buttons', typeString:'string',columnPosition:9, displayName:'Clicky', colWidth:50};//Adding a click row to our item schema.
+   //itemsSchema['click']={format: 'buttons', typeString:'string',columnPosition:9, displayName:'Clicky', colWidth:50};//Adding a click row to our item schema.
 
 
 // var Keen = require('keen.io');
@@ -834,19 +832,7 @@ exports.destroy = function(req, res){
 // }
 
 
-
-var formateDate = function(d){
-  var string = '';
-  string+=(d.getMonth()+1)+'/' // Returns the month
-  string+=d.getDate()+'/' // Returns the date
-  string+=d.getFullYear() // Returns the year
-  return string;
-}
-
 exports.pdf = function(req, res){
-    // Create PDF
-    // I know I need to commenbt this so here I go!
-    // 
     var data={
         is_owner:req.article.user.id==req.user.id
       , article_owner:req.article.user.id
@@ -855,126 +841,7 @@ exports.pdf = function(req, res){
       , session:req.sessionID?req.sessionID:null
     }
     utils.keenAnalytics('user_event', data);
-
-    var doc = new pdfDocument();
-    var m=doc.font('Helvetica', 12)
-    var drawRows = function(rows, margin,rowHeight,colPadding){
-        var keys = _.keys(itemsSchema).sort(function(key,keyTwo){
-              return itemsSchema[key].columnPosition>itemsSchema[keyTwo].columnPosition
-            });
-            //console.log(keys)
-
-        var rowWidthIndexHeader = 0;
-        keys.forEach(function(key, colIndex){
-
-            //var colIndex = itemsSchema[key].columnPosition,
-            var rowWidth =itemsSchema[key].printColWidth;
-                //console.log(key,colIndex,rowWidth,rowWidthIndexHeader)
-
-            m.fillColor('#888888').text(key?String(key):''
-              , margin.left+rowWidthIndexHeader
-              , margin.top 
-              , {width: rowWidth,
-                  height:rowHeight
-                });
-            rowWidthIndexHeader+=(rowWidth+colPadding);
-
-        });
-
-        rows.forEach(function(rowObj, rowIndex){
-            var rowWidthIndex = 0;
-
-              keys.forEach(function(key){
-                  var colIndex = itemsSchema[key].columnPosition,
-                      rowWidth =itemsSchema[key].printColWidth,
-                      content;
-
-                  if (key==='date'){
-                    content = rowObj[key]?formateDate(rowObj[key]):'';
-                  }else if(['cost','total'].indexOf(key)!==-1){
-                    //content = rowObj[key]?rowObj[key].toFixed(2):'';
-                    content = rowObj[key]?utils.formatCurrency(rowObj[key]):'';
-                  }else if (['tax1','tax2','qty'].indexOf(key)!==-1){
-                    content = rowObj[key]?rowObj[key].toFixed(2):'';
-                    content = content?String(content):'';
-                  }else{
-                    content = rowObj[key]?String(rowObj[key]):''
-                  }
-
-                  
-                  doc.fillColor('black').text(
-                    content, 
-                    margin.left+rowWidthIndex, 
-                    (margin.top+rowHeight)+(rowHeight*rowIndex), 
-                    {width: rowWidth,
-                     height:rowHeight
-                   });
-                   rowWidthIndex+=(rowWidth+colPadding); ///almost pull objects and sort them
-
-              }) 
-
-        });
-         
-    }
-
-
-
-     
-
-   doc.font('Helvetica', 30).text('Invoice',{align: 'center'})
-     
-   doc.font('Helvetica', 15).fillColor('#787878 ').text('#'+utils.formatInvoiceNumber(req.article.number))
-   doc.text('Name: '+req.article.user.firstname+" "+req.article.user.lastname)
-   if (req.article.user.organization){
-     doc.text('Organization: '+req.article.user.organization);
-   }
-   
-   if (req.article.invoicedOn){   
-    doc.text('Invoiced On: '+ formateDate(req.article.invoicedOn));
-   }   
-
-   
-   doc.moveTo(0, 185)
-      .lineTo(700, 185)
-      .strokeColor('#eee')
-      .lineWidth(5)
-      .stroke() 
-
-    var articles = req.article.items
-      , perPage = 15
-      , rowHeight = 45
-      , colPadding = 5
-      , margin = {left:50,top:50}
-      , perPageFirst = 10
-      , marginFirst = {left:50,top:200}
-      , lastIndex = 0
-      , nextIndex = articles.length<=perPageFirst?articles.length:perPageFirst;
-    
-    doc.font('Helvetica', 12).fillColor('black')
-    req.article.items.forEach(function(val, i){
-
-
-        if (i==lastIndex){
-          //drawRows(req.article.items.slice(i,perPageFirst),marginFirst, rowHeight, colPadding);
-        //}else if ( nextIndex == i ){
-          if(lastIndex!==0){doc.addPage()};
-          drawRows(req.article.items.slice(lastIndex,nextIndex),lastIndex!==0?margin:marginFirst, rowHeight, colPadding);
-          nextIndex+=perPage;
-          lastIndex=(nextIndex-perPage)
-        }
-
-    });
-   doc.addPage()
-   doc.font('Helvetica', 18).text('Total: '+utils.formatCurrency(req.article.total),{align: 'right'})
-
-    // req.article.items.forEach(function(rowObj, rowIndex){
-
-    //       _.keys(itemsSchema).forEach(function(key){
-    //           var colIndex = itemsSchema[key].columnPosition;
-    //           doc.text(rowObj[key]?String(rowObj[key]).slice(0,5):'', 40+40*colIndex, 60+30*rowIndex );
-    //       })  
-
-    // });
+    doc = utils.pdf(req, itemsSchema)
 
     // Write headers
     // 
@@ -990,55 +857,5 @@ exports.pdf = function(req, res){
     // Pipe generated PDF into response
     doc.pipe(res);
     doc.end();
-    //doc=null;
-
-
-  // // create a document and pipe to a blob
-  // var doc = new PDFDocument();
-  // //var stream = doc.pipe(blobStream());
-
-  // // draw some text
-  // doc.fontSize(25)
-  //    .text('Here is some vector graphics...', 100, 80);
-     
-  // // some vector graphics
-  // doc.save()
-  //    .moveTo(100, 150)
-  //    .lineTo(100, 250)
-  //    .lineTo(200, 250)
-  //    .fill("#FF3300");
-     
-  // doc.circle(280, 200, 50)
-  //    .fill("#6600FF");
-     
-  // // an SVG path
-  // doc.scale(0.6)
-  //    .translate(470, 130)
-  //    .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
-  //    .fill('red', 'even-odd')
-  //    .restore();
-     
-  // // and some justified text wrapped into columns
-  // doc.text('And here is some wrapped text...', 100, 300)
-  //    .font('Times-Roman', 13)
-  //    .moveDown()
-  //    .text(lorem, {
-  //      width: 412,
-  //      align: 'justify',
-  //      indent: 30,
-  //      columns: 2,
-  //      height: 300,
-  //      ellipsis: true
-  //    });
-
-  // doc.pipe(res)
-
-     
-  // // end and display the document in the iframe to the right
-  // doc.end();
-  // stream.on('finish', function() {
-  //   iframe.src = stream.toBlobURL('application/pdf');
-  // });
-
 
 }

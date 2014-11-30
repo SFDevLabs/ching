@@ -9,6 +9,8 @@ var express = require('express')
   , winston = require('winston')
   , helpers = require('view-helpers')
   , pkg = require('../package.json')
+  , utils = require('../lib/utils')
+  , itemsSchema = require('../app/models/article').itemsSchema
   , utils = require('../lib/utils');
 
 var env = process.env.NODE_ENV || 'development'

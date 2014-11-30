@@ -9,7 +9,9 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , utils = require('../../lib/utils')
   , Imager = require('imager')
-  , imagerConfig = require(config.root + '/config/imager.js');
+  , imagerConfig = require(config.root + '/config/imager.js')
+  , _ = require("underscore");
+
 /**
  * Getters
  */
@@ -49,8 +51,6 @@ var itemsSchema = {
     total:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:8, displayName:'Total', colWidth:100, printColWidth:120},
   }
 
-mongoose.model('Items', itemsSchema)
-
   var viewersSchema = new Schema({
     user: {type : Schema.ObjectId, ref : 'User'},
     createdAt: { type : Date, default : Date.now },
@@ -59,7 +59,9 @@ mongoose.model('Items', itemsSchema)
     user: {type : Schema.ObjectId, ref : 'User'},
     viewedAt: { type : Date, default : Date.now },
   })
-  exports.itemsSchema = itemsSchema;
+  exports.itemsSchemaExport = function(){
+    return _.extend({}, itemsSchema);
+  }
 
 var nextNumber = function(){
   return 1;

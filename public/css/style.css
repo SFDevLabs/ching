@@ -14,7 +14,8 @@ body {
   font-size: 1.5em;
   line-height: 1em; }
 .invoice-bar .btn {
-  margin-top: 5px; }
+  margin-top: 5px;
+  margin-right: 5px; }
 
 .container {
   position: relative; }
