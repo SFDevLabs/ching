@@ -653,7 +653,8 @@ exports.edit = function (req, res) {
  * Pay Invoice
  */
 exports.payed = function(req, res){
-  var article = req.article
+  var article = req.article,
+      subject;
 
   //article = extend(article, req.body)
   //article.paymentVerified=true;
@@ -669,12 +670,17 @@ exports.payed = function(req, res){
           , invoice_num: utils.formatInvoiceNumber(article.number)
           , action_href: domain+'/articles/'+article.id
         };
+        if (article.paymentVerifiedOn){
+          subject = 'Your invoice payment has been verified.'
+        }else{
+          subject = 'Your invoice has been marked as payed!'
+        }
   sendEmail({to: article.user.email
           , fromname : article.user.firstname +' '+article.user.lastname
           , from: 'noreply@ching.io'
           , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been paid.'
           , html : Mustache.render(emailTmplPaid, views)
-          , message: 'Your invoice has been marked as payed!'
+          , message: message
         },
   function(err, json){
     if (err){console.log('Email Error')};
