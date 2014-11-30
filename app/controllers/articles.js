@@ -130,20 +130,11 @@ exports.uploadImage = function(req, res){
   //make this an array of files console.log(req.files.files[0].path)
 
 
-  article.uploadAndSave(req.files.files[0], function(err) {
+  article.uploadAndSave(req.files.files[0], req.user.id, function(err) {
       if (!err) {
-       return res.send(err)
+       return res.send(article.images)
        // return res.redirect('/articles/' + article._id)
       }
-        res.send(err)
-
-      // console.log(err)
-
-      // res.render('articles/share', {
-      //   title: 'Edit ' + req.article.title,
-      //   article: article,
-      //   error: err?utils.errors(err.errors || err):null
-      // });
     });
 
 }
@@ -662,6 +653,16 @@ exports.payed = function(req, res){
   if (req.article.user.id==req.user.id){
     article.paymentVerifiedOn=new Date();
   }
+
+  if (req.body.body){
+    article.addComment(req.user, req.body, function (err) {
+      //hacky logic to account for tookens
+      redirect=req.token?'/articles/'+ article.id+'/token/'+req.token:'/articles/'+ article.id;
+      if (err) return res.render('500')
+    })  
+  }
+
+
   article.paidOn=new Date();
   var views={
             user_full_name: article.user.firstname +' '+ article.user.lastname
@@ -669,6 +670,7 @@ exports.payed = function(req, res){
           , organization: article.user.organization
           , invoice_num: utils.formatInvoiceNumber(article.number)
           , action_href: domain+'/articles/'+article.id
+          , notes : req.body.body?'Note Added: \"'+req.body.body+'\"':''
         };
         if (article.paymentVerifiedOn){
           subject = 'Your invoice payment has been verified.'
@@ -680,7 +682,7 @@ exports.payed = function(req, res){
           , from: 'noreply@ching.io'
           , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been paid.'
           , html : Mustache.render(emailTmplPaid, views)
-          , message: message
+          , message: subject
         },
   function(err, json){
     if (err){console.log('Email Error')};
