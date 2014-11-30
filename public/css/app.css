@@ -20,6 +20,14 @@
     .remove-sidebar tr:hover td a {
       display: block; }
 
+.images-grid .image {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  background-color: #eee;
+  display: inline-block;
+  margin: 5px; }
+
 #wrap {
   min-height: 100%;
   height: auto;

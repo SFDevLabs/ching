@@ -35,7 +35,7 @@
 
       this.timeZoneOffset=new Date().getTimezoneOffset()/60
       cars.fetch();
-      
+
     },formatCurrency: function(num) {
         var p = num.toFixed(2).split(".");
         return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
@@ -249,7 +249,8 @@
               if (r){
                 cars.remove(cars.at(y1));
               }
-              
+              App.handsonObj.deselectCell()//We are interpecting the script so we need to deselect and kill the class.
+
             } else if (clickedTag.length!==0 && clickedTag.hasClass('add')){
               $.post(aId+'/api/add',{index:y1});
               cars.fetch();
@@ -444,12 +445,10 @@ var setterFactor=function(attr){
 
 
   $("#add_car_time").click(function () {
-    //cars.add({_blank:true});
     cars.add({type:'Time'});
 
   })
   $("#add_car_item").click(function () {
-    //cars.add({_blank:true});
     cars.add({type:'Item'});
 
   })
@@ -582,7 +581,27 @@ $('#fileuploadimage').fileupload({
         ,previewMaxWidth: 100
         ,previewMaxHeight: 100
         ,previewCrop: true
-    })
+    }).on('fileuploaddone', function (e, data) {
+        
+          
+        //This is totally hack logic duplicated in show to render the photos you upload to the site.
+        $('.images-grid').html('')
+        data.result.forEach(function(val,i){
+          var imgthumb = $('<img>').attr('src',val.cdnUri+'/thumb_'+val.file);
+          var image = $('<a class="image">')
+              .attr('data-src',val.cdnUri+'/detail_'+val.file)
+              .attr('href','javascript:void(0)')
+              .append(imgthumb)
+          $('.images-grid')
+            .prepend(image);
+
+          if (val.itemReference){
+            var b=cars.findWhere({_id:val.itemReference})
+            if (b)
+              $('.images-grid').prepend(b.get('item'));
+          }          
+        })
+     });
 
 ///turn on date picker
 $('.date').datepicker();

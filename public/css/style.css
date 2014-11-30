@@ -629,6 +629,9 @@ header .middle-buttons {
     .modal .modal-wrap.col-lg-8 {
       left: 50%;
       margin-left: -33.33333%; }
+    .modal .modal-wrap.col-lg-9 {
+      left: 45%;
+      margin-left: -33.33333%; }
 
 body.show {
   background: #f5f5f5; }

@@ -8,14 +8,8 @@ module.exports = {
         
       },
       resizeAndCrop: {
-        thumb: {resize: "100x100", crop: "800x600"},
+        thumb: {resize: "133x133", crop: "100x100"},
         mini: {resize: "200x150", crop: "800x600"}
-      }
-    },
-
-    gallery: {
-      crop: {
-        thumb: "100x100"
       }
     }
   },
@@ -32,7 +26,7 @@ module.exports = {
     S3: {
       key: 'AKIAITZFPMBD2GIZM5PA',
       secret: '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',
-      bucket: 'chingapp',
+      bucket: 'chingimgs',
      // region: 'US Standard'
     }
   },

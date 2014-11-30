@@ -250,7 +250,19 @@ block content
                 a.csv-toggle.btn.subtle(onclick="post()") Submit
         hr
         .row
-            .col-md-6
+            .col-md-6.images-grid
+              - each image in article.images
+                //- span=image.file
+                //- span=image.cdnUri
+                //- span=image.user
+                //-span=image.itemReference
+
+                //- a(href=image.cdnUri+'/mini_'+image.file)
+                //-   | link
+
+                a.image(href="javascript:void(0)", data-src=image.cdnUri+'/detail_'+image.file)
+                  img(src=image.cdnUri+'/thumb_'+image.file)
+
             .col-md-6
               h3 
                 | Add Images
@@ -321,6 +333,18 @@ block content
             include ../comments/form
 
 block subfoot
+
+
+  .modal.image-modal
+    .container
+      .modal-wrap.col-lg-9
+        span.close-button
+          span.typcn.typcn-delete
+        .modal-header
+        
+        .row.center
+          img
+        hr
 
   .modal.csv-instrucions
     .container
@@ -398,7 +422,7 @@ block subfoot
           input(type="hidden", name="_csrf", value="#{csrf_token}")
           .form-group
             label.control-label(for='desc') Add Comment
-            textarea.form-control#desc(rows="5", name="description", placeholder="Add a note to this action.")
+            textarea.form-control#desc(rows="5", name="body", placeholder="Add a note to this action.")
           .form-group
             button.btn(type='submit')
               span.typcn.typcn-mail=button
@@ -549,22 +573,20 @@ block subfoot
             dateDiv.datepicker('setDate',myDate);
       })
 
+      $("body").on("click", ".image", function() {
+        var src = $(this).attr('data-src')
+        $(".image-modal img").attr("src",src)
+        $(".image-modal").fadeIn();
+      });
       $("body").on("click", ".btn-csv-instrucions", function() {
         $(".csv-instrucions").fadeIn();
       });
-
-
-
-
       $("body").on("click", ".btn-confirm-payed", function() {
         $(".confirm-payed-modal").fadeIn();
       });
       $("body").on("click", ".btn-payed", function() {
         $(".payed-modal").fadeIn();
       });
-
-
-
       $("body").on("click", ".btn-confirm-send", function() {
         $(".confirm-send-modal").fadeIn();
       });
@@ -585,6 +607,11 @@ block subfoot
           }
       });
 
+
+
+      $("body").on("click", ".image-modal .close-button", function() {
+        $(".image-modal").fadeOut();
+      });
       $("body").on("click", ".payed-modal .close-button", function() {
         $(".payed-modal").fadeOut();
       });

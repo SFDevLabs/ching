@@ -48,6 +48,9 @@ var itemsSchema = {
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:0, displayName:'Description', colWidth:195, printColWidth:80},
     total:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:8, displayName:'Total', colWidth:100, printColWidth:120},
   }
+
+mongoose.model('Items', itemsSchema)
+
   var viewersSchema = new Schema({
     user: {type : Schema.ObjectId, ref : 'User'},
     createdAt: { type : Date, default : Date.now },
@@ -69,6 +72,13 @@ var ArticleSchema = new Schema({
     user: {type : Schema.ObjectId, ref : 'User'},
     createdAt: { type : Date, default : Date.now },
     type: {type : String, default : '', trim : true},
+  }],
+  images:[{
+    user: {type : Schema.ObjectId, ref : 'User'},
+    createdAt: { type : Date, default : Date.now },
+    file: {type : String, default : '', trim : true},
+    cdnUri: {type : String, default : '', trim : true},
+    itemReference: {type : String, default:null}
   }],
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
@@ -169,7 +179,7 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  uploadAndSave: function (images, cb) {
+  uploadAndSave: function (images, userId, cb) {
           //console.log(images)
 
     //if (!images || !images.length) return this.save(cb);
@@ -183,13 +193,13 @@ ArticleSchema.methods = {
       console.log(err)
       if (err) return cb(err);
       imager.upload([images], function (err, cdnUri, files) {
-
-        console.log(err, cdnUri, files)
-
         if (err) return cb(err)
         if (files.length) {
-          self.image = { cdnUri : cdnUri, files : files }
+          files.forEach(function(val, i){
+            self.images.push({ cdnUri : cdnUri, file : val, user:userId})
+          })
         }
+        console.log(self.images)
         self.save(cb)
       }, 'article')
     })
@@ -309,6 +319,7 @@ ArticleSchema.statics = {
       .populate('comments.user')
       .populate('viewers.user', 'lastname email firstname organization')
       .populate('views.user', 'lastname email firstname organization')
+      .populate('images.user', 'lastname email firstname organization')
       .exec(cb)
   },
 
