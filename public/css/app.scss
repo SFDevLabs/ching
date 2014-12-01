@@ -280,9 +280,17 @@ button.error {
       color: #BEBEBE;
       font-weight: 400;
     }
+
+
     tr:nth-child(even) td{
       background-color:#eee;
 
+    }
+
+    tr td.htInvalid{
+      -webkit-transition: background 0.75s ease;
+      transition: background 0.75s ease;
+      background-color: #ff4c42;
     }
     .htAutocompleteArrow{
       color:#BEBEBE

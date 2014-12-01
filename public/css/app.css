@@ -195,6 +195,10 @@ button.error {
     font-weight: 400; }
   .handsontable .htCore tbody tr:nth-child(even) td {
     background-color: #eee; }
+  .handsontable .htCore tbody tr td.htInvalid {
+    -webkit-transition: background 0.75s ease;
+    transition: background 0.75s ease;
+    background-color: #ff4c42; }
   .handsontable .htCore tbody .htAutocompleteArrow {
     color: #BEBEBE; }
   .handsontable .htCore tbody .htAutocomplete {

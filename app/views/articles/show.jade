@@ -28,7 +28,7 @@ block main
               span.typcn.typcn-bell
                 |  Mark as Payed
           
-          -if(article.paidOn && !article.paymentVerifiedOn)
+          -if(article.paidOn && !article.paymentVerifiedOn && req.article.user.id===req.user.id)
             button.btn.btn-confirm-payed
               span.typcn.typcn-bell
                 |  Confirm Payment

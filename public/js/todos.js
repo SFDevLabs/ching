@@ -90,10 +90,11 @@
     qtyRender: function(instance, td, row, col, prop, value, cellProperties){
 
       var type = cars.at(row).get('type');
-      if (type && type.toLowerCase()==='time' && value!==null && value!==undefined){//Null changing and checking for time formating
+      var valNumber = Number(value)
+      if (type && type.toLowerCase()==='time' && value!==null && value!==undefined && !isNaN(valNumber)){//Null changing and checking for time formating
         cellProperties.valid=true;
         
-        var totalSeconds = Number(value)*3600;
+        var totalSeconds = Number(valNumber)*3600;
 
         var hours = Math.floor(totalSeconds / 3600);
         totalSeconds %= 3600;
@@ -124,7 +125,7 @@
           if (cars.format[i]==='dropdown'){
             columns[pos] =
             {
-              data:setterFactor(i) 
+                data:setterFactor(i) 
               , type:cars.format[i]
               , source: cars.dropdownOptions[i]
             }
@@ -134,7 +135,7 @@
                   data:function(){return '<a class="grid-buttons add" href="javascript:void(0)"><i class="typcn typcn-plus"></i></a><a class="grid-buttons delete" href="javascript:void(0)"><i class="typcn typcn-delete-outline"></i></a>'}//setterFactor(i)
                   , type:this.handsonType( cars.schema[i])
                   , format:cars.format[i]
-                  //, dateFormat:cars.format[i]
+                  , dateFormat:cars.format[i]
                   //, source: cars.dropdownOptions[i]
                   , renderer:'html'
                   , readOnly: true
@@ -144,7 +145,7 @@
                   data:setterFactor(i)
                   , type:this.handsonType( cars.schema[i])
                   , format:cars.format[i]
-                  //, dateFormat:cars.format[i]
+                  , dateFormat:cars.format[i]
                   //, source: cars.dropdownOptions[i]
                 }
           }
