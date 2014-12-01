@@ -126,7 +126,12 @@ select {
 
 .row {
   clear: both;
+  &.last-row{
+    margin-bottom:15px;
+  }
 }
+
+
 
 body.landing {
   background: $block;
@@ -817,14 +822,6 @@ header{
     }
   }
 
-  .chart-wrapper {
-    height: 0px;
-    margin-bottom: 2.5em;
-    overflow: hidden;
-    #area-chart {
-      background: #f7f7f7;
-    }
-  }
   .all {
     color: #000;
   }
@@ -872,10 +869,10 @@ header{
 }
 
 .paid {
-  color: $actionbg;
-  border-bottom-color: $actionbg;
+  color: #02C3A6;
+  border-bottom-color: #02C3A6;
   .status {
-    background: $actionbg;
+    background: #02C3A6;
   }
 }
 

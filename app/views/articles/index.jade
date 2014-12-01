@@ -26,10 +26,10 @@ block content
           h2.left=title
         .midle-row
           .middle-buttons
-            //- button.btn.btn-default(onclick="$(\'.chart-wrapper\').height(\'100%\')")
-            //-   i.typcn.typcn-chart-bar
-            //- button.btn.btn-default.hidden(onclick="$(\'.chart-wrapper\').height(\'0\')")
-            //-   i.typcn.typcn-chart-bar-outline
+            button.btn.btn-default(onclick="$(\'.chart-wrapper\').height(\'100%\')")
+              i.typcn.typcn-chart-bar
+            button.btn.btn-default.hidden(onclick="$(\'.chart-wrapper\').height(\'0\')")
+              i.typcn.typcn-chart-bar-outline
         .right-row
           form.input-group.search
               input.form-control(type='text' name="all" value=query)
@@ -112,7 +112,7 @@ block content
                 p.date
                   | Created: 
                   span.dim= formatDatetime(article.createdAt)
-        .row
+        .row.last-row
           .right
             | Total Records: 
             strong.muted
@@ -134,7 +134,7 @@ block content
                   a(href="?page="+(page+1))
                     i.typcn.typcn-chevron-right
 
-      - else if(query.length)
+      - else if(query && query.length)
         .container.list
           header.row
             h2.gray No Results.

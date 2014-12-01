@@ -63,6 +63,8 @@ button, input, textarea, select {
 
 .row {
   clear: both; }
+  .row.last-row {
+    margin-bottom: 15px; }
 
 body.landing {
   background: #f0f0f0; }
@@ -532,11 +534,6 @@ header .middle-buttons {
     display: inline-block;
     margin-left: 1.25em;
     font-weight: 600; }
-.list .chart-wrapper {
-  margin-bottom: 2.5em;
-  overflow: hidden; }
-  .list .chart-wrapper #area-chart {
-    background: #f7f7f7; }
 .list .all {
   color: #000; }
 .list .article {
@@ -571,10 +568,10 @@ header .middle-buttons {
     background: #c4c154; }
 
 .paid {
-  color: #02c34e;
-  border-bottom-color: #02c34e; }
+  color: #02C3A6;
+  border-bottom-color: #02C3A6; }
   .paid .status {
-    background: #02c34e; }
+    background: #02C3A6; }
 
 .verified {
   color: #02c34e;

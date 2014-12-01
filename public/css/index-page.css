@@ -1,11 +1,14 @@
-html, body, header {
-  height: 100%; }
-
-#area-chart {
-  font-size: 10px; }
-  #area-chart .axis path, #area-chart .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges; }
-  #area-chart .browser text {
+.chart-wrapper {
+  height: 0px;
+  margin: 2em 0px;
+  overflow: hidden; }
+  .chart-wrapper #area-chart {
+    border-radius: 5px;
+    background: #f7f7f7;
+    font-size: 14px; }
+    .chart-wrapper #area-chart .axis path, .chart-wrapper #area-chart .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges; }
+  .chart-wrapper .browser text {
     text-anchor: end; }

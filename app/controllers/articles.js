@@ -18,7 +18,8 @@ var mongoose = require('mongoose')
   , emailTmplPaid = fs.readFileSync('./app/views/email/paid.html','utf8')
   , Mustache = require('mustache')
   , async = require('async')
-  , itemsSchema = require('../models/article').itemsSchemaExport();
+  , itemsSchema = require('../models/article').itemsSchemaExport()
+  , _ = require("underscore");
 
    //itemsSchema['click']={format: 'buttons', typeString:'string',columnPosition:9, displayName:'Clicky', colWidth:50};//Adding a click row to our item schema.
 
@@ -59,7 +60,7 @@ exports.uploadcsv = function(req, res, next){
       csvConverter.fromString(data, function(err, json,b){
           if (err) return next(err);
 
-          console.log(json,b)
+          //Check to makes sure csv to parsed.  Bink out if not.
           if (!json || json.length===0){
             return res.send({
                    data:[]
@@ -67,9 +68,8 @@ exports.uploadcsv = function(req, res, next){
                 });            
           }
 
-          //we need logic to figure out when something gets parsed correctly.
-          var keys = Object.keys(json[0])
-              ,parser = csvParse.parseRules(keys);
+          var keys = Object.keys(json[0]) //these are the keys for the particular csv you uploaded
+              ,parser = csvParse.parseRules(keys); //This will get us a parser for that unique keys.  This accesses a library of parse rules.
 
             
           if (parser.mapper){
@@ -79,8 +79,6 @@ exports.uploadcsv = function(req, res, next){
           } else {
             convertedJson = json
           }    
-
-
          
           if (parser.mapper){ //This check to see if we have keys and can parse the CSV into the article model.
             var data = {
@@ -91,6 +89,11 @@ exports.uploadcsv = function(req, res, next){
               }
             utils.keenAnalytics('user_event', data);///Send data to the analytics engine
             req.article.items=req.article.items.concat(convertedJson)//We have the parsed and mapped data now to add it to the model!
+            
+            ///culculate the new total  this might be abstracted into a
+            var total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+            req.article.total=total;
+
             req.article.save(function(err){
               if (err) return next(err);     
               return res.send({
@@ -386,7 +389,7 @@ req.param('recipient')
           regex=new RegExp(regexPart+'.*','i') 
           qRegex=regex;
 
-          console.log(regexPart,regex,'regex','dd'.search(regex))
+          //console.log(regexPart,regex,'regex','dd'.search(regex))
 
     }
 
@@ -406,7 +409,7 @@ req.param('recipient')
               var uID=users.map(function(val){ return val.id})
             
               var viewerQueary = {viewers:{$elemMatch:{user: {$in:uID} } }};
-              console.log(err, users)
+              //console.log(err, users)
               //hacky parmeter stuff
               
               if (users[0] && q && q.length>0){
@@ -435,14 +438,14 @@ req.param('recipient')
             options.criteria.$or.push({total:num})
           }
 
-          console.log(options.criteria)
+          //console.log(options.criteria)
           // if (asyncResult.users && asyncResult.users.length===0){
           //    asyncResult.list=[];
           //    callback(null, asyncResult)
           // }
           //else
           Article.list(options, function(err, articles) {
-            console.log(err)
+           // console.log(err)
             
             asyncResult.list=articles;
             callback(null, asyncResult);
@@ -477,11 +480,9 @@ req.param('recipient')
     ],
     function(err, results) {
         // results is now equal to: {one: 1, two: 2}
-        console.log(results.length)
 
    
 
-        
 
 
           // console.log(count)
@@ -830,6 +831,112 @@ exports.destroy = function(req, res){
 //     // res.redirect('/articles')
 //   })
 // }
+
+exports.graph=function(req, res){
+    var userID=req.user?req.user._id:null
+      , options={};
+
+      //hard coded data
+    var data = [{"date":"11-Oct-14","IE":"41.95","Firefox":"25.78","Safari":"8.79","Opera":"1.25"}
+    ,{"date":"11-Oct-15","IE":"37.64","Firefox":"25.96","Safari":"10.16","Opera":"1.39"}
+    ,{"date":"11-Oct-16","IE":"37.27","Firefox":"25.98","Safari":"10.59","Opera":"1.44"}
+    ,{"date":"11-Oct-17","IE":"42.74","Firefox":"25.01","Safari":"0","Opera":"0"}];
+
+  options.criteria={
+    user: userID,
+    //createdOn: {$gt :new Date()}, //This will limit the qeary to non paid
+    //paidOn: null //This will limit the qeary to non paid
+    
+    //$or:[{createdOn: {$gt :new Date()}}, {paidOn: null}]  //This will limit the qeary to non paid
+
+
+    //number:7 //search for a number
+    //viewers: {$elemMatch:[{user:'541479be4b4b3f00000603db'}]}  //find a viewer
+    //invoicedOn: null //find drafts
+    //paidOn: null //find unpaid
+    //dueOn: {$lt :new Date()}  //find overdue
+
+    //$or:[{dueOn: {$gt :new Date()} }, {dueOn: null}]
+    //paymentVerified: true //find veridfied payment
+  }
+
+    Article.graph(options, function(err, result){
+
+      //console.log(result)
+
+      //Currently limited queary to toal's and date.  We can use:
+      var grouped = _.groupBy(result, function(val, i){
+        var date = utils.formateDate(val.createdAt);
+        return date;
+      });
+
+      var groupedSortedKeys = _.keys(grouped);
+    
+      groupedSortedKeys = _.sortBy(groupedSortedKeys,function(val, i){
+        return new Date(val);
+      });
+
+      var objTotal={paid:0, sent:0},
+          graphObj = [];
+      _.each(groupedSortedKeys, function(key){
+       
+        var val = grouped[key];
+        _.each(val, function(val, i){
+          if (val.paidOn){
+            objTotal.paid+=val.total;
+          } else if (val.invoicedOn){
+            objTotal.sent+=val.total;
+          }
+        });
+
+        returnObj = _.clone(objTotal); 
+        returnObj.date=key;
+        graphObj.push(returnObj);
+      })
+
+      // var groupedSorted = _.sortBy(grouped,function(val, i){
+      //   return new Date(i);
+      // })
+
+
+      // var objTotal={paid:0, sent:0};
+      // var graphObj = _.map(groupedSorted,function(valDate, i){
+      
+
+      // console.log(i, groupedSortedKeys)
+
+      //   _.each(valDate, function(val, i){
+
+      //     if (val.paidOn){
+      //       objTotal.paid+=val.total;
+      //     } else if (val.invoicedOn){
+      //       objTotal.sent+=val.total;
+      //     }
+
+      //   });
+
+      //   returnObj = _.clone(objTotal); 
+      //   returnObj.date=groupedSortedKeys[i];
+      //   return returnObj
+      // });
+
+
+      console.log(graphObj)
+      res.send(graphObj)
+
+
+
+        
+
+      });
+
+      //ie _.groupBy([1.3, 2.1, 2.4], function(num){ return Math.floor(num); }); to group by dates
+      //console.log(err, result)
+
+
+
+
+}
 
 
 exports.pdf = function(req, res){

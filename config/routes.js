@@ -163,6 +163,7 @@ module.exports = function (app, passport) {
   app.post('/articles/:id/upload', articles.uploadcsv);//upload 
   app.post('/articles/:id/uploadimage', articles.uploadImage);//upload 
 
+
   
 
   // viewer routes
@@ -186,6 +187,10 @@ module.exports = function (app, passport) {
   app.get('/',  articles.homeOrSent)
   app.get('/sent', auth.requiresLogin, articles.indexSent)
   app.get('/recieved', auth.requiresLogin,  articles.indexRecieved)
+
+  // Graph Api Route
+  app.get('/api/graph', articles.graph);//upload 
+
 
   //table
   app.post('/tableview',  articles.tableJSONView);
