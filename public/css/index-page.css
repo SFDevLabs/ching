@@ -1,3 +1,6 @@
+html, body, header {
+  height: 100%; }
+
 .chart-wrapper {
   margin: 2em 0px;
   overflow: hidden; }
