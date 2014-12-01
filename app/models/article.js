@@ -33,12 +33,8 @@ var setTags = function (tags) {
  */
 
   var formates = [,,'%0.00','%0.00','','mm/dd/yy'],
-      formateKeys = ['cost','qty','tax1','tax2','type','date'],
-      defaultDate = function(){  //We need to set the date as a canonical day so there is no timezone offset.
-        dateObj = new Date()
-        dateString = (dateObj.getMonth()+1)+'/'+dateObj.getDate()+'/'+dateObj.getFullYear()
-        return new Date(dateString)
-      }()
+      formateKeys = ['cost','qty','tax1','tax2','type','date'];
+
 var itemsSchema = {
     note:{type : String, default :  null, format: '', typeString:'string',columnPosition:7, displayName:'Note', colWidth:180, printColWidth:80},
     date: {type: Date, default : null, format: 'mm/dd/yy, D', typeString:'date',columnPosition:3, displayName:'Date', colWidth:135, printColWidth:55},
@@ -55,9 +51,10 @@ var itemsSchema = {
     user: {type : Schema.ObjectId, ref : 'User'},
     createdAt: { type : Date, default : Date.now },
   })
-  var viewsSchema = new Schema({
+  var viewsSchema = new Schema({ //turn this into events
     user: {type : Schema.ObjectId, ref : 'User'},
     viewedAt: { type : Date, default : Date.now },
+    type: {type : String, default : '', trim : true}
   })
   exports.itemsSchemaExport = function(){
     return _.extend({}, itemsSchema);
@@ -70,11 +67,11 @@ var ArticleSchema = new Schema({
   number:{type : Number},
   viewers:[viewersSchema],
   views: [viewsSchema],
-  notificationSent:[{
-    user: {type : Schema.ObjectId, ref : 'User'},
-    createdAt: { type : Date, default : Date.now },
-    type: {type : String, default : '', trim : true},
-  }],
+  // notificationSent:[{
+  //   user: {type : Schema.ObjectId, ref : 'User'},
+  //   createdAt: { type : Date, default : Date.now },
+  //   type: {type : String, default : '', trim : true},
+  // }],
   images:[{
     user: {type : Schema.ObjectId, ref : 'User'},
     createdAt: { type : Date, default : Date.now },
@@ -342,6 +339,44 @@ ArticleSchema.statics = {
   },
 
   /**
+   * Graph API articles
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  graph: function (options, cb) {
+    var criteria = options.criteria || {}
+    //options.criteria
+    
+    //paid
+    //overdue
+    //sent
+    // draft*
+    // 
+    //Start Date
+
+    this
+    //.project({ paidOn : 1 })
+    .find(options.criteria, { paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, total:1 })
+      // .or([
+      //     options.criteria
+      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
+      // ])
+      // .where('viewers')
+      // .in([options.criteria.user])
+      // 
+      // .populate('user', 'firstname email lastname organization')
+      // .populate('viewers.user', 'firstname email lastname organization')
+      //.sort({'createdAt': -1}) // sort by date
+      //.limit(options.perPage)
+      //.skip(options.perPage * options.page)
+      .lean()
+      .exec(cb)
+  },
+
+  /**
    * List articles
    *
    * @param {Object} options
@@ -352,7 +387,7 @@ ArticleSchema.statics = {
   list: function (options, cb) {
     var criteria = options.criteria || {}
 
-    this.find(options.criteria)
+    this.find(options.criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1 })
       // .or([
       //     options.criteria
       //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
