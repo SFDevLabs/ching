@@ -533,7 +533,6 @@ header .middle-buttons {
     margin-left: 1.25em;
     font-weight: 600; }
 .list .chart-wrapper {
-  height: 0px;
   margin-bottom: 2.5em;
   overflow: hidden; }
   .list .chart-wrapper #area-chart {
