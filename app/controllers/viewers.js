@@ -62,12 +62,12 @@ exports.create = function (req, res) {
       user = req.user,
       duplicate,
       user,
-      validatedEmail = req.body.email.replace(/\.(?=[^@]*\@)/g, '');
-
+      validatedEmail = req.body.email.replace(/\.(?=[^@]*\@)/g, ''),
+      emailValidation = utils.validateEmail(req.body.email);
       console.log(req.body.email)
 
-  if (!req.body.email || req.body.email.length===0){
-        req.flash('error', 'No email')
+  if (!req.body.email || req.body.email.length===0 || !emailValidation){
+        req.flash('error', 'Please enter a valid email')
         return res.redirect('/articles/' + article.id)
   }
 
