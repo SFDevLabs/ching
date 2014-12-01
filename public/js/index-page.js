@@ -85,13 +85,22 @@ var svg = d3.select(el).append("svg")
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
-
-
 }
 
 
-$.get('/api/graph',{index:'jeff'}, function(data, err){
-  var chartArea=$('#area-chart')[0];
-  d3GraphService(chartArea,data);
+$('.chart-on').on('click', function(){
+  $('i', this).toggleClass('typcn-chart-bar');
+  $('i', this).toggleClass('typcn-chart-bar-outline');
+  $('#area-chart').toggleClass('hidden')
 });
+
+$('.chart-on').one('click', function(){
+  $.get('/api/graph',{}, function(data, err){
+    var chartArea=$('#area-chart')[0];
+    $('#area-chart').removeClass('hidden')
+    d3GraphService(chartArea,data);
+  });
+})
+
+
 

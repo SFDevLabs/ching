@@ -26,10 +26,10 @@ block content
           h2.left=title
         .midle-row
           .middle-buttons
-            button.btn.btn-default(onclick="$(\'.chart-wrapper\').height(\'100%\')")
-              i.typcn.typcn-chart-bar
-            button.btn.btn-default.hidden(onclick="$(\'.chart-wrapper\').height(\'0\')")
-              i.typcn.typcn-chart-bar-outline
+            if (articles.length)
+              button.btn.btn-default.chart-on
+                i.typcn.typcn-chart-bar
+
         .right-row
           form.input-group.search
               input.form-control(type='text' name="all" value=query)
@@ -77,7 +77,7 @@ block content
             //- this chart needs to be way shorter. like half its current height.
 
           .chart-wrapper.col-md-12
-            #area-chart
+            #area-chart.hidden
         .row
           - each article in articles
             - var viewer = article.viewers[0]? article.viewers[0].user.organization:'';
