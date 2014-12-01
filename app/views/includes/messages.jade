@@ -1,6 +1,7 @@
 .alert
   div.alert-wrap
-    button.close(type='button', data-dismiss='alert') ×
+    button.close.close-button(type='button', data-dismiss='alert')
+      span.typcn.typcn-delete
     ul
       - if (typeof info != 'undefined' && info.length)
         - each inf in info
