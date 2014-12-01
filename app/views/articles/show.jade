@@ -62,25 +62,31 @@ block content
                 - var hasImage = "col-md-9"
               - else
                 - var hasImage = ""
+              
+              h2.title
+                | #{article.title}
+              br
+              .muted.status
+                |status:
               -if (article.status == "sent")
-                h2(class="#{article.status} #{hasImage}") Sent on #{formatDate(article.invoicedOn)}
+                h4.status(class="#{article.status} #{hasImage}") Sent on #{formatDate(article.invoicedOn)}
               -else if(article.status =='verified')
-                h2(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paymentVerifiedOn)}
+                h4.status(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paymentVerifiedOn)}
               -else if (article.status == "paid")
-                h2(class="#{article.status} #{hasImage}") Payment Sent on #{formatDate(article.paidOn)}
+                h4.status(class="#{article.status} #{hasImage}") Payment Sent on #{formatDate(article.paidOn)}
               -else if (article.status == "overdue")
                 -var today = new Date()
                 -var pastDue = Math.round( (today.getTime() - article.dueOn.getTime())/86400000 )
-                h2(class="#{article.status} #{hasImage}") Overdue #{pastDue} days
+                h4.status(class="#{article.status} #{hasImage}") Overdue #{pastDue} days
               -else
-                h2(class="#{article.status} #{hasImage}") #{article.status}
+                h4.status(class="#{article.status} #{hasImage}") #{article.status}
 
               -if (article.description)
                 br
                 P=article.description
               -else if (req.article.user.id===req.user.id)
                 br
-                a.btn-edit Add a description...
+                a(href="javascript:void(0)").btn-edit Add a invoice details...
                     
               -if (article.body)
                 p=article.body
@@ -505,7 +511,11 @@ block subfoot
 
           .form-group
             label.control-label(for='desc') Description
-            textarea.form-control#desc(rows="5", name="description")=article.description
+            input.form-control(type='text', name="title", value=article.title, placeholder='title')
+
+          .form-group
+            label.control-label(for='desc') Description
+            textarea.form-control#desc(rows="5", name="description" placeholder='description')=article.description
 
           .form-group
             label.control-label(for='tags') Tags
@@ -513,15 +523,15 @@ block subfoot
           .form-group
             label.control-label(for='tags') Due Date
             -var date=article.dueOn?(article.dueOn.getMonth()+1)+'/'+article.dueOn.getDate()+'/'+article.dueOn.getFullYear():'';
-            input.form-control#date.date(type='text', name="dueOn", value=date, placeholder='Due Date')
+            input.form-control#date.date(type='text', name="dueOn", value=date, placeholder='due Date')
           .form-group.quickdates
-            a(value='15') 15 Days
+            a(value='15', href="javascript:void(0)") 15 Days
               | &nbsp|&nbsp&nbsp
-            a(value='30') 30 Days
+            a(value='30', href="javascript:void(0)") 30 Days
               | &nbsp|&nbsp&nbsp
-            a(value='60') 60 Days
+            a(value='60', href="javascript:void(0)") 60 Days
               | &nbsp|&nbsp&nbsp
-            a(value='90') 90 Days
+            a(value='90', href="javascript:void(0)") 90 Days
               span.muted &nbsp
           .form-group
             button.right-float.btn.action(type='submit')

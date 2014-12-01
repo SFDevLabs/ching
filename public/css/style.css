@@ -552,6 +552,8 @@ header .middle-buttons {
     background: #f7f7f7;
     border-bottom: 2px solid;
     padding: 15px; }
+    .list .article .content h5 {
+      margin: 0px; }
   .list .article .date {
     position: absolute;
     bottom: 0px;
@@ -653,6 +655,8 @@ body.show {
       border: 1px dashed #e6e6e6; }
     .invoice-form .properties .btn {
       margin-bottom: 1.25em; }
+    .invoice-form .properties .status {
+      margin-top: 0em; }
   .invoice-form h2 {
     margin-bottom: 0; }
   .invoice-form .meta {
@@ -758,7 +762,7 @@ div.tags span.tag {
     font-size: 1em; }
 
 .meta {
-  padding-top: 1.25em; }
+  padding-top: 0.25em; }
   .meta:last-child {
     margin-bottom: 1.25em; }
   .meta hr {

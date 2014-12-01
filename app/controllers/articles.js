@@ -429,7 +429,7 @@ req.param('recipient')
             createOr();
             options.criteria.$or.push({description:qRegex})
             options.criteria.$or.push({tags:qRegex})
-
+            options.criteria.$or.push({title:qRegex})
           }
           var num = Number(q);
           if (!isNaN(num) && q.length>0){

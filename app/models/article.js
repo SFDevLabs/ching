@@ -66,6 +66,7 @@ var nextNumber = function(){
 var ArticleSchema = new Schema({
   number:{type : Number},
   viewers:[viewersSchema],
+  title: {type : String, default : '', trim : true},
   views: [viewsSchema],
   // notificationSent:[{
   //   user: {type : Schema.ObjectId, ref : 'User'},
@@ -387,7 +388,7 @@ ArticleSchema.statics = {
   list: function (options, cb) {
     var criteria = options.criteria || {}
 
-    this.find(options.criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1 })
+    this.find(options.criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, title:1 })
       // .or([
       //     options.criteria
       //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }

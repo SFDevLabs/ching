@@ -90,6 +90,7 @@ block content
                   span #{article.status}
                 span.right # #{formatInvoiceNumber(article.number)}
               .content
+                h5=article.title
                 if (article.viewers[0]!==Undefined && invoiceType==='sent')
                   span Recipients:
                   h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}
