@@ -128,7 +128,7 @@ exports.sendInvoice=function(req, res){
   articleJSON.viewers.forEach(function(viewer, i){
         var views={
             sender: viewer.user.firstname +' '+ viewer.user.lastname
-          , organization_article: user.organization?' with ':''
+          , organization_article: user.organization?' at ':''
           , organization: user.organization
           , amount: utils.formatCurrency(article.total)
           , invoice_num: utils.formatInvoiceNumber(article.number)
@@ -139,7 +139,7 @@ exports.sendInvoice=function(req, res){
         ,fromname = user.firstname +' '+user.lastname
 
         if (user.organization && user.organization.length>0){///Organization is optional.  this logic add it when we have it
-          subject+=' with '+user.organization;
+          subject+=' at '+user.organization;
           fromname+=' ('+user.organization+')';
         };
 
