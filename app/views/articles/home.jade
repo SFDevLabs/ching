@@ -2,9 +2,9 @@ extends ../layouts/default
 
 block content
 	header
-		.invoices
+		.invoices.hidden
 			img(src="/img/invoice.svg", class="invoice")
-		.junk.hide
+		.junk.hide.hidden
 			span.number 1
 			span.number 2
 			span.number 3
@@ -89,7 +89,7 @@ block content
 			span.typcn.typcn-clipboard
 			span.typcn.typcn-times-outline
 			span.typcn.typcn-clock
-		.header-content
+		.header-content.hidden
 			.container
 				h1 Ching
 				.computer
@@ -117,28 +117,28 @@ block content
 					li.col.col-lg-4
 						span(class="icon typcn typcn-chart-area-outline")
 						h4 Informative Charts
-						p Visualize your positions and find where money is flowing. See how to improve you cash-flow.
+						p Visualize where money is flowing. See how to improve your cash-flow.
 					li.col.col-lg-4
 						span(class="icon typcn typcn-zoom-in-outline")
 						h4 Fast Search
-						p Locate invoices by terms and values. Search on line items, client names, tags or totals.
+						p Complete invoice indexing. Search on items, client names, tags or totals.
 					li.col.col-lg-4
 						span(class="icon typcn typcn-watch")
 						h4 Speedy Invoicing
-						p Import data from any spreadsheet. Magically suck in data from your other time and expense tools.
+						p Magically suck in data from spreadheets, time tracking or expense tools.
 				ul.features.row					
 					li.col.col-lg-4
 						span(class="icon typcn typcn-clipboard")
 						h4 Spreadsheet Features
-						p Cut, copy and paste form any spreadsheet or CSV. Build your invoice with all the familiar spreadheet commands.
+						p Cut, copy and paste inside your invoice. Use all the familiar spreadheet commands.
 					li.col.col-lg-4
 						span(class="icon typcn typcn-calendar-outline")
 						h4 Track Due Dates
-						p Filter by due date and identify stale invoices. Stay on top of you accounts and get paid promptly.
+						p Stay on top of you accounts and get paid promptly. Avoid past due invoices.
 					li.col.col-lg-4
 						span(class="icon typcn typcn-messages")
 						h4 Communicate Clearly
-						p Use pictues and comments directly on the invoice to get your point across. Avoid endless email threads.
+						p Avoid endless email threads. Add photos and comments directly on the invoice. 
 		div.sources.logos
 			div.container.details
 				h2.mini Combine timesheets and expenses from anywhere.
@@ -153,7 +153,7 @@ block content
 						img(src="/img/logo-excel-text.png")
 		div.cta
 			div.container.details
-				h2.mini Dead Simple Invoicing.
+				h2.mini Get the books done faster.
 				p.tagline
 					a(href="/signup", class="button action") Sign up
 		include ../includes/footer
@@ -178,14 +178,14 @@ block subfoot
 			});
 
 			function timer(element) {
-				var delay = Math.floor(Math.random() * (2000 - 100 + 1)) + 100;
+				var delay = Math.floor(Math.random() * (2000 - 100 + 1)) + 200;
 				floatJunk(element, delay);
 			}
 
 			function floatJunk(element, delay) {
 				var width = $(window).width() / 1000;
 				var newLeft = "-" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10) + "%";
-				var speed = width * (Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000);
+				var speed = width * (Math.floor(Math.random() * (10000 - 5000 + 1)) + 3000);
 				$(element).delay(delay).animate({
 					left: "100%"
 				}, speed, 'easeInOutQuad', function() {
@@ -196,7 +196,7 @@ block subfoot
 
 			function invoice() {
 				var width = $(window).width() / 1000;
-				var delay = width * 3000;
+				var delay = width * 2000;
 				var speed = width * 5000;
 				$(".invoices img").delay(delay).animate({
 					left: "150%"
@@ -205,6 +205,22 @@ block subfoot
 					invoice();
 				});
 			}
+			//blelow logic makes sure the images are loaded before we start the animation;
+			var showJunk =  function(){ 
+			  $('.junk').removeClass('hidden')
+			  $('.header-content').removeClass('hidden')
+			  $('.invoices').removeClass('hidden')
+			}
+			$('.computer img').each(function() {
+				if (!this.complete) {
+					$(this).load(function(){
+						showJunk();
+					});
+				}else{
+					showJunk();
+				}
+			});
+
 
 			invoice();
 		});

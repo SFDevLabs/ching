@@ -476,7 +476,7 @@ nav.navbar {
 
 footer {
   //margin: 5em 0 0 0;
-  padding: 2em 0 0 0;
+  padding: 1.5em 0 0 0;
   background: transparent url(/img/grid.jpg) center center repeat;
   background-size: 50% auto;
   text-align: center;
@@ -488,6 +488,14 @@ footer {
   .logo img {
     border-radius: 0;
     max-width: 50px;
+  }
+  .footer-contact{
+    li a {
+      color: rgba(255,255,255,0.75);
+      font-size: 1.10em;
+      font-weight: 500;
+    }
+    margin:1.5em;
   }
 
   img {

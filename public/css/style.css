@@ -313,7 +313,7 @@ nav.navbar p, nav.navbar ul li {
   opacity: 0.45; }
 
 footer {
-  padding: 2em 0 0 0;
+  padding: 1.5em 0 0 0;
   background: transparent url(/img/grid.jpg) center center repeat;
   background-size: 50% auto;
   text-align: center;
@@ -323,6 +323,12 @@ footer {
   footer .logo, footer .logo img {
     border-radius: 0;
     max-width: 50px; }
+  footer .footer-contact {
+    margin: 1.5em; }
+    footer .footer-contact li a {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 1.1em;
+      font-weight: 500; }
   footer img {
     opacity: 0.5;
     -webkit-transition: all 0.5s;
