@@ -509,7 +509,6 @@ footer {
 
 .landing {
 
-
   header {
     position: absolute;
     top: 0;
@@ -539,6 +538,7 @@ footer {
       }
 
       .computer {
+        min-height:106px;
         position: relative;
         width: 100%;
         z-index: 1000;
@@ -684,8 +684,15 @@ footer {
       }
     }
     p {
-      margin-top: 1.25em;
-    }    
+      text-align: justify;
+      margin: 0em 3.2em;
+
+    }
+    @media (max-width: 1200px){
+      p{
+        margin: 0em 10.2em;
+      }
+    }
   }
 
   .logos {
@@ -715,6 +722,12 @@ footer {
 
   h2.mini {
     font-size: 1.875em;
+  }
+
+  .feature-list .mini{
+    i{
+      font-size: 1.5em;
+    }
   }
 
   .cta {

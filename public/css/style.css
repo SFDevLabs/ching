@@ -358,6 +358,7 @@ footer {
       color: #FF9B00;
       margin-bottom: 0.3125em; }
     .landing header .header-content .computer {
+      min-height: 106px;
       position: relative;
       width: 100%;
       z-index: 1000; }
@@ -457,7 +458,12 @@ footer {
     .landing .feature-list .icon:before {
       display: inline; }
   .landing .feature-list p {
-    margin-top: 1.25em; }
+    text-align: justify;
+    margin: 0em 3.2em; }
+  @media (max-width: 1200px) {
+    .landing .feature-list p {
+      margin: 0em 10.2em; }
+ }
 .landing .logos {
   background: #fafafa;
   padding: 5em 0; }
@@ -477,6 +483,8 @@ footer {
   margin-bottom: 0; }
 .landing h2.mini {
   font-size: 1.875em; }
+.landing .feature-list .mini i {
+  font-size: 1.5em; }
 .landing .cta {
   border-top: 1px solid rgba(0, 0, 0, 0.5);
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
