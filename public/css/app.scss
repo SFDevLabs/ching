@@ -73,6 +73,14 @@ body {
 .comment {
   padding: 15px 0;
   border-bottom: 1px solid #e8e8e8;
+  .remove{
+    visibility: hidden;
+    i{
+      visibility: visible;
+      font-size: 2.3em;
+      color: #BB1D00;
+    }
+  }
 }
 
 .error {
@@ -202,6 +210,14 @@ button.error {
   margin: 0px;
   &.highlight{
     background-color: rgba(255, 155, 0, 0.5);
+  }
+}
+
+.csv-instrucions{
+  ol li{
+    //border-bottom: 1px solid #333;
+    padding: .2em;
+    font-weight: 500;
   }
 }
 
