@@ -226,6 +226,8 @@ exports.token  = function(req, res, next, token){
  */
 
 exports.indexRecieved = function(req, res){
+
+
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
   var perPage = 12,
       userID=req.user?req.user._id:null;
@@ -236,6 +238,8 @@ exports.indexRecieved = function(req, res){
   options.criteria={
     'viewers':{$elemMatch: {user:userID}} 
   }
+
+  utils.keenAnalytics('user_event', {type:'index_inbox', user:req.user.id, session:req.sessionID?req.sessionID:null});
 
   var bodyClass = "list received";
 
@@ -283,6 +287,8 @@ exports.homeOrSent = function(req, res){
  */
 
 var indexSent = exports.indexSent = function(req, res){
+
+
   var bodyClass = "list";
 
 
@@ -300,6 +306,7 @@ var indexSent = exports.indexSent = function(req, res){
   //here we need logic to properly parse out a search API.
   //http://localhost:4000/?stuff=testtest
   //console.log(req.param('recipient'))
+  //
 
 
 
@@ -331,7 +338,6 @@ var indexSent = exports.indexSent = function(req, res){
 
 //   res.send(results)
 // });
-req.param('recipient')
 
   //Article.all(options, function(err, results){
 
@@ -366,6 +372,8 @@ req.param('recipient')
     }
     var q = req.param('all')
         , qRegex;
+
+    utils.keenAnalytics('user_event', {type:'index_sent', user:req.user.id, session:req.sessionID?req.sessionID:null, queary:q?q:null});
 
     ///(?=.*u)|(?=.*i)|(?=.*i).*/i
 
@@ -646,8 +654,8 @@ exports.payed = function(req, res){
   var article = req.article,
       subject;
 
-  //article = extend(article, req.body)
-  //article.paymentVerified=true;
+  utils.keenAnalytics('user_event', {type:'invoice_payed', user:req.user.id, sender:req.article.user.id, session:req.sessionID?req.sessionID:null});
+
   //
   if (req.article.user.id==req.user.id){
     article.paymentVerifiedOn=new Date();
@@ -703,6 +711,8 @@ exports.payed = function(req, res){
 exports.unpayed = function(req, res){
   var article = req.article
 
+  utils.keenAnalytics('user_event', {type:'invoice_unpayed', user:req.user.id, sender:req.article.user.id, session:req.sessionID?req.sessionID:null});
+
   article.paymentVerifiedOn=null;
   article.paidOn=null;
 
@@ -720,7 +730,9 @@ exports.unpayed = function(req, res){
 
 exports.update = function(req, res){
   var article = req.article
-  console.log(req.body)
+
+  utils.keenAnalytics('user_event', {type:'invoice_edit_update', user:req.user.id, session:req.sessionID?req.sessionID:null});
+
 
   article = extend(article, req.body)
 
@@ -737,28 +749,6 @@ exports.update = function(req, res){
   })
 }
 
-/**
- * Pay article
- */
-
-exports.pay = function(req, res){
-  var article = req.article
-
-  //article = extend(article, req.body)
-
-  article.paidOn=new Date();
-  article.save(function(err) {
-    if (!err) {
-      return res.redirect('/articles/' + article._id)
-    }
-
-    res.render('articles/edit', {
-      title: 'Edit Article',
-      article: article,
-      error: utils.errors(err.errors || err)
-    })
-  })
-}
 
 
 /**
@@ -766,6 +756,9 @@ exports.pay = function(req, res){
  */
 
 exports.show = function(req, res, next){
+
+  utils.keenAnalytics('user_event', {type:'invoice_show', user:req.user.id, session:req.sessionID?req.sessionID:null});
+
   var bodyClass = "show";
 
   function capitalize(s) {

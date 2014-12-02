@@ -261,13 +261,13 @@
   }
 
   var analyticsRoute=function(collection,route){
-    return function(req, res, next){
-          var data = {
-            type:route
-            , user:req.user?req.user.id:null
-            , session:req.sessionID?req.sessionID:null
-          }
-          utils.keenAnalytics(collection,data)
+    return  function(req, res, next){
+          // var data = {//turning off api analytics too much
+          //   type:route
+          //   , user:req.user?req.user.id:null
+          //   , session:req.sessionID?req.sessionID:null
+          // }
+          // utils.keenAnalytics(collection,data)
           next();
     }
   }

@@ -24,17 +24,6 @@ var client = Keen.configure({
     masterKey: "56431B491A7ADDAA1DACA079F6165952"
 });
 
-var Analytics = function(collection, keyVals, cb){
-  client.addEvent(collection, keyVals, function(err, res) {
-    if (err && cb) {
-      cb(err, null)
-        console.log("Oh no, an error!", err);
-    } else if (cb) {
-      cb(null, res)
-    }
-  });
-}
-
 
 /**
  * Load viewers
@@ -56,7 +45,7 @@ exports.load = function (req, res, next, id) {
 
 exports.create = function (req, res) {
 
-  Analytics('event', {type:'new_recipient', user:req.user.id});
+  utils.keenAnalytics('user_event', {type:'invoice_new_recipient', user:req.user.id, session:req.sessionID?req.sessionID:null});
 
   var article = req.article,
       user = req.user,
@@ -100,7 +89,9 @@ exports.create = function (req, res) {
 
 exports.sendInvoice=function(req, res){
 
-  Analytics('event', {type:'invoice_sent', user:req.user.id});
+  utils.keenAnalytics('user_event', {type:'invoice_sent', user:req.user.id, session:req.sessionID?req.sessionID:null });
+
+    //         , 
 
   var   article= req.article
       , articleJSON = article.toJSON()
@@ -172,6 +163,8 @@ exports.sendInvoice=function(req, res){
  */
 
 exports.destroy = function (req, res) {
+  utils.keenAnalytics('user_event', {type:'invoice_destroy', user:req.user.id, session:req.sessionID?req.sessionID:null});
+
   var article = req.article
   console.log(req.param('viewerId'))
   article.removeViewer(req.param('viewerId'), function (err) {
