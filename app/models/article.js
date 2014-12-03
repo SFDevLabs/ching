@@ -44,6 +44,7 @@ var itemsSchema = {
     tax2:{type : Number, default : null, format: '%0.00', typeString:'number',columnPosition:5, displayName:'Tax (2)', colWidth:60, printColWidth:30},
     type:{type : String, default : 'Time', format: 'dropdown', dropdownOptions: ['Time','Item','Subtotal'], typeString:'string',columnPosition:6, displayName:'Time | Item', colWidth:90, printColWidth:40},
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:0, displayName:'Description', colWidth:195, printColWidth:80},
+    subtotals:[{type : String, default : null, format: '', typeString:'string'}],
     total:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:8, displayName:'Total', colWidth:100, printColWidth:120},
   }
 

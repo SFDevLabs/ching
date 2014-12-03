@@ -12,6 +12,7 @@
     , itemsSchema = require('../app/models/article').itemsSchemaExport()//_.extend({}, require('../app/models/article').itemsSchema) //we need to make copy of the schma to keep the original intacts
     , articles = require('../app/controllers/articles')
     , utils = require('../lib/utils')
+    , _ = require("underscore");
 
 
    itemsSchema['click']={format: 'buttons', typeString:'string',columnPosition:9, displayName:'Clicky', colWidth:50};//Adding a click row to our item schema.
@@ -115,10 +116,9 @@
   //
   function getUpdateController(model) {
     return function (req, res) {
-
       req.article.items=req.body;   
 
-      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      req.article.total = req.article._.uni.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
 
       req.article.save(function(err){
           if (!err) {
@@ -139,12 +139,16 @@
       var key,
           items=req.article.items,
           index=req.itemIndex;
+
+
       for (key in req.body) {
+         if (key==='subtotals' && req.body[key]!==null){//make sure we put in a unique list of subtotals
+          items[index][key] = _.unique(req.body.subtotals)
+         } else 
         if (key!=='_id' && key!=='createdAt'){
           items[index][key] = req.body[key];
         }
       }
-
       req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
 
       req.article.save(function(err){

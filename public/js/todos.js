@@ -72,7 +72,25 @@
         //   return A+B;
         // });
         subtotals.forEach(function(model, index) {
-            model.set('total', '999.66');
+            
+            var subtotalIDsArray=model.get('subtotals')
+
+
+          
+            
+            var subtotal=0;
+            if (subtotalIDsArray!==null){
+              //var subtotalIDsArray=subtotalIDs.split(',');
+              subtotalIDsArray.forEach(function(val,i){
+                var car = cars.findWhere({_id:val})
+                if (car){
+                  subtotal += Number(car.get('total'));              
+                }
+              })
+            };
+
+
+            model.set('total', subtotal);
         });           
       }
 
