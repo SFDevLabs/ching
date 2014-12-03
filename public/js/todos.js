@@ -29,6 +29,9 @@
       cars.bind('add', this.renderAfterSync);
       cars.bind('change reset fetch remove',this.totalCalculation)
 
+      cars.bind('change reset fetch remove',this.subTotalCalculation)
+
+
       this.footer = this.$('footer');
       this.main = $('#main');
       this.total = $("#total .amount");
@@ -48,13 +51,34 @@
         App.total.html(curr);
         return false
       };
-      var total = cars.pluck('total').reduce(function(a,b){ 
+      var notSubTotal=cars.filter(function(car) {
+            return car.get("type") !== "Subtotal";
+      });
+      var total = notSubTotal.map(function(car){ return car.get('total')}).reduce(function(a,b){ ///duplicated in following functionm
         var A = (isNaN(a) || typeof a!=='number')?0:a
           , B = (isNaN(b) || typeof b!=='number')?0:b;
         return A+B;
       });
       total = total?App.formatCurrency(total):App.formatCurrency(0);
       App.total.html(total);
+    },
+    subTotalCalculation: function(todo, response){
+
+      if (todo.get('type')!=='Subtotal'){
+        var subtotals = cars.where({type:'Subtotal'});
+        // var total = cars.pluck('total').reduce(function(a,b){ 
+        //   var A = (isNaN(a) || typeof a!=='number')?0:a
+        //     , B = (isNaN(b) || typeof b!=='number')?0:b;
+        //   return A+B;
+        // });
+        subtotals.forEach(function(model, index) {
+            model.set('total', '999.66');
+        });           
+      }
+
+
+
+
     },
     renderAfterSync: function (todos, response) {  
        App.handsonContainer.handsontable("render");//we need to maunaull rerender after we add an item.
@@ -316,6 +340,28 @@
           this.on('change:tax1',this.tax1Formater);
           this.on('change:tax2',this.tax2Formater);
           this.on('change:qty',this.qtyFormater);
+
+          this.on('change:type',this.subtotalSwitch);
+
+        },
+        subtotalSwitch:function(todo, val){
+          
+          if (todo.get('type')!=='Subtotal'){return false};
+
+          for (var i in todo.attributes) {
+            if (i!=='type' && i!=='_id'){
+                todo.set(i, null)
+            }
+            
+          };
+          // todo.map(function(val, i){
+
+          //   if (i==='type'||i==='_id')
+          //     return val
+          //   else
+          //     return null
+          // })
+
         },
         tax1Formater:function(todo,val){
             if (typeof val === 'number'){
@@ -341,13 +387,17 @@
         saveIt:function(todo, option){
           ///caluclate the total
           var cost = todo.get('cost'),
+              type = todo.get('type'),
               cost = cost===""?0:cost,
               tax1 = todo.attributes.tax1==null?0:todo.attributes.tax1,
               tax2 = todo.attributes.tax2==null?0:todo.attributes.tax2,
               qty = !todo.attributes.qty?0:todo.attributes.qty,
               total;
 
-              if ([cost, qty].indexOf(null)===-1 && [cost, qty].indexOf(undefined) && ![cost, qty].some(function(a){ return isNaN(a)})){
+              if (type==='Subtotal'){
+                //do nothing
+              }
+              else if ([cost, qty].indexOf(null)===-1 && [cost, qty].indexOf(undefined) && ![cost, qty].some(function(a){ return isNaN(a)})){
                 total = cost * (1+tax1) * (1+tax2) * qty
                 todo.attributes.total=total;
               }else{
