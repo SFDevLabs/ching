@@ -90,9 +90,8 @@ exports.uploadcsv = function(req, res, next){
             utils.keenAnalytics('user_event', data);///Send data to the analytics engine
             req.article.items=req.article.items.concat(convertedJson)//We have the parsed and mapped data now to add it to the model!
             
-            ///culculate the new total  this might be abstracted into a
-            var total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
-            req.article.total=total;
+            ///calculate the new total  this might be abstracted into a
+            req.article.total=utils.calculateTotal(req.article);
 
             req.article.save(function(err){
               if (err) return next(err);     

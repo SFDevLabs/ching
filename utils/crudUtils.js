@@ -81,7 +81,9 @@
         }
       }
       var newItem = req.article.items.push(item);
-      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      req.article.total = utils.calculateTotal(req.article)
+
+      //req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
 
       req.article.save(function(err){
           if (!err) {
@@ -118,7 +120,9 @@
     return function (req, res) {
       req.article.items=req.body;   
 
-      req.article.total = req.article._.uni.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      req.article.total = utils.calculateTotal(req.article)
+
+//      req.article.total = req.article._.uni.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
 
       req.article.save(function(err){
           if (!err) {
@@ -142,14 +146,21 @@
 
 
       for (key in req.body) {
-         if (key==='subtotals' && req.body[key]!==null){//make sure we put in a unique list of subtotals
+         if (key==='subtotals' && req.body[key]!==null){//if the item is a subtotal make sure we put in a unique list of subtotals
           items[index][key] = _.unique(req.body.subtotals)
-         } else 
-        if (key!=='_id' && key!=='createdAt'){
+         }
+         //  else if (key==='total' && items[index]['type']==='Subtotal'){
+
+         //  //items[index][key]=null; //make it zero,  Its a subtotal
+         //  //do nothing we dont want to save the subtotals, they are calcualted by the fornt end.
+         // }
+         else if (key!=='_id' && key!=='createdAt') {
           items[index][key] = req.body[key];
         }
       }
-      req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+      req.article.total = utils.calculateTotal(req.article)
+
+  //    req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
 
       req.article.save(function(err){
           if (!err) {
@@ -195,7 +206,9 @@
       items.pull(req.idt)
       
       if (req.article.total>0){ //if there is nothing in the array it is a total of Zero.
-        req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+        //req.article.total = req.article.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal});
+        req.article.total = utils.calculateTotal(req.article)
+
       }else{
         req.article.total=0;
       }

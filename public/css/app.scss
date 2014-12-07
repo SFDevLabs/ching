@@ -279,13 +279,18 @@ button.error {
 //  // visibility: hidden;
 // }
 
-.handsontable .htCore {
+.handsontable .htContainer .htCore {
+
 
   col.rowHeader {
       width: 30px;
   }
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
+  
+  tbody{
+
+  }
   tbody{
 
     th{
@@ -303,6 +308,8 @@ button.error {
 
     }
 
+
+
     tr td.htInvalid{
       -webkit-transition: background 0.75s ease;
       transition: background 0.75s ease;
@@ -314,6 +321,7 @@ button.error {
     .htAutocomplete{
       text-align: justify;
     }
+
   }
   thead{
       tr th:first-child{
@@ -332,6 +340,16 @@ button.error {
       }
     } 
 
+}
+
+.autocompleteEditor{
+    margin-top: -4px !important;
+    .htContainer table{
+      border: 1px solid #999 !important;
+      td{
+        background-color:#fff;
+      }
+    }
 }
 
 #grid {

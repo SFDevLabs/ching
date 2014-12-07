@@ -191,40 +191,47 @@ button.error {
     /* IE6-9 */ }
  }
 
-.handsontable .htCore {
+.handsontable .htContainer .htCore {
   -webkit-box-shadow: none !important;
   box-shadow: none !important; }
-  .handsontable .htCore col.rowHeader {
+  .handsontable .htContainer .htCore col.rowHeader {
     width: 30px; }
-  .handsontable .htCore tbody th {
+  .handsontable .htContainer .htCore tbody th {
     background-color: #fff;
     border-bottom-color: #fff !important;
     border-top-color: #fff !important;
     border-left-color: #fff !important;
     color: #BEBEBE;
     font-weight: 400; }
-  .handsontable .htCore tbody tr:nth-child(even) td {
+  .handsontable .htContainer .htCore tbody tr:nth-child(even) td {
     background-color: #eee; }
-  .handsontable .htCore tbody tr td.htInvalid {
+  .handsontable .htContainer .htCore tbody tr td.htInvalid {
     -webkit-transition: background 0.75s ease;
     transition: background 0.75s ease;
     background-color: #ff4c42; }
-  .handsontable .htCore tbody .htAutocompleteArrow {
+  .handsontable .htContainer .htCore tbody .htAutocompleteArrow {
     color: #BEBEBE; }
-  .handsontable .htCore tbody .htAutocomplete {
+  .handsontable .htContainer .htCore tbody .htAutocomplete {
     text-align: justify; }
-  .handsontable .htCore thead tr th:first-child {
+  .handsontable .htContainer .htCore thead tr th:first-child {
     background-color: #fff !important;
     border-bottom-color: #fff !important;
     border-top-color: #fff !important;
     border-left-color: #fff !important; }
-  .handsontable .htCore thead tr:first-child th {
+  .handsontable .htContainer .htCore thead tr:first-child th {
     border-top: 0px !important;
     background-color: #CCC;
     border-right-color: #eee;
     padding-top: 3px;
     padding-bottom: 3px;
     font-weight: 500; }
+
+.autocompleteEditor {
+  margin-top: -4px !important; }
+  .autocompleteEditor .htContainer table {
+    border: 1px solid #999 !important; }
+    .autocompleteEditor .htContainer table td {
+      background-color: #fff; }
 
 #grid thead th:nth-child(11) {
   display: none; }

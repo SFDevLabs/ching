@@ -13,5 +13,5 @@
     p
       a(href="/users/"+comment.user._id)= name
       |  :&nbsp;
-      = comment.body
+      !=comment.body.replace(/\r?\n/g, '<br>')
     span.muted= formatDatetime(comment.createdAt)

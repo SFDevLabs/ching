@@ -28,7 +28,6 @@
       cars.bind('remove', this.renderAfterSync);
       cars.bind('add', this.renderAfterSync);
       cars.bind('change reset fetch remove',this.totalCalculation)
-
       cars.bind('change reset fetch remove',this.subTotalCalculation)
 
 
@@ -73,28 +72,29 @@
         // });
         subtotals.forEach(function(model, index) {
             
-            var subtotalIDsArray=model.get('subtotals')
-
-
-          
-            
-            var subtotal=0;
-            if (subtotalIDsArray!==null){
-              //var subtotalIDsArray=subtotalIDs.split(',');
-              subtotalIDsArray.forEach(function(val,i){
-                var car = cars.findWhere({_id:val})
-                if (car){
-                  subtotal += Number(car.get('total'));              
-                }
-              })
-            };
-
+            var subtotalIDsArray=model.get('subtotals'),
+                subtotal = App.subTotalCalFromIds(subtotalIDsArray);
 
             model.set('total', subtotal);
         });           
       }
 
 
+
+
+    },
+    subTotalCalFromIds:function(subtotalIDs){
+
+      if (subtotalIDs===null){ return 0}
+
+      var subtotal=0;
+      subtotalIDs.forEach(function(val,i){
+        var car = cars.findWhere({_id:val})
+        if (car){
+          subtotal += Number(car.get('total'));              
+        }
+      });
+      return subtotal;
 
 
     },
@@ -188,7 +188,7 @@
                   , type:this.handsonType( cars.schema[i])
                   , format:cars.format[i]
                   , dateFormat:cars.format[i]
-                  //, source: cars.dropdownOptions[i]
+//                  , renderer:'html'
                 }
           }
           if(i==='total'){columns[pos].readOnly=true};
@@ -283,17 +283,19 @@
         }
       });
 
-      this.handsonObj.addHook('afterSelection',function(y1, x1, y2, x2){
-        var index=App.buttonIndex;
-        if (x1===index || x2===index){
+      this.handsonObj.addHook('afterOnCellMouseDown',function(e, coords){
+        var index=App.buttonIndex,
+            x1=coords.col,
+            y1=coords.row;
+        if (x1===index){
             var clickedTag = $(event.target).closest('a')
             if(clickedTag.length!==0 && clickedTag.hasClass('delete')){
-              var r = confirm("Please confirm.\nThis permanently delete this row.")
-              if (r){
+              setTimeout(function(){ //creates new scope so handsontable can end the selection.  Removing this will cause the selection to stick for the user.
+                var r = confirm("Please confirm.\nThis will permanently delete this row.")
+                if (r){
                 cars.remove(cars.at(y1));
-              }
-              App.handsonObj.deselectCell()//We are interpecting the script so we need to deselect and kill the class.
-
+                }                
+              }, 100)
             } else if (clickedTag.length!==0 && clickedTag.hasClass('add')){
               $.post(aId+'/api/add',{index:y1});
               cars.fetch();
@@ -360,6 +362,15 @@
           this.on('change:qty',this.qtyFormater);
 
           this.on('change:type',this.subtotalSwitch);
+          this.on('change:subtotals',this.subtotalAdd);
+
+        },
+        subtotalAdd:function(todo, val){
+            var subtotalIDsArray=todo.get('subtotals'),
+                subtotal = App.subTotalCalFromIds(subtotalIDsArray);
+                todo.set('total', subtotal);
+
+                todo.set('item','<a href="stuff" onclick="makeit()">Stiuff</a>');
 
         },
         subtotalSwitch:function(todo, val){
