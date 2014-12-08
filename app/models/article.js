@@ -315,7 +315,7 @@ ArticleSchema.statics = {
 
   load: function (id, cb) {
     this.findOne({ _id : id })
-      .populate('user', 'lastname firstname email organization')
+      .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile')
       .populate('comments.user')
       .populate('viewers.user', 'lastname email firstname organization')
       .populate('views.user', 'lastname email firstname organization')

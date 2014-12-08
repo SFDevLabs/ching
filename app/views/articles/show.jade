@@ -115,9 +115,9 @@ block content
                     | &nbsp;&nbsp;
 
             .col-md-4.float-right.right
-              - if (req.user.profileImageCDN && req.user.profileImageFile)
+              - if (req.article.user.profileImageCDN && req.article.user.profileImageFile)
                 .invoice-img
-                  img(src="#{req.user.profileImageCDN}/user_thumb_#{req.user.profileImageFile}")
+                  img(src="#{req.article.user.profileImageCDN}/user_thumb_#{req.article.user.profileImageFile}")
               -else if (mainAuth)
                  h4.mini.invoice-img
                   a(href='/users/'+req.user.id) Add Invoice Logo
