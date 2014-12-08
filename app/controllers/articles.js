@@ -939,21 +939,23 @@ exports.pdf = function(req, res){
       , session:req.sessionID?req.sessionID:null
     }
     utils.keenAnalytics('user_event', data);
-    doc = utils.pdf(req, itemsSchema)
+    utils.pdf(req, itemsSchema, function(err, doc){
 
-    // Write headers
-    // 
-    var filename = req.article.user.firstname +'_'+ req.article.user.lastname
-    if (req.article.user.organization!==null){filename+=req.article.user.organization}
-    res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Access-Control-Allow-Origin': '*',
-        'Content-Disposition': 'attachment; filename='+filename+'_'+utils.formatInvoiceNumber(req.article.number)+'.pdf',
-    });
+      // Write headers 
+      var filename = req.article.user.firstname +'_'+ req.article.user.lastname
+      if (req.article.user.organization!==null){filename+=req.article.user.organization}
+      res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Access-Control-Allow-Origin': '*',
+          'Content-Disposition': 'attachment; filename='+filename+'_'+utils.formatInvoiceNumber(req.article.number)+'.pdf',
+      });
+    
+      // Pipe generated PDF into response
+      doc.pipe(res);
+      doc.end();
+
+    })
 
 
-    // Pipe generated PDF into response
-    doc.pipe(res);
-    doc.end();
 
 }

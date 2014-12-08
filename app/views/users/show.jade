@@ -34,7 +34,7 @@ block main
           input(type='hidden', name='_csrf', value="#{csrf_token}")
           input#email.form-control(type='hidden', placeholder="Your Email", name="email" value=user.email)
           br
-          button.btn.btn-primary(type='submit')
+          button.btn(type='submit')
             span(class="typcn typcn-mail")
               |  Send Email
 
@@ -42,10 +42,12 @@ block main
     .row.last
       hr
       .col-md-6
-        img(src="#{user.profileImageCDN}/user_thumb_#{user.profileImageFile}")
+        - if (user.profileImageCDN && user.profileImageFile)
+          h4 Current Image:
+          img(src="#{user.profileImageCDN}/user_thumb_#{user.profileImageFile}")
       .col-md-6
         h4
-          | Add Profile Image
+          | Add an Invoice Image
         .csv-drop-file
           p
             input.file-uploader#fileuploadimage( type="file", name="files[]", multiple)

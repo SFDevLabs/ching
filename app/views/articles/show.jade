@@ -700,14 +700,6 @@ block subfoot
         $(".edit-properties-modal").fadeOut();
       });
 
-      $('.dropzone').on('click',function(){
-
-          $('.file-uploader', $(this).parent()).addClass("highlight").delay(500).queue(function(next){
-              $(this).removeClass("highlight");
-              next();
-          });
-        })
-
 
       //Keen Anatalytics
       window.keenClient = undefined;

@@ -187,7 +187,7 @@
                   , qty : val.Hours?Number(val.Hours):null
                   , item : (val['Last Name']?val['Last Name']:null)+', '+(val['First Name']?val['First Name']:null)
                   , type : 'Time'
-                  , cost: val['Hourly Rate']? Number( val['Hourly Rate'].replace(',','') ):null
+                  , cost: val['Hourly Rate'] ? val['Hourly Rate']:null
                   , note : (val.Notes?val.Notes:'')+' - '+(val.Job?val.Job:'')+' - '+(val.Category?val.Category:'')+' - '+(val.Project?val.Project:'')
                   , total : (val.Hours && val['Hourly Rate'])?Number(val.Hours)*val['Hourly Rate']:null
               }

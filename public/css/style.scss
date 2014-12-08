@@ -1289,3 +1289,15 @@ ul.pagination{
   }
 
 }
+
+//file upload highlight
+.file-uploader{
+  -webkit-transition: background-color .5s ease-in-out;
+  transition: background-color .5s ease-in-out;  
+  border-radius: 5px;
+  padding: 5px 0px 2px 0px;
+  margin: 0px;
+  &.highlight{
+    background-color: rgba(255, 155, 0, 0.5);
+  }
+}

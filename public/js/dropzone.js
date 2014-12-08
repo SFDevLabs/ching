@@ -14,3 +14,11 @@ $('.dropzone').on('drop',function(e){
 $('#destroyPreview').on('click', function(e){  //this is depricated.
   $('#preview').data('handsontable').destroy();
 });
+
+$('.dropzone').on('click',function(){  //highlight to point out choose file button
+
+  $('.file-uploader', $(this).parent()).addClass("highlight").delay(500).queue(function(next){
+      $(this).removeClass("highlight");
+      next();
+  });
+})
