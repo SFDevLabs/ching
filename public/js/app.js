@@ -22,6 +22,12 @@ $(document).ready(function () {
 	 $('#tooltipAutofill').popover('show');
 	});
   
+  if ($('.alert-wrap').length>0){
+    $('.container, .navigation').one('click',function(){
+        $('.alert-wrap').remove()
+    });   
+  };
+
 
 });
 

@@ -96,7 +96,6 @@ var ArticleSchema = new Schema({
   paymentVerifiedOn : {type : Date, default : null},
   dueOn:{type : Date, default : null},
   items: [itemsSchema],
-  //address: {type : String, default : '', trim : true},
   currency: {type : String, default : 'USD', trim : true},
   total:{type : Number, default : 0},
 });
@@ -315,7 +314,7 @@ ArticleSchema.statics = {
 
   load: function (id, cb) {
     this.findOne({ _id : id })
-      .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile')
+      .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile address city state zipcode')
       .populate('comments.user')
       .populate('viewers.user', 'lastname email firstname organization')
       .populate('views.user', 'lastname email firstname organization')

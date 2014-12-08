@@ -101,7 +101,8 @@ block content
 
               -if (article.description)
                 br
-                P=article.description
+                P
+                  !=article.description.replace(/\r?\n/g, '<br>')
               -else if (mainAuth)
                 br
                 a(href="javascript:void(0)").btn-edit Add a invoice details...
@@ -120,7 +121,7 @@ block content
                   img(src="#{req.article.user.profileImageCDN}/user_thumb_#{req.article.user.profileImageFile}")
               -else if (mainAuth)
                  h4.mini.invoice-img
-                  a(href='/users/'+req.user.id) Add Invoice Logo
+                  a(href='/users/'+req.user.id) Add Logo
                   |&nbsp;
                   i.typcn.typcn-image
               - if (req.user && req.article && mainAuth)
@@ -143,12 +144,12 @@ block content
 
       hr
       .row
-        .col-md-8
+        .col-md-12
           .meta.clear.show-view
             div.view-content
                 .clear.to-block.clearfix
-                  p.col-sm-2 From:
-                  div.col-sm-4.to
+                  p.col-sm-1 From:
+                  .col-sm-4.to
                     -if (article.user.firstname || article.user.lastname)
                       p
                         strong #{article.user.firstname} #{article.user.lastname}
@@ -156,15 +157,27 @@ block content
                     -if(article.user.organization)
                       p.gray='Organization: '
                       p=article.user.organization
+                  .col-sm-3.to
+                     
+                  .col-sm-3.to
+                      -if(article.user.address)
+                        p
+                          strong Address:
+                        p
+                          |#{article.user.address} 
+                          br               
+                          |#{article.user.city}, #{article.user.state} #{article.user.zipcode} 
+                        a(target="_blank" href="https://www.google.com/maps/place/#{article.user.address},+#{article.user.city},+#{article.user.state}+#{article.user.zipcode} ")
+                            | map
       hr
       .row
-        .col-md-8
+        .col-md-12
           .meta.clear.show-view
             div.view-content
               - if (article.user)
                 - var name = article.user.name ? article.user.name : article.user.username
                 .clear.to-block.clearfix
-                  p.col-sm-2 To: 
+                  p.col-sm-1 To: 
                   -if(article.viewers.length > 0)
                     - each viewer, i in article.viewers
                       div.col-sm-4.to

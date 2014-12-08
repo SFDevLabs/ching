@@ -37,6 +37,7 @@ footer, .page-wrap:after {
   margin-bottom: 0; }
 
 .alert {
+  pointer-events: none;
   position: fixed;
   width: 100%;
   left: 0;
@@ -44,6 +45,7 @@ footer, .page-wrap:after {
   z-index: 2000;
   margin: 0; }
   .alert .alert-wrap {
+    pointer-events: auto;
     width: 40%;
     position: relative;
     margin: 0 auto;
