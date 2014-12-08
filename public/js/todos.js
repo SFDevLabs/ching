@@ -170,26 +170,30 @@
                 data:setterFactor(i) 
               , type:cars.format[i]
               , source: cars.dropdownOptions[i]
+              , readOnly: readOnly
+
             }
           }else if (cars.format[i]=='buttons'){
-              App.buttonIndex=colPos[i];
-              columns[pos]={
-                  data:function(){return '<a class="grid-buttons add" href="javascript:void(0)"><i class="typcn typcn-plus"></i></a><a class="grid-buttons delete" href="javascript:void(0)"><i class="typcn typcn-delete-outline"></i></a>'}//setterFactor(i)
-                  , type:this.handsonType( cars.schema[i])
-                  , format:cars.format[i]
-                  , dateFormat:cars.format[i]
-                  //, source: cars.dropdownOptions[i]
-                  , renderer:'html'
-                  , readOnly: true
-                }
+            App.buttonIndex=colPos[i];
+            columns[pos]={
+                data:function(){return '<a class="grid-buttons add" href="javascript:void(0)"><i class="typcn typcn-plus"></i></a><a class="grid-buttons delete" href="javascript:void(0)"><i class="typcn typcn-delete-outline"></i></a>'}//setterFactor(i)
+                , type:this.handsonType( cars.schema[i])
+                , format:cars.format[i]
+                , dateFormat:cars.format[i]
+                //, source: cars.dropdownOptions[i]
+                , renderer:'html'
+                , readOnly: true
+              }
           }else{
-              columns[pos]={
-                  data:setterFactor(i)
-                  , type:this.handsonType( cars.schema[i])
-                  , format:cars.format[i]
-                  , dateFormat:cars.format[i]
+            columns[pos]={
+                data:setterFactor(i)
+                , type:this.handsonType( cars.schema[i])
+                , format:cars.format[i]
+                , dateFormat:cars.format[i]
+                , readOnly: readOnly
+
 //                  , renderer:'html'
-                }
+              }
           }
           if(i==='total'){columns[pos].readOnly=true};
         colWidth[pos]=cars.colWidth[i]
@@ -541,44 +545,6 @@ var setterFactor=function(attr){
 
 
 
-
-
-
-
-$('.dropzone').on('dragenter',function(e){
-  $(this).addClass('dragging');
-  $(this).closest('.dropzone').addClass('dragging');
-
-  $(this).delay(2000).queue(function(next){
-    $(this).removeClass('dragging');
-    next();
-  });
-});
-$('.dropzone').on('drop',function(e){
-  $(this).removeClass('dragging');
-});
-
-$('#destroyPreview').on('click', function(e){  //this is depricated.
-  $('#preview').data('handsontable').destroy();
-});
-
-// ///copy paste info box//this is depricated.
-// $(window).on('cut', function(e){
-//   if (App.handsonObj.getSelected()){
-//       alert('Use Command & x to cut a cell');
-//   }
-// });
-// $(window).on('copy', function(e){//this is depricated.
-//   if (App.handsonObj.getSelected()){
-//       alert('Use Command & c to copy a cell');
-//   }
-// });
-// $(window).on('paste', function(e){//this is depricated.
-//   if (App.handsonObj.getSelected()){
-//       alert('Use Command & p to paste into the grid');
-//   }
-// });
-// 
 var post = function(){
   $.ajax({
     type: "POST",

@@ -129,6 +129,9 @@ select {
 }
 
 .row {
+  &.last{
+    margin-bottom: 5em;
+  }
   clear: both;
   &.last-row{
     margin-bottom:15px;
@@ -393,6 +396,7 @@ form {
   }
   .form-group {
     margin-bottom: 1em;
+    padding-left: 0px;
     &:last-child {
       margin-bottom: 0;
     }
@@ -1019,10 +1023,18 @@ body.show {
       border: 1px dashed darken($bg, 10%);      
     }
     .btn {
-      margin-bottom: 1.25em;
+      margin: .7em 0em 0em;
     }
     .status{
       margin-top:0em;
+    }
+    .invoice-img{ 
+      i{
+        font-size: 2em;
+      }
+      img{
+        width:100px;
+      }
     }
   }
 
@@ -1141,6 +1153,14 @@ font-size: 13px;
 .table-container {
   padding-top: 1.25em;
 }
+
+// #dropzone{
+//   height:100px;
+//   //background-color: pink;
+//   &.dragging{
+//     border: 5px dashed;
+//   }
+// }
 
 .dropzone {
   position: relative;

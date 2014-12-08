@@ -124,13 +124,11 @@ exports.uploadcsv = function(req, res, next){
  */
 exports.uploadImage = function(req, res){
   var article = req.article;
-  var file = req.files.files[0];
+  var files = req.files.files;
 
-  
-  //make this an array of files console.log(req.files.files[0].path)
+  if (!files || files.length===0){ return res.send([])};
 
-
-  article.uploadAndSave(req.files.files[0], req.user.id, function(err) {
+  article.uploadAndSave(files, req.user.id, function(err) {
       if (!err) {
        return res.send(article.images)
        // return res.redirect('/articles/' + article._id)
@@ -780,7 +778,8 @@ exports.show = function(req, res, next){
     invoiceType:invoiceType,
     article: req.article,
     bodyClass: bodyClass,
-    keenConfigObj:utils.keenConfigObj
+    keenConfigObj:utils.keenConfigObj,
+    preview: 'yad'
   })
 }
 

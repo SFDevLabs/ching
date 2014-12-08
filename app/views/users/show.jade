@@ -10,15 +10,25 @@ block main
           span(class="typcn typcn-edit")
             |  Edit
         .meta
-            p='Email: '+user.email
+            p.muted='Email: '+user.email
         .meta
             p='Name: '+user.firstname+" "+user.lastname
         .meta
             p='Organization: '+user.organization
+        .meta
+            p
+              | Address:
+              br
+              | #{user.address}
+              br
+              | #{user.city}, #{user.state} #{user.zipcode}
+            
+
 
     .row
+      hr
       .col-md-4
-        h4.label
+        h4
           | Send me a password reset email:
         form.form-horizontal(action="/reset", method="post", role="form")
           input(type='hidden', name='_csrf', value="#{csrf_token}")
@@ -26,7 +36,26 @@ block main
           br
           button.btn.btn-primary(type='submit')
             span(class="typcn typcn-mail")
-              |  Send
+              |  Send Email
+
+    
+    .row.last
+      hr
+      .col-md-6
+        img(src="#{user.profileImageCDN}/user_thumb_#{user.profileImageFile}")
+      .col-md-6
+        h4
+          | Add Profile Image
+        .csv-drop-file
+          p
+            input.file-uploader#fileuploadimage( type="file", name="files[]", multiple)
+          #dropzoneimage.dropzone
+            span.typcn.typcn-folder-open
+            .muted.text
+              | Drag and drop image files here
+          div(id="files", class="files")
+
+
 block subfoot
   - var action = '/users/' + user.id
   .modal.edit-profile-modal
@@ -55,12 +84,38 @@ block subfoot
             input#email.form-control(type='text', name="email", placeholder='Email', value=user.email)
 
           .form-group
+            label.control-label(for='name') Address
+            input#email.form-control(type='text', name="address", placeholder='Address', value=user.address)
+
+          .form-group.col-sm-4
+            //label.control-label(for='name') City
+            input#email.form-control(type='text', name="city", placeholder='City', value=user.city)
+
+          .form-group.col-sm-3
+            //label.control-label(for='name') State
+            input#state.form-control(type='text', name="state", placeholder='State', value=user.state)
+
+          .form-group.col-sm-2
+            //label.control-label(for='name') Zipcode
+            input#email.form-control(type='number', name="zipcode", placeholder='Zipcode', value=user.zipcode)
+
+
+
+
+          .form-group
             button.left-float.btn.action(type='submit')
               span.typcn.typcn-tick
               |  Save
             a.right-float.btn.subtle.cancel.btn-danger(href='/articles', title="cancel")
               span.typcn.typcn-times
               |  Cancel
+
+  script(type="text/javascript", src='/js/vendor/jquery-ui.js')
+  script(type="text/javascript", src="/js/vendor/jquery.ui.widget.js")
+  script(type="text/javascript", src="/js/vendor/jquery.iframe-transport.js")
+  script(type="text/javascript", src="/js/vendor/jquery.fileupload.js")
+  script(type="text/javascript", src="/js/dropzone.js")
+
   script.
     $( document ).ready(function() {
 
@@ -72,3 +127,21 @@ block subfoot
       });
 
     });
+    $('#fileuploadimage').fileupload({
+             url: '#{user.id}/uploadimage'
+            ,dataType: 'json'
+            ,autoUpload: true
+            ,dropZone: $('#dropzoneimage')
+          //  acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            ,maxFileSize: 20000000 // 5 MB
+            // Enable image resizing, except for Android and Opera,
+            // which actually support image resizing, but fail to
+            // send Blob objects via XHR requests:
+            ,disableImageResize: /Android(?!.*Chrome)|Opera/
+                .test(window.navigator.userAgent)
+            ,previewMaxWidth: 100
+            ,previewMaxHeight: 100
+            ,previewCrop: true
+        }).on('fileuploaddone', function (e, data) {
+          location.reload();
+        })

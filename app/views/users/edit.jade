@@ -33,6 +33,17 @@ block content
             input#email.form-control(type='text', name="email", placeholder='Email', value=user.email)
 
         .form-group
+          label.col-sm-2.control-label(for='email') Address
+          .col-sm-10
+            input#email.form-control(type='text', name="address", placeholder='Address', value=user.address)
+
+        .form-group
+          label.col-sm-2.control-label(for='email') Zipcode
+          .col-sm-10
+            input#email.form-control(type='text', name="zipcode", placeholder='Zipcode', value=user.zipcode)
+
+
+        .form-group
           .col-sm-offset-2.col-sm-10
             button.btn.btn-primary(type='submit') Save
             | &nbsp;

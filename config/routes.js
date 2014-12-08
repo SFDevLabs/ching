@@ -89,6 +89,7 @@ module.exports = function (app, passport) {
   app.get('/users/:userId', users.show)
   app.get('/users/:userId/edit', users.edit)
   app.put('/users/:userId', users.update)
+  app.post('/users/:userId/uploadimage', users.uploadImage);//upload 
 
 
 
@@ -151,6 +152,8 @@ module.exports = function (app, passport) {
   app.param('token', articles.token)
   app.get('/articles/:id/token/:token', viewerAuthToken, articles.record, articles.show)
   app.get('/articles/:id', viewerAuth, articles.record, articles.show)
+  app.get('/articles/:id/preview', viewerAuth, articles.record, function(req,res,next){ req.preview=true; next()}, articles.show)
+
   app.get('/articles/:id/edit', articleAuth, articles.edit)
   app.put('/articles/:id', articleAuth, articles.update)
   app.del('/articles/:id', articleAuth, articles.destroy)
@@ -162,6 +165,9 @@ module.exports = function (app, passport) {
 
   app.post('/articles/:id/upload', articles.uploadcsv);//upload 
   app.post('/articles/:id/uploadimage', articles.uploadImage);//upload 
+
+
+
 
 
   

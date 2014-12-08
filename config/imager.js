@@ -8,8 +8,17 @@ module.exports = {
         
       },
       resizeAndCrop: {
-        thumb: {resize: "133x133", crop: "100x100"},
-        mini: {resize: "200x150", crop: "800x600"}
+        thumb: {resize: "133x133", crop: "100x100"}
+      }
+    },
+    user: {
+      resize: {
+        user_thumb: "250x250"
+      },
+      crop: {
+        
+      },
+      resizeAndCrop: {
       }
     }
   },

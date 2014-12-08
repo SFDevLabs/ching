@@ -67,6 +67,8 @@ button, input, textarea, select {
 
 .row {
   clear: both; }
+  .row.last {
+    margin-bottom: 5em; }
   .row.last-row {
     margin-bottom: 15px; }
 
@@ -255,7 +257,8 @@ form.large label, form.large input, form.large textarea, form.large select, form
   font-size: 1.25em;
   line-height: 1.25em; }
 form .form-group {
-  margin-bottom: 1em; }
+  margin-bottom: 1em;
+  padding-left: 0px; }
   form .form-group:last-child {
     margin-bottom: 0; }
   form .form-group .line {
@@ -668,9 +671,13 @@ body.show {
       background: #fafafa;
       border: 1px dashed #e6e6e6; }
     .invoice-form .properties .btn {
-      margin-bottom: 1.25em; }
+      margin: 0.7em 0em 0em; }
     .invoice-form .properties .status {
       margin-top: 0em; }
+    .invoice-form .properties .invoice-img i {
+      font-size: 2em; }
+    .invoice-form .properties .invoice-img img {
+      width: 100px; }
   .invoice-form h2 {
     margin-bottom: 0; }
   .invoice-form .meta {

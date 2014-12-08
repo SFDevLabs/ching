@@ -186,14 +186,13 @@ ArticleSchema.methods = {
     //if (!images || !images.length) return this.save(cb);
      // console.log(images)
 
-     console.log(imagerConfig)
     var imager = new Imager(imagerConfig, 'S3')
     var self = this
 
     this.validate(function (err) {
       console.log(err)
       if (err) return cb(err);
-      imager.upload([images], function (err, cdnUri, files) {
+      imager.upload(images, function (err, cdnUri, files) {
         if (err) return cb(err)
         if (files.length) {
           files.forEach(function(val, i){

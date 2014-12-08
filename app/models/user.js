@@ -6,7 +6,11 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , crypto = require('crypto')
   , oAuthTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin']
-
+  , env = process.env.NODE_ENV || 'development'
+  , config = require('../../config/config')[env]
+  , Imager = require('imager')
+  , imagerConfig = require(config.root + '/config/imager.js')
+  , _ = require("underscore");
 /**
  * User Schema
  */
@@ -20,6 +24,8 @@ var UserSchema = new Schema({
   zipcode: { type: String, default: '' },
   city: { type: String, default: '' },
   state: { type: String, default: '' },
+  profileImageFile: {type : String, default : ''},
+  profileImageCDN: {type : String, default : ''},
   provider: { type: String, default: '' },
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
@@ -155,6 +161,36 @@ UserSchema.methods = {
 
   doesNotRequireValidation: function() {
     return ~oAuthTypes.indexOf(this.provider);
+  },
+    /**
+   * Save article and upload image
+   *
+   * @param {Object} images
+   * @param {Function} cb
+   * @api private
+   */
+
+  uploadAndSave: function (images, userId, cb) {
+
+    var imager = new Imager(imagerConfig, 'S3')
+    var self = this
+
+    this.validate(function (err) {
+      console.log(err)
+      if (err) return cb(err);
+      imager.upload(images, function (err, cdnUri, files) {
+                  console.log(err, 'err')
+
+        if (err) return cb(err)
+        if (files.length) {
+          files.forEach(function(val, i){
+            self.profileImageCDN=cdnUri;
+            self.profileImageFile=val;
+          })
+        }
+        self.save(cb)
+      }, 'user')
+    })
   }
 }
 

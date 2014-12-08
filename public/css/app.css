@@ -92,11 +92,6 @@ button.error {
 #grid .htDimmed {
   color: inherit; }
 
-#dropzone {
-  height: 100px; }
-  #dropzone.dragging {
-    border: 5px dashed; }
-
 #ui-datepicker-div {
   background-color: #fff;
   border: 1px solid #ddd; }

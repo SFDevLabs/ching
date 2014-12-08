@@ -302,6 +302,8 @@ exports.edit = function (req, res) {
   })
 }
 
+
+
 /**
  * Show edit
  */
@@ -314,5 +316,26 @@ exports.update = function (req, res, next) {
       req.flash('success', 'Successfully Updated Your Profile!')
       return res.redirect('/users/'+user.id)
   })
+
+}
+
+/*
+ * Upload Image
+ */
+exports.uploadImage = function(req, res){
+  var user = req.user;
+  var files = req.files.files;
+
+  if (!files || files.length===0){ return res.send([])};
+  user.uploadAndSave(files, req.user.id, function(err) {
+        console.log(err, 'save')
+
+      if (!err) {
+       return res.send({
+        file: user.profileImageFile,
+        cdn: user.profileImageCDN
+       })
+      }
+    });
 
 }

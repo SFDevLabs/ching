@@ -6,19 +6,35 @@ block extrahead
   link(rel='stylesheet', href='/css/jquery-ui.min.css')
   link(rel='stylesheet', href='/css/jquery-ui.ching.theme.css')
   link(rel="stylesheet", href="/css/app.css")
-
+  - if (req.article.user.id!==req.user.id || req.preview)
+    link(rel="stylesheet", href="/css/view-invoice.css")
 block main
+  - var mainAuth = (req.article.user.id===req.user.id && !req.preview)
   .controls
     .container
       .row
         .col-md-12.invoice-bar
-
           - var actionPDF = "/articles/"+article._id+"/pdf"
+          - var actionPreview = "/articles/"+article._id+"/preview"
+          - var actionArticle = "/articles/"+article._id
+
+
           -if(req.token){actionPDF+= '/token/'+req.token}          
+
+          -if (req.preview)
+            a.btn(href=actionArticle)
+              span.typcn.typcn-arrow-back
+              |  Back to Invoice
 
           a.btn(href=actionPDF)
             span.typcn.typcn-document-text
             |  Download PDF
+
+          -if (mainAuth)
+            a.btn(href=actionPreview)
+              span.typcn.typcn-document-text
+              |  Preview Invoice
+
           - if (article.paidOn)
             button.btn.btn-danger.subtle.btn-payed
               span.typcn.typcn-mail
@@ -28,7 +44,7 @@ block main
               span.typcn.typcn-bell
                 |  Mark as Payed
           
-          -if(article.paidOn && !article.paymentVerifiedOn && req.article.user.id===req.user.id)
+          -if(article.paidOn && !article.paymentVerifiedOn && mainAuth)
             button.btn.btn-confirm-payed
               span.typcn.typcn-bell
                 |  Confirm Payment
@@ -63,12 +79,14 @@ block content
               - else
                 - var hasImage = ""
               
+
               h2.title
                 | #{article.title}
               br
-              .muted.status
-                |status:
-              -if (article.status == "sent")
+              if (mainAuth || (article.status !== "sent" && article.status !== "draft"))
+                .muted.status
+                  |status:
+              -if (article.status == "sent" && mainAuth)
                 h4.status(class="#{article.status} #{hasImage}") Sent on #{formatDate(article.invoicedOn)}
               -else if(article.status =='verified')
                 h4.status(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paymentVerifiedOn)}
@@ -78,13 +96,13 @@ block content
                 -var today = new Date()
                 -var pastDue = Math.round( (today.getTime() - article.dueOn.getTime())/86400000 )
                 h4.status(class="#{article.status} #{hasImage}") Overdue #{pastDue} days
-              -else
+              -else if (article.status == "draft" && mainAuth)
                 h4.status(class="#{article.status} #{hasImage}") #{article.status}
 
               -if (article.description)
                 br
                 P=article.description
-              -else if (req.article.user.id===req.user.id)
+              -else if (mainAuth)
                 br
                 a(href="javascript:void(0)").btn-edit Add a invoice details...
                     
@@ -97,16 +115,24 @@ block content
                     | &nbsp;&nbsp;
 
             .col-md-4.float-right.right
-              - if (req.user && req.article && req.article.user.id===req.user.id)
+              - if (req.user.profileImageCDN && req.user.profileImageFile)
+                .invoice-img
+                  img(src="#{req.user.profileImageCDN}/user_thumb_#{req.user.profileImageFile}")
+              -else if (mainAuth)
+                 h4.mini.invoice-img
+                  a(href='/users/'+req.user.id) Add Invoice Logo
+                  |&nbsp;
+                  i.typcn.typcn-image
+              - if (req.user && req.article && mainAuth)
                 span.btn.btn-default.btn-edit
                   span.typcn.typcn-edit
                   |  Edit
               h4.mini  InvoiceNumber: #{formatInvoiceNumber(article.number)}
               if (article.dueOn)
                 h4.mini Due Date: #{formatDate(article.dueOn)}  
-              else if (req.article.user.id===req.user.id)
+              else if (mainAuth)
                  h4.mini Due Date: 
-                  a.btn-edit Add Due Date
+                  a(href='javascript:void(0)').btn-edit Add Due Date
               if (article.invoicedOn)
                 h4.mini Invoice Sent On: #{formatDate(article.invoicedOn)}
               if (article.paidOn)
@@ -114,6 +140,7 @@ block content
               h4.gray
                 span Created 
                 span= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
+
       hr
       .row
         .col-md-8
@@ -146,14 +173,14 @@ block content
                         p=viewer.user.email
                         p.gray='Organization: '
                         p=viewer.user.organization
-                        -if (req.article.user.id===req.user.id)
+                        -if (mainAuth)
                           form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id)
                             input(type='hidden', name='_csrf', value="#{csrf_token}")
                             input(type="hidden", name="_method", value="DELETE")
                             button.close-button(type="submit")
                               span.typcn.typcn-delete
 
-        - if (req.user && req.article && req.article.user.id===req.user.id)
+        - if (req.user && req.article && mainAuth)
           .col-md-4
             button.right.btn.add-recipient-trigger.closed
               span.typcn.typcn-user-add
@@ -219,7 +246,7 @@ block content
       
       
 
-      - if (req.user && req.article && req.article.user.id===req.user.id)
+      - if (req.user && req.article && mainAuth)
         hr
         .row
             .col-md-6
@@ -298,7 +325,7 @@ block content
     //-           p
     //-             | Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
 
-    -if (article.status != "draft" && req.user && req.article.user.id===req.user.id)
+    -if (article.status != "draft" && req.user && mainAuth)
       .container
         .row
           .col-md-12
@@ -564,6 +591,8 @@ block subfoot
           .col-md-4
             - if (!article.isNew && article.image && article.image.files && article.image.files.length)
               img(src=article.image.cdnUri + "/mini_" + article.image.files[0])
+  script.
+    window.readOnly = #{!mainAuth};
   script(type="text/javascript", src='/js/vendor/jquery-ui.js')
   script(type="text/javascript", src="/js/vendor/underscore-min.js")
   script(type="text/javascript", src="/js/vendor/backbone-min.js")
@@ -573,6 +602,7 @@ block subfoot
   script(type="text/javascript", src="/js/vendor/jquery.fileupload.js")
   script(type="text/javascript", src="/js/vendor/jquery.timeago.js")
   script(type="text/javascript", src="/js/todos.js")
+  script(type="text/javascript", src="/js/dropzone.js")
   script(src='https://d26b395fwzu5fz.cloudfront.net/3.1.0/keen.min.js', type='text/javascript')
   script.
     $( document ).ready(function() {
