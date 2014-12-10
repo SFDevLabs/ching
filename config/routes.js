@@ -86,11 +86,12 @@ module.exports = function (app, passport) {
       failureRedirect: '/login',
       failureFlash: 'Invalid email or password.'
     }), users.session)
-  app.get('/users/:userId', users.show)
-  app.get('/users/:userId/edit', users.edit)
-  app.put('/users/:userId', users.update)
-  app.post('/users/:userId/uploadimage', users.uploadImage);//upload 
+  app.get('/users/:userId',userAuth, users.show)
+  app.get('/users/:userId/edit',userAuth, users.edit)
+  app.put('/users/:userId',userAuth, users.update)
+  app.post('/users/:userId/uploadimage',userAuth, users.uploadImage);//upload 
 
+  app.get('/users/:userId/addresses', users.addresses)
 
 
   app.get('/auth/facebook',

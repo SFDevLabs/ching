@@ -369,7 +369,7 @@ footer {
       color: #FF9B00;
       margin-bottom: 0.3125em; }
     .landing header .header-content .computer {
-      min-height: 106px;
+      min-height: 200px;
       position: relative;
       width: 100%;
       z-index: 1000; }
@@ -470,11 +470,8 @@ footer {
       display: inline; }
   .landing .feature-list p {
     text-align: justify;
-    margin: 0em 3.2em; }
-  @media (max-width: 1200px) {
-    .landing .feature-list p {
-      margin: 0em 10.2em; }
- }
+    width: 80%;
+    margin: auto; }
 .landing .logos {
   background: #fafafa;
   padding: 5em 0; }
@@ -483,11 +480,10 @@ footer {
   .landing .logos .ding img {
     margin-top: 1.65em; }
   .landing .logos .expensify img {
-    margin-top: 2.5em;
-    max-width: 200px; }
+    margin-top: 2.5em; }
   .landing .logos img {
     margin: 0 auto;
-    max-width: 160px;
+    max-width: 105%;
     max-height: 100px;
     opacity: 0.35; }
 .landing p:last-child {

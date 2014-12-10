@@ -552,7 +552,7 @@ footer {
       }
 
       .computer {
-        min-height:106px;
+        min-height:200px;
         position: relative;
         width: 100%;
         z-index: 1000;
@@ -699,14 +699,21 @@ footer {
     }
     p {
       text-align: justify;
-      margin: 0em 3.2em;
+      width:80%;
+      margin: auto;
+      //margin: 0em 3.2em;
 
     }
-    @media (max-width: 1200px){
-      p{
-        margin: 0em 10.2em;
-      }
-    }
+    // @media (max-width: 1200px) and (min-width:990px){
+    //   p{
+    //     margin: 0em 23.2em;
+    //   }
+    // }
+    // @media (max-width: 990px){
+    //   p{
+    //     margin: 0em 15.2em;
+    //   }
+    // }
   }
 
   .logos {
@@ -719,11 +726,10 @@ footer {
     }
     .expensify img {
       margin-top: 2.5em;
-      max-width: 200px;
     }
     img {
       margin: 0 auto;
-      max-width: 160px;
+      max-width: 105%;
       max-height: 100px;
       opacity: 0.35;
     }

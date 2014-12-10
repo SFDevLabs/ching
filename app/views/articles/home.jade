@@ -89,7 +89,7 @@ block content
 			span.typcn.typcn-clipboard
 			span.typcn.typcn-times-outline
 			span.typcn.typcn-clock
-		.header-content.hidden
+		.header-content
 			.container
 				h1 Ching
 				.computer
@@ -114,28 +114,28 @@ block content
 				//- 	|  ching:
 
 				ul.features.row
-					li.col.col-lg-4
+					li.col.col-sm-4
 						span(class="icon typcn typcn-chart-area-outline")
 						h4 Informative Charts
 						p Visualize where money is flowing. See how to improve your cash-flow.
-					li.col.col-lg-4
+					li.col.col-sm-4
 						span(class="icon typcn typcn-zoom-in-outline")
 						h4 Fast Search
 						p Complete invoice indexing. Search on items, client names, tags or totals.
-					li.col.col-lg-4
+					li.col.col-sm-4
 						span(class="icon typcn typcn-watch")
 						h4 Speedy Invoicing
 						p Magically pull in data from spreadheets, time tracking or expense tools.
 				ul.features.row					
-					li.col.col-lg-4
+					li.col.col-sm-4
 						span(class="icon typcn typcn-clipboard")
 						h4 Spreadsheet Features
 						p Cut, copy and paste inside your invoice. Use all the familiar spreadheet commands.
-					li.col.col-lg-4
+					li.col.col-sm-4
 						span(class="icon typcn typcn-calendar-outline")
 						h4 Track Due Dates
 						p Stay on top of you accounts and get paid promptly. Avoid past due invoices.
-					li.col.col-lg-4
+					li.col.col-sm-4
 						span(class="icon typcn typcn-messages")
 						h4 Communicate Clearly
 						p Avoid endless email threads. Add photos and comments directly on the invoice. 
@@ -143,13 +143,13 @@ block content
 			div.container.details
 				h2.mini Combine timesheets and expenses from anywhere.
 				ul
-					li.col.col-lg-3.ding(title="Ding")
+					li.col.col-sm-3.ding(title="Ding")
 						img(src="/img/logo-ding.png")
-					li.col.col-lg-3.freshbooks(title="Freshbooks")
+					li.col.col-sm-3.freshbooks(title="Freshbooks")
 						img(src="/img/logo-freshbooks.png")
-					li.col.col-lg-3.expensify(title="Expensify")
+					li.col.col-sm-3.expensify(title="Expensify")
 						img(src="/img/logo-expensify.png")
-					li.col.col-lg-3.excel(title="Excel")
+					li.col.col-sm-3.excel(title="Excel")
 						img(src="/img/logo-excel-text.png")
 		div.cta
 			div.container.details
@@ -208,7 +208,6 @@ block subfoot
 			//blelow logic makes sure the images are loaded before we start the animation;
 			var showJunk =  function(){ 
 			  $('.junk').removeClass('hidden')
-			  $('.header-content').removeClass('hidden')
 			  $('.invoices').removeClass('hidden')
 			}
 			$('.computer img').each(function() {

@@ -287,6 +287,21 @@ exports.user = function (req, res, next, id) {
 }
 
 
+/**
+ * Search for users by email
+ */
+
+exports.addresses = function (req, res) {
+  User
+    .find({ email : /jeff/i },"firstname lastname organization email")
+    .exec(function (err, results) {
+      if (err) return next(err)
+      
+        res.send(results)
+
+    })
+}
+
 
 /**
  * Show edit
