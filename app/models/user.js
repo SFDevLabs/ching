@@ -20,6 +20,7 @@ var UserSchema = new Schema({
   lastname: { type: String, default: '' },
   email: { type: String, default: '' },
   organization: { type: String, default: '' },
+  organizations: { type: String, default: '' },
   address: { type: String, default: '' },
   zipcode: { type: String, default: '' },
   city: { type: String, default: '' },

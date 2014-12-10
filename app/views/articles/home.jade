@@ -107,7 +107,7 @@ block content
 	.landing-content#more
 		div.feature-list
 
-			div.container.details
+			div.container.details.fadeIn.fade.hide
 				//- h3.mini.mute 
 				//- 	| Reasons you'll &
 				//- 	i(class="icon typcn typcn-heart")
@@ -144,13 +144,13 @@ block content
 				h2.mini Combine timesheets and expenses from anywhere.
 				ul
 					li.col.col-sm-3.ding(title="Ding")
-						img(src="/img/logo-ding.png")
+						img.fadeIn.hide.fade(src="/img/logo-ding.png")
 					li.col.col-sm-3.freshbooks(title="Freshbooks")
-						img(src="/img/logo-freshbooks.png")
+						img.fadeIn.hide.fade(src="/img/logo-freshbooks.png")
 					li.col.col-sm-3.expensify(title="Expensify")
-						img(src="/img/logo-expensify.png")
+						img.fadeIn.hide.fade(src="/img/logo-expensify.png")
 					li.col.col-sm-3.excel(title="Excel")
-						img(src="/img/logo-excel-text.png")
+						img.fadeIn.hide.fade(src="/img/logo-excel-text.png")
 		div.cta
 			div.container.details
 				h2.mini Get the books done faster.
@@ -220,6 +220,35 @@ block subfoot
 				}
 			});
 
+			var logo = $('.logos'),
+				features = $('.feature-list'),
+				a=true,
+				b=true;
+			$(window).on('scroll', function(e){
+
+				if (a && isScrolledIntoView(features[0])){
+				a=false;
+				features.find('.details').removeClass('hide');
+				setTimeout(function(){features.find('.details').removeClass('fade')}, 150);
+				}
+				if (b && isScrolledIntoView(logo[0])){
+				b=false;
+				logo.find('img').removeClass('hide');
+				setTimeout(function(){logo.find('img').removeClass('fade')}, 150);
+				}
+
+
+			})
+			function isScrolledIntoView(elem)
+			{
+			    var docViewTop = $(window).scrollTop();
+			    var docViewBottom = docViewTop + $(window).height();
+
+			    var elemTop = $(elem).offset().top;
+			    var elemBottom = elemTop + $(elem).height();
+
+			    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+			}
 
 			invoice();
 		});

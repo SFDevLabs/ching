@@ -458,14 +458,16 @@ footer {
 .landing .feature-list {
   padding: 3.75em 0 2.5em 0;
   border-top: 1px solid #dedede;
-  border-bottom: 1px solid #dedede; }
+  border-bottom: 1px solid #dedede;
+  min-height: 400px; }
   .landing .feature-list .features li {
     margin-top: 40px; }
   .landing .feature-list .icon {
     font-size: 6.5em;
     color: #bdbdbd;
     vertical-align: bottom;
-    line-height: 0.625em; }
+    line-height: 0.625em;
+    color: #FF9B00; }
     .landing .feature-list .icon:before {
       display: inline; }
   .landing .feature-list p {
@@ -475,6 +477,8 @@ footer {
 .landing .logos {
   background: #fafafa;
   padding: 5em 0; }
+  .landing .logos ul {
+    min-height: 100px; }
   .landing .logos h2 {
     margin-bottom: 1.25em; }
   .landing .logos .ding img {
@@ -869,3 +873,11 @@ ul.pagination {
   margin: 0px; }
   .file-uploader.highlight {
     background-color: rgba(255, 155, 0, 0.5); }
+
+.fadeIn {
+  transition: opacity 0.25s ease-in-out;
+  -moz-transition: opacity 0.25s ease-in-out;
+  -webkit-transition: opacity 0.25s ease-in-out; }
+
+.fade {
+  opacity: 0 !important; }

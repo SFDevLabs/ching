@@ -5,6 +5,7 @@
 
 var mongoose = require('mongoose')
   , User = mongoose.model('User')
+  , Org = mongoose.model('Org')
   , utils = require('../../lib/utils')
   , crypto = require('crypto')
   , User = mongoose.model('User')
@@ -234,7 +235,15 @@ exports.create = function (req, res, next) {
             title: 'Sign up'
           })
       } else { //Brand spankin new so we make a new user
-          newUser = new User(req.body)
+
+          var user ={};
+          for (key in req.body) {
+            user[key]=req.body[key]
+          };
+          if(req.body.organization){
+            user.organizations = [new Org({name:req.body.organization})]
+          }
+          newUser = new User(user)
       }
       newUser.provider = 'local' //Set as local auth
       newUser.save(function (err) {

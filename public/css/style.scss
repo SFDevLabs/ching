@@ -673,6 +673,7 @@ footer {
 
   .details {
     text-align: center;
+
     .button {
       margin: 0 1.25em;
     }
@@ -685,6 +686,7 @@ footer {
     padding: 3.75em 0 2.5em 0;
     border-top: 1px solid darken($block, 7%);
     border-bottom: 1px solid darken($block, 7%);
+    min-height: 400px;
     .features li{
       margin-top: 40px;
     }
@@ -693,6 +695,7 @@ footer {
       color: darken($block, 20%);
       vertical-align: bottom;
       line-height: 0.625em;
+      color: #FF9B00;
       &:before {
         display: inline;
       }
@@ -717,6 +720,9 @@ footer {
   }
 
   .logos {
+    ul{
+      min-height: 100px;
+    }
     background: #fafafa;
     h2 {
       margin-bottom: 1.25em;
@@ -1308,4 +1314,14 @@ ul.pagination{
   &.highlight{
     background-color: rgba(255, 155, 0, 0.5);
   }
+}
+
+.fadeIn {
+   transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+}
+
+.fade {
+   opacity: 0 !important;
 }
