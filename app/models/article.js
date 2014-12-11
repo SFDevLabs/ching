@@ -1,4 +1,4 @@
-
+'use strict';
 /**
  * Module dependencies.
  */
@@ -17,23 +17,20 @@ var mongoose = require('mongoose')
  */
 
 var getTags = function (tags) {
-  return tags.join(',')
-}
+  return tags.join(',');
+};
 
 /**
  * Setters
  */
 
 var setTags = function (tags) {
-  return tags.split(',')
-}
+  return tags.split(',');
+};
 
 /**
  * Article Schema
  */
-
-  var formates = [,,'%0.00','%0.00','','mm/dd/yy'],
-      formateKeys = ['cost','qty','tax1','tax2','type','date'];
 
 var itemsSchema = {
     note:{type : String, default :  null, format: '', typeString:'string',columnPosition:7, displayName:'Note', colWidth:180, printColWidth:80},
@@ -46,24 +43,21 @@ var itemsSchema = {
     item:{type : String, default : null, format: '', typeString:'string',columnPosition:0, displayName:'Description', colWidth:195, printColWidth:80},
   //  subtotals:[{type : String, default : null, format: '', typeString:'string'}],
     total:{type : Number, default : null, format: '0,0.00', typeString:'number',columnPosition:8, displayName:'Total', colWidth:100, printColWidth:120},
-  }
+  };
 
   var viewersSchema = new Schema({
     user: {type : Schema.ObjectId, ref : 'User'},
     createdAt: { type : Date, default : Date.now },
-  })
+  });
   var viewsSchema = new Schema({ //turn this into events
     user: {type : Schema.ObjectId, ref : 'User'},
     viewedAt: { type : Date, default : Date.now },
     type: {type : String, default : '', trim : true}
-  })
+  });
   exports.itemsSchemaExport = function(){
     return _.extend({}, itemsSchema);
-  }
+  };
 
-var nextNumber = function(){
-  return 1;
-}
 var ArticleSchema = new Schema({
   number:{type : Number},
   viewers:[viewersSchema],
@@ -122,22 +116,22 @@ var ArticleSchema = new Schema({
 ArticleSchema
   .virtual('status')
   .get(function() {// This logic and the templates that use it could be better thought out.
-     var val
+     var val;
       if (this.paymentVerifiedOn!==null){
-        val='verified'
+        val='verified';
       }else if (this.paidOn!==null){
-        val='paid'
+        val='paid';
       }else if (this.invoicedOn===null){
-        val='draft'
+        val='draft';
       }else if (this.paidOn===null && this.dueOn && new Date()>this.dueOn){
-        val='overdue'
+        val='overdue';
       } else if (this.invoicedOn!==null){
-        val='sent'
+        val='sent';
       }
 
-      return val
+      return val;
 
-  })
+  });
 
 
 
@@ -185,23 +179,21 @@ ArticleSchema.methods = {
     //if (!images || !images.length) return this.save(cb);
      // console.log(images)
 
-    var imager = new Imager(imagerConfig, 'S3')
-    var self = this
+    var imager = new Imager(imagerConfig, 'S3');
+    var self = this;
 
     this.validate(function (err) {
-      console.log(err)
       if (err) return cb(err);
       imager.upload(images, function (err, cdnUri, files) {
-        if (err) return cb(err)
+        if (err) return cb(err);
         if (files.length) {
-          files.forEach(function(val, i){
-            self.images.push({ cdnUri : cdnUri, file : val, user:userId})
-          })
+          files.forEach(function(val){
+            self.images.push({ cdnUri : cdnUri, file : val, user:userId});
+          });
         }
-        console.log(self.images)
-        self.save(cb)
-      }, 'article')
-    })
+        self.save(cb);
+      }, 'article');
+    });
   },
 
   /**
@@ -217,8 +209,8 @@ ArticleSchema.methods = {
     this.comments.push({
       body: comment.body,
       user: user._id
-    })
-    this.save(cb)
+    });
+    this.save(cb);
   },
 
   /**
@@ -230,10 +222,10 @@ ArticleSchema.methods = {
    */
 
   removeComment: function (commentId, cb) {
-    var index = utils.indexof(this.comments, { id: commentId })
-    if (~index) this.comments.splice(index, 1)
-    else return cb('not found')
-    this.save(cb)
+    var index = utils.indexof(this.comments, { id: commentId });
+    if (~index) this.comments.splice(index, 1);
+    else return cb('not found');
+    this.save(cb);
   },
 
 
@@ -256,8 +248,8 @@ ArticleSchema.methods = {
     // })
 
     this.save(function(err,obj){
-      cb(err,obj,newViewer)
-    })
+      cb(err,obj,newViewer);
+    });
   },
 
   /**
@@ -269,10 +261,10 @@ ArticleSchema.methods = {
    */
 
   removeViewer: function (viewerId, cb) {
-    var index = utils.indexof(this.viewers, { id: viewerId })
-    if (~index) this.viewers.splice(index, 1)
-    else return cb('not found')
-    this.save(cb)
+    var index = utils.indexof(this.viewers, { id: viewerId });
+    if (~index) this.viewers.splice(index, 1);
+    else return cb('not found');
+    this.save(cb);
   },
 
    /**
@@ -293,10 +285,10 @@ ArticleSchema.methods = {
     // })
 
     this.save(function(err,obj){
-      cb(err,obj,newViewer)
-    })
+      cb(err,obj,newViewer);
+    });
   },
-}
+};
 
 /**
  * Statics
@@ -319,7 +311,7 @@ ArticleSchema.statics = {
       .populate('viewers.user', 'lastname email firstname organization')
       .populate('views.user', 'lastname email firstname organization')
       .populate('images.user', 'lastname email firstname organization')
-      .exec(cb)
+      .exec(cb);
   },
 
   highestNumber: function (userId, cb) {
@@ -328,14 +320,14 @@ ArticleSchema.statics = {
         .limit( 1 )
         .sort( {number:-1} )
         .exec(function(err, highest){
-            if (err) { cb(err,null)};            
+            if (err) { cb(err,null);}       
             if (highest.length && typeof highest[0].number==='number'){
-              number = highest[0].number+1
+              number = highest[0].number+1;
             }else{
-              number = 1
-            };
-            cb(null,number)
-        })
+              number = 1;
+            }
+            cb(null,number);
+        });
   },
 
   /**
@@ -347,19 +339,11 @@ ArticleSchema.statics = {
    */
 
   graph: function (options, cb) {
-    var criteria = options.criteria || {}
-    //options.criteria
-    
-    //paid
-    //overdue
-    //sent
-    // draft*
-    // 
-    //Start Date
+    var criteria = options.criteria || {};
 
     this
-    //.project({ paidOn : 1 })
-    .find(options.criteria, { paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, total:1 })
+    .find(criteria, { paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, total:1 })
+      //.project({ paidOn : 1 })
       // .or([
       //     options.criteria
       //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
@@ -373,7 +357,7 @@ ArticleSchema.statics = {
       //.limit(options.perPage)
       //.skip(options.perPage * options.page)
       .lean()
-      .exec(cb)
+      .exec(cb);
   },
 
   /**
@@ -385,9 +369,9 @@ ArticleSchema.statics = {
    */
 
   list: function (options, cb) {
-    var criteria = options.criteria || {}
+    var criteria = options.criteria || {};
 
-    this.find(options.criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, title:1 })
+    this.find(criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, title:1 })
       // .or([
       //     options.criteria
       //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
@@ -400,7 +384,7 @@ ArticleSchema.statics = {
       .sort({'createdAt': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)
-      .exec(cb)
+      .exec(cb);
   },
 
 
@@ -414,28 +398,20 @@ ArticleSchema.statics = {
   all:function (options,cb){
       
       this.find(options.criteria)
-      // .or([
-      //     options.criteria
-      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
-      // ])
-      // .where('viewers')
-      // .in([options.criteria.user])
       .populate('user', 'firstname email lastname organization')
       .populate('viewers.user', 'firstname email lastname organization')
-      .sort({'createdAt': -1}) // sort by date
-      //.limit(options.perPage)
-      //.skip(options.perPage * options.page)
-      .exec(cb)
+      .sort({'createdAt': -1}) 
+      .exec(cb);
   },
 
   total: function (options, cb) {//@TODO clean me up
-    var criteria = options.criteria || {}
+    var criteria = options.criteria || {};
 
-    this.aggregate( [ { $match : options.criteria}
-                      ,{ $unwind : "$items" }
-                      ,{ $group : { _id : null , total : { $sum : '$items.total' } } }
+    this.aggregate( [ { $match : criteria},
+                      { $unwind : '$items' },
+                      { $group : { _id : null , total : { $sum : '$items.total' } } }
                       //{ $group: { _id: null, count: { $sum: 1 } } }
-                     ] ).exec(function(err,res, res2){
+                     ] ).exec(function(err,res){
                         // console.log(err,res,res2, 'agg')
                         var total;
                         if (res[0]){
@@ -446,44 +422,9 @@ ArticleSchema.statics = {
                         cb(null, total);
                        });
     
- //    this.find(options.criteria)
- //      // .or([
- //      //     options.criteria
- //      //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
- //      // ])
- //      // .where('viewers')
- //      // .in([options.criteria.user])
- //      // .populate('user', 'firstname email lastname organization')
- //      // .populate('viewers.user', 'firstname email lastname organization')
- //      // .sort({'createdAt': -1}) // sort by date
- // //     .limit(options.perPage)
- // //     .skip(options.perPage * options.page)
- //      .exec(function(err, results){
- //        //console.log(results)
- //        if (results.length){
- //          var total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
- //        }//check for luncg before we map reduce
- //        if (total && total>=0){req.total=total}
- //        //console.log(total, results.length)
- //        cb(null, total);
-
- //      })
   }
 
-//   var total = function(req, criteria, cb){
-//   var userID=req.user?req.user._id:null;
 
-//   console.log(criteria)
-//   Article.find(criteria, function(err, results) {
+};
 
-//     var total = results.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
-//     if (total>=0){req.total=total}
-//     console.log(total, results.length)
-//     cb();
-//   });
-
-// }
-
-}
-
-mongoose.model('Article', ArticleSchema)
+mongoose.model('Article', ArticleSchema);

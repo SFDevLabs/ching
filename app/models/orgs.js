@@ -1,7 +1,7 @@
+'use strict';
 /**
  * Module dependencies.
  */
-
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , crypto = require('crypto')
@@ -17,14 +17,13 @@ var mongoose = require('mongoose')
 
 var OrgSchema = new Schema({
   name: { type: String, default: '' },
-  email: { type: String, default: '' },
   address: { type: String, default: '' },
   zipcode: { type: String, default: '' },
   city: { type: String, default: '' },
   state: { type: String, default: '' },
   profileImageFile: {type : String, default : ''},
-  profileImageCDN: {type : String, default : ''},
-})
+  profileImageCDN: {type : String, default : ''}
+});
 
 /**
  * Virtuals
@@ -33,19 +32,13 @@ var OrgSchema = new Schema({
 OrgSchema
   .virtual('password')
   .set(function(password) {
-    this._password = password
-    this.salt = this.makeSalt()
-    this.hashed_password = this.encryptPassword(password)
+    this._password = password;
+    this.salt = this.makeSalt();
+    this.hashed_password = this.encryptPassword(password);
   })
-  .get(function() { return this._password })
-
-/**
- * Validations
- */
-
-var validatePresenceOf = function (value) {
-  return value && value.length
-}
+  .get(function() {
+    return this._password;
+  });
 
 
 
@@ -64,7 +57,7 @@ OrgSchema.statics = {
   //     .exec(cb)
   // }
 
-}
+};
 
 /**
  * Methods
@@ -81,10 +74,10 @@ OrgSchema.methods = {
    */
 
 
-  uploadAndSave: function (images, userId, cb) {
+  uploadAndSave: function () {
 
 
   }
-}
+};
 
-mongoose.model('Org', OrgSchema)
+mongoose.model('Org', OrgSchema);

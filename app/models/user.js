@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Module dependencies.
  */
@@ -19,8 +20,11 @@ var UserSchema = new Schema({
   firstname: { type: String, default: '' },
   lastname: { type: String, default: '' },
   email: { type: String, default: '' },
-  organization: { type: String, default: '' },
-  organizations: { type: String, default: '' },
+  organization:{ type: String, default: '' },
+  // organizations:[{
+  //   orgId : {type : Schema.ObjectId, ref : 'Org'},
+  //   isDefault : { type: Boolean, default: false },
+  // }],
   address: { type: String, default: '' },
   zipcode: { type: String, default: '' },
   city: { type: String, default: '' },
@@ -39,7 +43,7 @@ var UserSchema = new Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   placeholderFromShare: { type: Boolean, default: false },
-})
+});
 
 /**
  * Virtuals
@@ -48,32 +52,32 @@ var UserSchema = new Schema({
 UserSchema
   .virtual('password')
   .set(function(password) {
-    this._password = password
-    this.salt = this.makeSalt()
-    this.hashed_password = this.encryptPassword(password)
+    this._password = password;
+    this.salt = this.makeSalt();
+    this.hashed_password = this.encryptPassword(password);
   })
-  .get(function() { return this._password })
+  .get(function(){return this._password;});
 
 /**
  * Validations
  */
 
 var validatePresenceOf = function (value) {
-  return value && value.length
-}
+  return value && value.length;
+};
 
 // the below 5 validations only apply if you are signing up traditionally
 
 UserSchema.path('email').validate(function (email) {
-  if (this.doesNotRequireValidation() || this.placeholderFromShare) return true
-  return email.length
-}, 'Email cannot be blank')
+  if (this.doesNotRequireValidation() || this.placeholderFromShare) return true;
+  return email.length;
+}, 'Email cannot be blank');
 
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-  if (this.doesNotRequireValidation() || this.placeholderFromShare ) return true
-  return hashed_password.length
-}, 'Password cannot be blank')
+  if (this.doesNotRequireValidation() || this.placeholderFromShare ) return true;
+  return hashed_password.length;
+}, 'Password cannot be blank');
 
 
 /**
@@ -81,14 +85,13 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
  */
 
 UserSchema.pre('save', function(next) {
-  if (!this.isNew || this.placeholderFromShare) return next()
+  if (!this.isNew || this.placeholderFromShare) return next();
 
-  if (!validatePresenceOf(this.password)
-    && !this.doesNotRequireValidation())
-    next(new Error('Invalid password'))
-  else
-    next()
-})
+  if (!validatePresenceOf(this.password) && !this.doesNotRequireValidation()){
+    next(new Error('Invalid password'));
+  }else
+    next();
+});
 
 
 UserSchema.statics = {
@@ -103,10 +106,10 @@ UserSchema.statics = {
       //.sort({'createdAt': -1}) // sort by date
       //.limit(options.perPage)
       //.skip(options.perPage * options.page)
-      .exec(cb)
+      .exec(cb);
   }
 
-}
+};
 
 /**
  * Methods
@@ -123,7 +126,7 @@ UserSchema.methods = {
    */
 
   authenticate: function (plainText) {
-    return this.encryptPassword(plainText) === this.hashed_password
+    return this.encryptPassword(plainText) === this.hashed_password;
   },
 
   /**
@@ -134,7 +137,7 @@ UserSchema.methods = {
    */
 
   makeSalt: function () {
-    return Math.round((new Date().valueOf() * Math.random())) + ''
+    return Math.round((new Date().valueOf() * Math.random())) + '';
   },
 
   /**
@@ -146,13 +149,13 @@ UserSchema.methods = {
    */
 
   encryptPassword: function (password) {
-    if (!password) return ''
-    var encrypred
+    if (!password) return '';
+    var encrypred;
     try {
-      encrypred = crypto.createHmac('sha1', this.salt).update(password).digest('hex')
-      return encrypred
+      encrypred = crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+      return encrypred;
     } catch (err) {
-      return ''
+      return '';
     }
   },
 
@@ -173,26 +176,23 @@ UserSchema.methods = {
 
   uploadAndSave: function (images, userId, cb) {
 
-    var imager = new Imager(imagerConfig, 'S3')
-    var self = this
+    var imager = new Imager(imagerConfig, 'S3');
+    var self = this;
 
     this.validate(function (err) {
-      console.log(err)
       if (err) return cb(err);
       imager.upload(images, function (err, cdnUri, files) {
-                  console.log(err, 'err')
-
-        if (err) return cb(err)
+        if (err) return cb(err);
         if (files.length) {
-          files.forEach(function(val, i){
+          files.forEach(function(val){
             self.profileImageCDN=cdnUri;
             self.profileImageFile=val;
-          })
+          });
         }
-        self.save(cb)
-      }, 'user')
-    })
+        self.save(cb);
+      }, 'user');
+    });
   }
-}
+};
 
-mongoose.model('User', UserSchema)
+mongoose.model('User', UserSchema);

@@ -3,7 +3,6 @@ extends ../layouts/default
 block main
   link(rel='stylesheet', href='/css/index-page.css')
   .container.profile
-    h3=user
     h1= title
     .row
       .col-md-8
@@ -39,6 +38,13 @@ block main
             span(class="typcn typcn-mail")
               |  Send Email
 
+    .row
+      hr
+      .col-md-4
+        h4
+          | Organizations:
+        - each org in user.organizations
+          span=org.name
     
     .row.last
       hr

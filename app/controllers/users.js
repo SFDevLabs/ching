@@ -1,4 +1,4 @@
-
+'use strict';
 /**
  * Module dependencies.
  */
@@ -20,18 +20,18 @@ var mongoose = require('mongoose')
   , Mustache=require('mustache');
 
 var login = function (req, res) {
-  var redirectTo = req.session.returnTo ? req.session.returnTo : '/'
-  delete req.session.returnTo
-  res.redirect(redirectTo)
-}
+  var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
+  delete req.session.returnTo;
+  res.redirect(redirectTo);
+};
 
-exports.signin = function (req, res) {}
+exports.signin = function (req, res) {};
 
 /**
  * Auth callback
  */
 
-exports.authCallback = login
+exports.authCallback = login;
 
 
 /**
@@ -39,8 +39,8 @@ exports.authCallback = login
  */
 exports.savepw = function (req, res, next) {
     req.flash('savedbody',req.body);
-    next()
-}
+    next();
+};
 
 /**
  * Show login form
@@ -60,8 +60,8 @@ exports.login = function (req, res) {
     password: password,
     email: email,
    // bodyClass: bodyClass
-  })
-}
+  });
+};
 
 /**
  * Show sign up form
@@ -73,21 +73,21 @@ exports.signup = function (req, res) {
     title: 'Sign up',
     //bodyClass: bodyClass,
     user: new User()
-  })
-}
+  });
+};
 
 /**
  * Show reset form
  */
 
 exports.resetpage = function (req, res) {
-  var bodyClass = "reset";
+  var bodyClass = 'reset';
   res.render('users/reset', {
     title: 'Reset',
     bodyClass: bodyClass,
     message: req.flash('error')
-  })
-}
+  });
+};
 
 
 /**
@@ -98,27 +98,27 @@ exports.loadreset = function(req, res, next, resetid){
 
   User.findOne({resetPasswordToken:resetid}, function(err,user){
     req.user=user;
-    next()
-  })
-}
+    next();
+  });
+};
 
 /**
  * Reset Passwors
  */
 
 exports.resetPWpage = function (req, res) {
-  var bodyClass = "reset";
+  var bodyClass = 'reset';
   if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ 
-     req.flash('error', 'Password reset link invalid.')
-     return  res.redirect('/login')
-  };
+     req.flash('error', 'Password reset link invalid.');
+     return  res.redirect('/login');
+  }
   res.render('users/resetpage', {
     bodyClass: bodyClass,
     title: 'Reset Password',
     message: req.flash('error')
-  })
+  });
 
-}
+};
 
 
 /**
@@ -127,9 +127,9 @@ exports.resetPWpage = function (req, res) {
 
 exports.resetPW = function (req, res) {
   if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
-  req.user.resetPasswordExpires=undefined
-  req.user.resetPasswordToken=undefined
-  req.user.hashed_password=req.user.encryptPassword(req.body.password)
+  req.user.resetPasswordExpires=undefined;
+  req.user.resetPasswordToken=undefined;
+  req.user.hashed_password=req.user.encryptPassword(req.body.password);
   req.user.save(function (err) {
       var views={
         user_full_name: req.user.firstname+' '+req.user.lastname
@@ -219,12 +219,11 @@ exports.session = login
  */
 
 exports.create = function (req, res, next) {
-
-
-
   // Check only when it is a new user or when email field is modified
   User.findOne({ email: req.body.email }).exec(function (err, user) {
-      var newUser
+      var newUser;
+          //org = {orgId: new Org({name:req.body.organization}), isDefault:true };
+
       if (!err && user && user.placeholderFromShare){ //Save over the placeholder
          newUser = extend(user, req.body) //Combine the objects
          newUser.placeholderFromShare=false; //Remove placeholder flag
@@ -235,17 +234,17 @@ exports.create = function (req, res, next) {
             title: 'Sign up'
           })
       } else { //Brand spankin new so we make a new user
-
           var user ={};
-          for (key in req.body) {
+          for (var key in req.body) {
             user[key]=req.body[key]
           };
-          if(req.body.organization){
-            user.organizations = [new Org({name:req.body.organization})]
-          }
+          // if(req.body.organization){
+          //   user.organizations = [org]
+          // }
           newUser = new User(user)
       }
-      newUser.provider = 'local' //Set as local auth
+      newUser.provider = 'local'; //Set as local auth
+      //org.save(function (err) {
       newUser.save(function (err) {
         if (err){
           return res.render('users/signup', {
@@ -260,10 +259,10 @@ exports.create = function (req, res, next) {
           return res.redirect('/')
         })
 
-      })//save function
+      })//save function newUser
+      //})//save function Org
       
   });//findone function
-
 }
 
 /**
@@ -287,6 +286,7 @@ exports.show = function (req, res) {
 exports.user = function (req, res, next, id) {
   User
     .findOne({ _id : id })
+    .populate('organizations','name')
     .exec(function (err, user) {
       if (err) return next(err)
       if (!user) return next(new Error('Failed to load User ' + id))
