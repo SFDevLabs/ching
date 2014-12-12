@@ -1,0 +1,30 @@
+extends auth
+
+block auth
+  .row.sign-up
+    h2.center= title
+    form.large.col.col-lg-5.center-block(action="/users", method="post", role="form")
+      div.logo.center-block
+        a(href="/")
+          img(src="./img/logo.png")
+      input(type='hidden', name='_csrf', value="#{csrf_token}")
+
+      .form-group
+        label(for='lastname') Name 
+        input#firstname.form-control.half(type='text', name="firstname", placeholder='First', value=user.name)
+        input#lastname.form-control.half.right-float(type='text', name="lastname", placeholder='Last', value=user.name)
+
+      .form-group
+        label(for='organization') Organization
+        input#organization.form-control(type='text', name="organization", placeholder='Optional', value=user.name)
+
+      .form-group
+        label(for='email') Email
+        input#email.form-control(type='text', name="email", placeholder='', value=user.email)
+
+      .form-group
+        label(for='password') Password
+        input#password.form-control(type='password', name="password", placeholder='')
+      br
+      .form-group.center
+        button.btn.action.center-block(type='submit') Sign up

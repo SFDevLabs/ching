@@ -5,7 +5,7 @@
 
 var mongoose = require('mongoose')
   , User = mongoose.model('User')
-  , Org = mongoose.model('Org')
+  , Orgs = mongoose.model('Org')
   , utils = require('../../lib/utils')
   , crypto = require('crypto')
   , User = mongoose.model('User')
@@ -270,10 +270,10 @@ exports.create = function (req, res, next) {
 
 exports.show = function (req, res) {
   var bodyClass = "profile";
-  var user = req.profile
-  res.render('users/show', {
-    title: 'Profile',
-    user: user,
+  var org = req.organization
+  res.render('organization/show', {
+    title: 'Organization',
+    org: org,
     bodyClass: bodyClass
   })
 }
@@ -282,16 +282,23 @@ exports.show = function (req, res) {
  * Find user by id
  */
 
-exports.user = function (req, res, next, id) {
-  User
-    .findOne({ _id : id })
-    .populate('organizations.org')
-    .exec(function (err, user) {
+exports.org = function (req, res, next, id) {
+
+  User.orgMember(id, function(err, members){
+      req.members = members
       if (err) return next(err)
-      if (!user) return next(new Error('Failed to load User ' + id))
-      req.profile = user
-      next()
-    })
+      //if (members) return next(new Error('Failed to load Members ' + id))
+
+    Orgs
+      .findOne({ _id : id })
+      .exec(function (err, org) {
+        if (err) return next(err)
+        if (!org) return next(new Error('Failed to load Org ' + id))
+        req.organization = org
+        next()
+      });
+
+  });
 }
 
 
@@ -332,31 +339,95 @@ exports.edit = function (req, res) {
  */
 
 exports.update = function (req, res, next) {
-  var user = req.profile
-  extend(user, req.body);
-  user.save(function(err){
+  var org = req.organization
+  extend(org, req.body);
+  org.save(function(err){
     if (err) return next(err)
-      req.flash('success', 'Successfully Updated Your Profile!')
-      return res.redirect('/users/'+user.id)
+      req.flash('success', 'Successfully Updated Your Organization!')
+      return res.redirect('/organizations/'+org.id)
   })
 
 }
+
+/**
+ * Add User
+ */
+
+exports.addmember = function (req, res) {
+  var org = req.organization
+  User.findOne({email:req.body.email})
+      .exec(function (err, user) {
+
+        if (user){
+          var duplicate = user.organizations.some(function(val){
+            console.log(val.org,org._id )
+            return String(val.org)===org.id
+          });
+          if (!duplicate){
+            user.organizations.push({
+              org:org
+            })            
+          }
+          console.log(user)
+          user.save(function(){
+            if (err) return next(err)
+            return res.redirect('/organizations/'+org.id)    
+          });
+
+        } else{
+          user = new User(req.body);
+          user.placeholderFromShare=true;
+          user.organizations.push({
+              org:org
+            });
+          user.save(function(){
+            return res.redirect('/organizations/'+org.id)
+          });
+        }
+
+      });
+}
+
+/**
+ * Remove User
+ */
+exports.removemember = function (req, res) {
+  var org = req.organization
+  User.findOne({_id:req.body._id})
+    .exec(function (err, user) {
+      console.log(user)
+      user.organizations.forEach(function(val){
+      console.log(val.org, org._id)
+
+        if (String(val.org)==org.id){
+          user.organizations.pull(val)
+        }
+      });
+      user.save(function(err){
+        return res.redirect('/organizations/'+org.id)
+      });
+      
+  });
+
+}
+
+
 
 /*
  * Upload Image
  */
 exports.uploadImage = function(req, res){
-  var user = req.user;
+  var org = req.organization;
   var files = req.files.files;
 
   if (!files || files.length===0){ return res.send([])};
-  user.uploadAndSave(files, req.user.id, function(err) {
-        console.log(err, 'save')
+  org.uploadAndSave(files, org.id, function(err) {
+      console.log(err, 'save')
 
       if (!err) {
        return res.send({
-        file: user.profileImageFile,
-        cdn: user.profileImageCDN
+        file: org.profileImageFile,
+        cdn: org.profileImageCDN
        })
       }
     });

@@ -9,6 +9,7 @@ var async    = require('async');
  */
 
 var users = require('../app/controllers/users')
+  , organizations = require('../app/controllers/organizations')
   , articles = require('../app/controllers/articles')
   , auth = require('./middlewares/authorization')
   , crudUtils = require('../utils/crudUtils')
@@ -21,7 +22,8 @@ var users = require('../app/controllers/users')
   , commentAuthToken = [auth.article.hasViewAuthorizationToken, auth.comment.hasAuthorization]
   , viewerAuth = [auth.requiresLogin, auth.article.hasViewAuthorization]
   , viewerAuthToken = [auth.article.hasViewAuthorizationToken]
-  , userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
+  , userAuth = [auth.requiresLogin, auth.user.hasAuthorization]
+  , orgAuth = [auth.requiresLogin, auth.org.hasAuthorization];
 
 var mongoose = require('mongoose')
   , Article = mongoose.model('Article')
@@ -86,11 +88,27 @@ module.exports = function (app, passport) {
       failureRedirect: '/login',
       failureFlash: 'Invalid email or password.'
     }), users.session)
+ 
   app.get('/users/:userId',userAuth, users.show)
   app.get('/users/:userId/edit',userAuth, users.edit)
   app.put('/users/:userId',userAuth, users.update)
   app.post('/users/:userId/uploadimage',userAuth, users.uploadImage);//upload 
 
+
+  app.param('orgId', organizations.org)
+
+
+  app.get('/organizations/:orgId',orgAuth, organizations.show)
+  app.put('/organziations/:orgId',orgAuth, organizations.update)
+
+  //app.get('/organizations/:orgId/edit',orgAuth, organizations.edit)
+  app.post('/organizations/:orgId/uploadimage',orgAuth, organizations.uploadImage);//upload 
+  app.post('/organziations/:orgId/addmember',orgAuth, organizations.addmember)
+  app.delete('/organziations/:orgId/removemember',orgAuth, organizations.removemember)
+
+
+
+  ///addresses api
   app.get('/users/:userId/addresses', users.addresses)
 
 

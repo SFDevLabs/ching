@@ -77,6 +77,7 @@ var ArticleSchema = new Schema({
   }],
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
+  Organization: {type : Schema.ObjectId, ref : 'Org'},
   comments: [{
     body: { type : String, default : '' },
     user: { type : Schema.ObjectId, ref : 'User' },
@@ -306,7 +307,7 @@ ArticleSchema.statics = {
 
   load: function (id, cb) {
     this.findOne({ _id : id })
-      .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile address city state zipcode')
+      .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile address city state zipcode organizations')
       .populate('comments.user')
       .populate('viewers.user', 'lastname email firstname organization')
       .populate('views.user', 'lastname email firstname organization')

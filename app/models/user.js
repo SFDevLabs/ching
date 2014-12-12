@@ -20,11 +20,12 @@ var UserSchema = new Schema({
   firstname: { type: String, default: '' },
   lastname: { type: String, default: '' },
   email: { type: String, default: '' },
-  organization:{ type: String, default: '' },
-  // organizations:[{
-  //   orgId : {type : Schema.ObjectId, ref : 'Org'},
-  //   isDefault : { type: Boolean, default: false },
-  // }],
+  //organization:{ type: String, default: '' },
+  organizations:[{
+    org : {type : Schema.ObjectId, ref : 'Org'},
+    isAdmin: { type: Boolean, default: false }
+  }],
+  defautOrgIndex: { type: Number, default: null },
   address: { type: String, default: '' },
   zipcode: { type: String, default: '' },
   city: { type: String, default: '' },
@@ -98,6 +99,25 @@ UserSchema.statics = {
 
     /**
    * Get User email
+   */
+
+  orgMember: function (id, cb) {
+    this.find({
+      organizations:{
+        $elemMatch:{
+          org: id
+        }
+      }
+    })
+      //.populate('user', 'name username')
+      //.sort({'createdAt': -1}) // sort by date
+      //.limit(options.perPage)
+      //.skip(options.perPage * options.page)
+      .exec(cb);
+  },
+
+    /**
+   * Get Org email
    */
 
   userEmail: function (options, cb) {

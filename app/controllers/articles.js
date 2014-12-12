@@ -5,6 +5,8 @@
 var mongoose = require('mongoose')
   , Article = mongoose.model('Article')
   , User = mongoose.model('User')
+  , Org = mongoose.model('Org')
+
   , utils = require('../../lib/utils')
   , csvParse = require('../../utils/csvParse')
   , validateEmail = utils.validateEmail
@@ -197,6 +199,8 @@ var getcsv=function(files, body, cb){
 exports.load = function(req, res, next, id){
   var User = mongoose.model('User')
   Article.load(id, function (err, article) {
+
+  Org.find
     if (err) return next(err)
     if (!article) return next(new Error('not found'))
     req.article = article
@@ -535,7 +539,7 @@ exports.new = function(req, res){
   });
   Article.highestNumber(req.user.id, function(err, number){
 
-    var article = new Article({user:req.user.id, number:number});
+    var article = new Article({user:req.user.id,organization:req.user.defaultOrg, number:number});
     req.article = article;
 
     req.article.items.push({});//Add Tow of each type to get the started

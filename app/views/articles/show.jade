@@ -149,14 +149,26 @@ block content
             div.view-content
                 .clear.to-block.clearfix
                   p.col-sm-1 From:
-                  .col-sm-4.to
-                    -if (article.user.firstname || article.user.lastname)
-                      p
-                        strong #{article.user.firstname} #{article.user.lastname}
-                    p=article.user.email      
-                    -if(article.user.organization)
-                      p.gray='Organization: '
-                      p=article.user.organization
+                  .col-sm-3.to.dropdown
+                      a#dLabel(type='button', data-toggle='dropdown', aria-haspopup='true', role='button', aria-expanded='false')
+                        span.right.caret
+                        p
+                         strong #{article.user.firstname} #{article.user.lastname}
+                        p=article.user.email 
+                      ul.dropdown-menu(role='menu', aria-labelledby='dLabel')
+                        li.to
+                          p
+                            strong #{article.user.firstname} #{article.user.lastname}
+                          p=article.user.email 
+                          p=req.organizations[0]
+
+                    //- -if (article.user.firstname || article.user.lastname)
+                    //-   p
+                    //-     strong #{article.user.firstname} #{article.user.lastname}
+                    //- p=article.user.email      
+                    //- -if(article.user.organization)
+                    //-   p.gray='Organization: '
+                    //-   p=article.user.organization
                   .col-sm-3.to
                      
                   .col-sm-3.to
@@ -180,21 +192,23 @@ block content
                   p.col-sm-1 To: 
                   -if(article.viewers.length > 0)
                     - each viewer, i in article.viewers
-                      div.col-sm-4.to
+                      div.col-sm-3.to
                         p
                           strong #{viewer.user.firstname} #{viewer.user.lastname}
                         p=viewer.user.email
                         p.gray='Organization: '
                         p=viewer.user.organization
                         -if (mainAuth)
-                          form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id)
+                          form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')" )
                             input(type='hidden', name='_csrf', value="#{csrf_token}")
                             input(type="hidden", name="_method", value="DELETE")
                             button.close-button(type="submit")
                               span.typcn.typcn-delete
 
         - if (req.user && req.article && mainAuth)
-          .col-md-4
+        .row
+          .col-md-8
+          .col-md-3
             button.right.btn.add-recipient-trigger.closed
               span.typcn.typcn-user-add
                 |  Add Recipient

@@ -1,0 +1,30 @@
+extends auth
+
+block auth
+  .row.center
+    br
+    h2= title
+    form.large.col.col-lg-5.center-block(action="/users/session", method="post", role="form")
+      div.logo
+        a(href="/")
+          img(src="./img/logo.png")
+      input(type='hidden', name='_csrf', value="#{csrf_token}")
+
+      p.col-sm-offset-2.error= message
+
+      .form-group
+        input#email(type="email", placeholder="Email", name="email" value='#{email}')
+
+      .form-group
+        input#password(type="password", placeholder="Password", name="password", value='#{password}')
+      br
+      .form-group
+        button.button.action(type='submit') Log in
+      
+      p.forgot
+        strong
+          a(href="/reset") Forgot your password?
+
+      p
+        strong
+          a(href="/signup") Signup

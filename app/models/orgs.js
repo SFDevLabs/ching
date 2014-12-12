@@ -74,9 +74,23 @@ OrgSchema.methods = {
    */
 
 
-  uploadAndSave: function () {
+  uploadAndSave: function (images, userId, cb) {
+    var imager = new Imager(imagerConfig, 'S3');
+    var self = this;
 
-
+    this.validate(function (err) {
+      if (err) return cb(err);
+      imager.upload(images, function (err, cdnUri, files) {
+        if (err) return cb(err);
+        if (files.length) {
+          files.forEach(function(val){
+            self.profileImageCDN=cdnUri;
+            self.profileImageFile=val;
+          });
+        }
+        self.save(cb);
+      }, 'user');
+    });
   }
 };
 

@@ -23,6 +23,30 @@ exports.user = {
   }
 }
 
+
+var orgCheck = function(list, id){
+  return list.some(function(val,i){
+    //console.log(val.org, id)
+    return String(val.org) === id
+  });
+}
+
+
+/*
+ *  User authorization routing middleware
+ */
+
+exports.org = {
+  hasAuthorization: function (req, res, next) {
+    console.log(orgCheck(req.user.organizations, req.organization.id))
+    if (orgCheck(req.user.organizations, req.organization.id)) {
+      return next()
+    }
+    req.flash('info', 'You are not authorized')
+    return res.redirect('/')
+  }
+}
+
 /*
  *  Article authorization routing middleware
  */
