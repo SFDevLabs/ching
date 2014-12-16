@@ -574,6 +574,10 @@ block subfoot
             input.form-control(type='text', name="title", value=article.title, placeholder='title')
 
           .form-group
+            label.control-label(for='desc') Invoice Number
+            input.form-control(type='number', name="number", value=article.number, placeholder='Invoice Number')
+
+          .form-group
             label.control-label(for='desc') Description
             textarea.form-control#desc(rows="5", name="description" placeholder='description')=article.description
 

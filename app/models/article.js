@@ -59,7 +59,7 @@ var itemsSchema = {
   };
 
 var ArticleSchema = new Schema({
-  number:{type : Number},
+  number:{type : Number, unique: true },
   viewers:[viewersSchema],
   title: {type : String, default : '', trim : true},
   views: [viewsSchema],
