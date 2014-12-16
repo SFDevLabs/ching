@@ -125,6 +125,7 @@ exports.sendInvoice=function(req, res){
           , invoice_num: utils.formatInvoiceNumber(article.number)
           , main_p: "Your Invoice total is "+utils.formatCurrency(article.total)
           , action_href: domain+'/articles/'+article.id+'/token/'+viewer._id
+          , action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
         }
         , subject = 'Invoice #'+utils.formatInvoiceNumber(article.number)+' from '+viewer.user.firstname +' '+ viewer.user.lastname
         ,fromname = user.firstname +' '+user.lastname
