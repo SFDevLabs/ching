@@ -220,6 +220,7 @@ button.error {
   }
   .table-container{
     overflow-x: scroll;
+    padding-bottom: 40px;
     padding-box:5px;
     &::-webkit-scrollbar { 
       display: none; 
@@ -237,8 +238,8 @@ button.error {
     
   }
   .scroll-indicator{
+    pointer-events: none;
     position:absolute;
-    background-color:green;
     right:0px;
     height: 100%;
     z-index: 1000;

@@ -5,6 +5,7 @@ header {
 }
 
 .chart-wrapper {
+	overflow: scroll;
 
 	#area-chart{
 	border-radius: 5px;

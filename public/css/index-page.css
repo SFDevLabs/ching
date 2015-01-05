@@ -2,6 +2,7 @@ html, body, header {
   height: 100%; }
 
 .chart-wrapper {
+  overflow: scroll;
   margin: 2em 0px;
   overflow: hidden; }
   .chart-wrapper #area-chart {
