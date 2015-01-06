@@ -26,7 +26,6 @@ exports.user = {
 
 var orgCheck = function(list, id){
   return list.some(function(val,i){
-    //console.log(val.org, id)
     return String(val.org) === id
   });
 }
@@ -38,7 +37,7 @@ var orgCheck = function(list, id){
 
 exports.org = {
   hasAuthorization: function (req, res, next) {
-    console.log(orgCheck(req.user.organizations, req.organization.id))
+//    console.log(orgCheck(req.user.organizations, req.organization.id))
     if (orgCheck(req.user.organizations, req.organization.id)) {
       return next()
     }

@@ -79,9 +79,13 @@ block content
               - else
                 - var hasImage = ""
               
+              -if (article.title)
+                h2.title
+                  | #{article.title}
+              -else
+                a(href="javascript:void(0)").btn-edit Add a title...
+                br
 
-              h2.title
-                | #{article.title}
               br
               if (mainAuth || (article.status !== "sent" && article.status !== "draft"))
                 .muted.status
@@ -105,7 +109,7 @@ block content
                   !=article.description.replace(/\r?\n/g, '<br>')
               -else if (mainAuth)
                 br
-                a(href="javascript:void(0)").btn-edit Add a invoice details...
+                a(href="javascript:void(0)").btn-edit Add a description...
                     
               -if (article.body)
                 p=article.body
@@ -116,12 +120,20 @@ block content
                     | &nbsp;&nbsp;
 
             .col-md-4.float-right.right
-              - if (req.article.user.profileImageCDN && req.article.user.profileImageFile)
+              - if (article.organization && article.organization.profileImageCDN && article.organization.profileImageFile)
                 .invoice-img
-                  img(src="#{req.article.user.profileImageCDN}/user_thumb_#{req.article.user.profileImageFile}")
+                  img(src="#{article.organization.profileImageCDN}/user_thumb_#{article.organization.profileImageFile}")
+              - else if (article.organization)
+                 h4.mini.invoice-img
+                  a(href='/organizations/'+article.organization.id) Add an Organization Logo
+                  |&nbsp;
+                  i.typcn.typcn-image
+              - else if (article.user.profileImageCDN && article.user.profileImageFile)
+                .invoice-img
+                  img(src="#{article.user.profileImageCDN}/user_thumb_#{article.user.profileImageFile}")
               -else if (mainAuth)
                  h4.mini.invoice-img
-                  a(href='/users/'+req.user.id) Add Logo
+                  a(href='/users/'+req.user.id) Add Your Logo
                   |&nbsp;
                   i.typcn.typcn-image
               - if (req.user && req.article && mainAuth)
@@ -148,19 +160,65 @@ block content
           .meta.clear.show-view
             div.view-content
                 .clear.to-block.clearfix
+                  p=mainAuth
                   p.col-sm-1 From:
-                  .col-sm-3.to.dropdown
-                      a#dLabel(type='button', data-toggle='dropdown', aria-haspopup='true', role='button', aria-expanded='false')
-                        span.right.caret
+                  if (!mainAuth)
+                    .col-sm-3.to
+                      #dLabel(href='javascript:void(0)',type='button', data-toggle='dropdown', aria-haspopup='true', role='button', aria-expanded='false')
                         p
                          strong #{article.user.firstname} #{article.user.lastname}
-                        p=article.user.email 
-                      ul.dropdown-menu(role='menu', aria-labelledby='dLabel')
-                        li.to
+                        p=article.user.email
+                        if (article.organization)
+                          p.gray
+                             | Organization:
                           p
-                            strong #{article.user.firstname} #{article.user.lastname}
-                          p=article.user.email 
-                          p=req.organizations[0]
+                            strong=article.organization.name
+                            if (article.organization.url)
+                              |  (
+                              a(href=article.organization.url)
+                                | link
+                              | )
+                  else
+                    .col-sm-3.to.dropdown
+                        a#dLabel(href='javascript:void(0)',type='button', data-toggle='dropdown', aria-haspopup='true', role='button', aria-expanded='false')
+                          span.right.caret
+                          p
+                           strong #{article.user.firstname} #{article.user.lastname}
+                          p=article.user.email
+                          if (article.organization)
+                            p.gray
+                              | Organization:
+                            p
+                              strong=article.organization.name
+                              |  (
+                              a(href='/organizations/'+article.organization.id)="edit"
+                              | )
+
+                        ul.dropdown-menu(role='menu', aria-labelledby='dLabel')
+                          li
+                            form.form-inline(role="form", method="post", action="/articles/" + article._id)
+                              input(type='hidden', name='_csrf', value="#{csrf_token}")
+                              input(type="hidden", name="_method", value="PUT")
+                              input(type="hidden", name="organization", value="")
+                              button(type="submit")
+                                a
+                                  p
+                                    strong #{article.user.firstname} #{article.user.lastname}
+                                  p=article.user.email 
+                          - each organization in organizations        
+                            li
+                              form.form-inline(role="form", method="post", action="/articles/" + article._id)
+                                input(type='hidden', name='_csrf', value="#{csrf_token}")
+                                input(type="hidden", name="_method", value="PUT")
+                                input(type="hidden", name="organization", value="#{organization.id}")
+                                button(type="submit")
+                                  a
+                                    p
+                                      strong #{article.user.firstname} #{article.user.lastname}
+                                    p=article.user.email 
+                                    p 
+                                      strong
+                                        |#{organization.name}
 
                     //- -if (article.user.firstname || article.user.lastname)
                     //-   p
@@ -169,10 +227,19 @@ block content
                     //- -if(article.user.organization)
                     //-   p.gray='Organization: '
                     //-   p=article.user.organization
-                  .col-sm-3.to
+                  .col-sm-3
                      
                   .col-sm-3.to
-                      -if(article.user.address)
+                      -if (article.organization && article.organization.address)
+                        p
+                          strong Address:
+                        p
+                          |#{article.organization.address} 
+                          br               
+                          |#{article.organization.city}, #{article.organization.state} #{article.organization.zipcode} 
+                        a(target="_blank" href="https://www.google.com/maps/place/#{article.organization.address},+#{article.organization.city},+#{article.organization.state}+#{article.organization.zipcode} ")
+                            | map
+                      -else if(!article.organization && article.user.address)
                         p
                           strong Address:
                         p
@@ -206,37 +273,37 @@ block content
                               span.typcn.typcn-delete
 
         - if (req.user && req.article && mainAuth)
-        .row
-          .col-md-8
-          .col-md-3
-            button.right.btn.add-recipient-trigger.closed
-              span.typcn.typcn-user-add
-                |  Add Recipient
-          .row.clear
-            .right-float.add-recipient-form(style="display: none;")
-              div.add-recipient-position
-                span.close-button
-                  span.typcn.typcn-delete
-                - if (true)
-                  form.block(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
-                    input(type="hidden", name="_csrf", value="#{csrf_token}")
-                    input(type="hidden", name="_method", value="POST")
-                    .form-group
-                      label.control-label(for='title') Email
-                      input.form-control#title(type='text', name="email")
-                    .form-group
-                      label.control-label(for='title') First Name
-                      input.form-control#title(type='text', name="firstname")
-                    .form-group
-                      label.control-label(for='title') Last Name
-                      input.form-control#title(type='text', name="lastname")
-                    .form-group
-                      label.control-label(for='title') Organization <em><strong>(Optional)</strong></em>
-                      input.form-control#title(type='text', name="organization")
-                    .form-group
-                      button.btn.subtle(type='submit')
-                        span.typcn.typcn-user-add
-                          |  Save
+          .row
+            .col-md-8
+            .col-md-3
+              button.right.btn.add-recipient-trigger.closed
+                span.typcn.typcn-user-add
+                  |  Add Recipient
+            .row.clear
+              .right-float.add-recipient-form(style="display: none;")
+                div.add-recipient-position
+                  span.close-button
+                    span.typcn.typcn-delete
+                  - if (true)
+                    form.block(method="post", action='/articles/' + article.id + '/viewer', enctype="multipart/form-data", role="form")
+                      input(type="hidden", name="_csrf", value="#{csrf_token}")
+                      input(type="hidden", name="_method", value="POST")
+                      .form-group
+                        label.control-label(for='title') Email
+                        input.form-control#title(type='text', name="email")
+                      .form-group
+                        label.control-label(for='title') First Name
+                        input.form-control#title(type='text', name="firstname")
+                      .form-group
+                        label.control-label(for='title') Last Name
+                        input.form-control#title(type='text', name="lastname")
+                      .form-group
+                        label.control-label(for='title') Organization <em><strong>(Optional)</strong></em>
+                        input.form-control#title(type='text', name="organization")
+                      .form-group
+                        button.btn.subtle(type='submit')
+                          span.typcn.typcn-user-add
+                            |  Save
         .clear
           .col-md-12
             hr
@@ -586,6 +653,10 @@ block subfoot
           .form-group
             label.control-label(for='desc') Description
             input.form-control(type='text', name="title", value=article.title, placeholder='title')
+
+          .form-group
+            label.control-label(for='desc') Invoice Number
+            input.form-control(type='number', name="number", value=article.number, placeholder='Invoice Number')
 
           .form-group
             label.control-label(for='desc') Description

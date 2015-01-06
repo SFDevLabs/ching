@@ -734,19 +734,17 @@ exports.update = function(req, res){
 
   utils.keenAnalytics('user_event', {type:'invoice_edit_update', user:req.user.id, session:req.sessionID?req.sessionID:null});
 
-
-  article = extend(article, req.body)
+  if (req.body.organization===""){ //If the user is updating the organization unset it.
+    article.organization=undefined;
+  }else{ //otherwise we can just update the article.  We do this because they are seperate on the front end.
+    article = extend(article, req.body)
+  };
 
   article.save(function(err) {
-    if (!err) {
-      return res.redirect('/articles/' + article._id)
+    if (err) {
+      req.flash('error', "Opps,  We could not save your changes.");
     }
-
-    res.render('articles/edit', {
-      title: 'Edit Article',
-      article: article,
-      error: utils.errors(err.errors || err)
-    })
+    return res.redirect('/articles/' + article._id)
   })
 }
 
@@ -777,14 +775,21 @@ exports.show = function(req, res, next){
   } else {
     var invoiceType='recieved'
   }
-  res.render('articles/show', {
-    title: title,
-    invoiceType:invoiceType,
-    article: req.article,
-    bodyClass: bodyClass,
-    keenConfigObj:utils.keenConfigObj,
-    preview: 'yad'
-  })
+  var includes=[];
+  req.user.organizations.forEach(function(val, i){
+    includes.push(val.org)
+  });
+  Org.find({_id:{$in:includes}},function(err, orgs){
+    res.render('articles/show', {
+      title: title,
+      invoiceType:invoiceType,
+      article: req.article,
+      organizations: orgs,
+      bodyClass: bodyClass,
+      keenConfigObj:utils.keenConfigObj,
+      preview: 'yad'
+    });
+  });//Org find
 }
 
 /**

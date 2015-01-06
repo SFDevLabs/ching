@@ -36,7 +36,7 @@ block main
           br
           button.btn(type='submit')
             span(class="typcn typcn-mail")
-              |  Send Email
+              |  Send Reset Email
 
     .row
       hr
@@ -48,7 +48,12 @@ block main
           .name=organization.name
           a(href='/organizations/'+organization.id)=organization.id
           span= organization.address
-    
+        form.form-horizontal(action="/organizations", method="post", role="form")
+          input(type='hidden', name='_csrf', value="#{csrf_token}")
+          br
+          button.btn(type='submit')
+            span(class="typcn typcn-plus")
+              |  New Organization
     .row.last
       hr
       .col-md-6

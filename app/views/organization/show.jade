@@ -13,6 +13,9 @@ block main
             p='Name: '+org.name
         .meta
             p
+              a(href=org.url, target="_blank")
+                |#{org.url}
+            p
               | Address:
               br
               | #{org.address}
@@ -109,6 +112,10 @@ block subfoot
           .form-group
             label.control-label(for='name') Organzation Name 
             input#name.form-control(type='text', name="name", placeholder='First name (optinal)', value=org.name)
+
+          .form-group
+            label.control-label(for='name') Organzation URL
+            input#url.form-control(type='text', name="url", placeholder='http://yourorganization.com', value=org.url)
 
           .form-group
             label.control-label(for='name') Address

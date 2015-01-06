@@ -216,53 +216,68 @@ exports.session = login
  * Create user
  */
 
-exports.create = function (req, res, next) {
-  // Check only when it is a new user or when email field is modified
-  User.findOne({ email: req.body.email }).exec(function (err, user) {
-      var newUser,
-      orgObj = {org: new Org({name:req.body.organization}), isAdmin:true };
+// exports.create = function (req, res, next) {
+//   // Check only when it is a new user or when email field is modified
+//   User.findOne({ email: req.body.email }).exec(function (err, user) {
+//       var newUser,
+//       orgObj = {org: new Org({name:req.body.organization}), isAdmin:true };
 
-      if (!err && user && user.placeholderFromShare){ //Save over the placeholder
-         newUser = extend(user, req.body) //Combine the objects
-         newUser.placeholderFromShare=false; //Remove placeholder flag
-      } else if (!err && user){  //Already existis and not a placeholder
-          return res.render('users/signup', {
-            errors: utils.errors([{ message: 'Email already exists'}]),
-            user: user,
-            title: 'Sign up'
-          })
-      } else { //Brand spankin new so we make a new user
-          var user ={};
-          for (var key in req.body) {
-            user[key]=req.body[key]
-          };
-          if(req.body.organization){
-            user.organizations = [orgObj];
-            user.defautOrgIndex = 1;
-          }
-          newUser = new User(user)
-      }
-      newUser.provider = 'local'; //Set as local auth
-      orgObj.org.save(function (err) {
-      newUser.save(function (err) {
-        if (err){
-          return res.render('users/signup', {
-            errors: utils.errors(err.errors),
-            user: user,
-            title: 'Sign up'
-          })
-        }
-        // manually login the user once successfully signed up
-        req.logIn(newUser, function(err) {
-          if (err) return next(err)
-          return res.redirect('/')
-        })
+//       if (!err && user && user.placeholderFromShare){ //Save over the placeholder
+//          newUser = extend(user, req.body) //Combine the objects
+//          newUser.placeholderFromShare=false; //Remove placeholder flag
+//       } else if (!err && user){  //Already existis and not a placeholder
+//           return res.render('users/signup', {
+//             errors: utils.errors([{ message: 'Email already exists'}]),
+//             user: user,
+//             title: 'Sign up'
+//           })
+//       } else { //Brand spankin new so we make a new user
+//           var user ={};
+//           for (var key in req.body) {
+//             user[key]=req.body[key]
+//           };
+//           if(req.body.organization){
+//             user.organizations = [orgObj];
+//             user.defautOrgIndex = 1;
+//           }
+//           newUser = new User(user)
+//       }
+//       newUser.provider = 'local'; //Set as local auth
+//       orgObj.org.save(function (err) {
+//       newUser.save(function (err) {
+//         if (err){
+//           return res.render('users/signup', {
+//             errors: utils.errors(err.errors),
+//             user: user,
+//             title: 'Sign up'
+//           })
+//         }
+//         // manually login the user once successfully signed up
+//         req.logIn(newUser, function(err) {
+//           if (err) return next(err)
+//           return res.redirect('/')
+//         })
 
-      })//save function newUser
-      })//save function Org
+//       })//save function newUser
+//       })//save function Org
       
-  });//findone function
-}
+//   });//findone function
+// }
+// 
+ exports.create = function (req, res) {
+  var org = new Orgs({});
+
+
+  org.save(function(err){
+    if (err) return next(err);
+
+    req.user.organizations.push({org:org.id, isAdmin:true})
+    req.user.save(function(err){
+      res.redirect('/organizations/'+org.id)
+    });
+  });
+ };
+ 
 
 /**
  *  Show profile

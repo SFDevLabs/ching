@@ -362,6 +362,9 @@
             console.log(error);
           });
           this.on('change:tax1',this.tax1Formater);
+
+          this.on('change:date',this.dateFormater);
+
           this.on('change:tax2',this.tax2Formater);
           this.on('change:qty',this.qtyFormater);
 
@@ -395,6 +398,11 @@
           //     return null
           // })
 
+        },
+        dateFormater:function(todo,val){
+          if (typeof val === "string"){
+            todo.attributes.date = val.slice(0,10)
+          }
         },
         tax1Formater:function(todo,val){
             if (typeof val === 'number'){

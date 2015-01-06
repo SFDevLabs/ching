@@ -19,6 +19,7 @@ var OrgSchema = new Schema({
   name: { type: String, default: '' },
   address: { type: String, default: '' },
   zipcode: { type: String, default: '' },
+  url: { type: String, default: '' },
   city: { type: String, default: '' },
   state: { type: String, default: '' },
   profileImageFile: {type : String, default : ''},

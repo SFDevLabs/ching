@@ -99,6 +99,8 @@ module.exports = function (app, passport) {
 
 
   app.get('/organizations/:orgId',orgAuth, organizations.show)
+  app.post('/organizations',auth.requiresLogin, organizations.create)
+
   app.put('/organziations/:orgId',orgAuth, organizations.update)
 
   //app.get('/organizations/:orgId/edit',orgAuth, organizations.edit)

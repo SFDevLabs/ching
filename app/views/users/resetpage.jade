@@ -2,11 +2,13 @@ extends auth
 
 block auth
     br
-    .col.col-lg-4
-    .col.col-lg-8.center
+    
+    .col.col-lg-12.center
       h3
         | Reset Your Password
-      form.col.col-lg-4.form-horizontal(action="", method="post", role="form")
+    .col-lg-4
+    .col-lg-4
+      form.col.form-inline(action="", method="post", role="form")
         input(type='hidden', name='_csrf', value="#{csrf_token}")
         p.col-sm-offset-2.error= message
         .form-group

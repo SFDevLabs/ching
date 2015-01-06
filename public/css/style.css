@@ -715,6 +715,20 @@ body.show {
         display: block;
         right: -0.3125em;
         top: -0.3125em; }
+  .invoice-form .to-block ul.dropdown-menu {
+    width: 100%; }
+    .invoice-form .to-block ul.dropdown-menu li {
+      padding: 5px; }
+      .invoice-form .to-block ul.dropdown-menu li:hover {
+        background-color: #eee; }
+        .invoice-form .to-block ul.dropdown-menu li:hover button {
+          background-color: #eee; }
+      .invoice-form .to-block ul.dropdown-menu li button {
+        width: 100%;
+        background-color: #fff;
+        border: none;
+        text-align: left;
+        font-weight: 200; }
   .invoice-form .to-block .close-button {
     visibility: hidden; }
     .invoice-form .to-block .close-button span {

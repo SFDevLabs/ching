@@ -1091,6 +1091,7 @@ body.show {
     > p:first-child,
     .to {
       padding-top: 1.25em;
+
     }
     .to {
       padding-bottom: 1.25em;
@@ -1108,6 +1109,26 @@ body.show {
           top: -0.3125em;
         }
       }
+    }
+    ul.dropdown-menu{
+      width:100%;
+        li{
+          padding: 5px;
+          &:hover{
+              background-color: #eee;
+              button{
+                background-color: #eee;
+              }
+          }
+          button{
+            width: 100%;
+            background-color: #fff;
+            border: none;
+            text-align: left;
+            font-weight: 200;
+
+          }
+        }
     }
     
     .close-button {

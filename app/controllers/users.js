@@ -170,7 +170,7 @@ exports.reset = function (req, res, next) {
           user.resetPasswordToken=token;
           user.resetPasswordExpires=Date.now() + 3600000;
           user.save(function (err) {    
-            views={
+            var views={
               reset_link: domain+'/reset/'+token
               , user_full_name: user.firstname+' '+user.lastname
             };   

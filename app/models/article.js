@@ -59,7 +59,7 @@ var itemsSchema = {
   };
 
 var ArticleSchema = new Schema({
-  number:{type : Number},
+  number:{type : Number, unique: true },
   viewers:[viewersSchema],
   title: {type : String, default : '', trim : true},
   views: [viewsSchema],
@@ -77,7 +77,7 @@ var ArticleSchema = new Schema({
   }],
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
-  Organization: {type : Schema.ObjectId, ref : 'Org'},
+  organization: {type : Schema.ObjectId, ref : 'Org'},
   comments: [{
     body: { type : String, default : '' },
     user: { type : Schema.ObjectId, ref : 'User' },
@@ -112,7 +112,6 @@ var ArticleSchema = new Schema({
 //     return val
 
 //   })
-
 
 ArticleSchema
   .virtual('status')
@@ -312,6 +311,7 @@ ArticleSchema.statics = {
       .populate('viewers.user', 'lastname email firstname organization')
       .populate('views.user', 'lastname email firstname organization')
       .populate('images.user', 'lastname email firstname organization')
+      .populate('organization')
       .exec(cb);
   },
 
