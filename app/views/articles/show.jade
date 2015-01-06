@@ -82,7 +82,7 @@ block content
               -if (article.title)
                 h2.title
                   | #{article.title}
-              -else
+              -else if (mainAuth)
                 a(href="javascript:void(0)").btn-edit Add a title...
                 br
 
