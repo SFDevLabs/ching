@@ -395,25 +395,28 @@ exports.addmember = function (req, res) {
         user.save(function(){
           if (err) return next(err)
           //here we are sending the user an email to the new member
-          var views={
-              sender: viewer.user.firstname +' '+ viewer.user.lastname
-            , organization_article: user.organization?' at ':''
-            , organization: user.organization
-            , amount: utils.formatCurrency(article.total)
-            , invoice_num: utils.formatInvoiceNumber(article.number)
-            , main_p: "Your Invoice total is "+utils.formatCurrency(article.total)
-            , action_href: domain+'/articles/'+article.id+'/token/'+viewer._id
-            , action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
-          };
+          var fromname = user.firstname +' '+user.lastname
+              ,views={
+            sender: fromname
+            //, organization_article: user.organization?' at ':''
+            //, organization: user.organization
+            //, amount: utils.formatCurrency(article.total)
+            //, invoice_num: utils.formatInvoiceNumber(article.number)
+            , action_href: domain+'/organizations/'+org.id
+            //, action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
+          }
+           , subject = org.name+' '+req.user.firstname+req.user.lastname
+           
           sendEmail({
-              to: viewer.user.email
-            , fromname: fromname 
+              to: user.email
+            , fromname: req.user.firstname +' '+req.user.lastname
             , from: 'noreply@ching.io'
             , subject: subject
             , html : Mustache.render(emailAddMemberTmpl, views)
-            , message: 'Your invoice can be viewed at '+domain+'/articles/'+article.id+'/token/'+viewer._id
+            , message: 'You have been invited to the organization '+org.name+'. '+domain+'/organizations/'+org.id
             }, 
-            function(){
+            function(err){
+              console.log(err,'err')
               return res.redirect('/organizations/'+org.id)    
            });            
         });

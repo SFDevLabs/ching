@@ -117,18 +117,17 @@ exports.sendInvoice=function(req, res){
 
   // we should create token here for each time we send the invoice! see authorization js line 67
   articleJSON.viewers.forEach(function(viewer, i){
-        var views={
-            sender: viewer.user.firstname +' '+ viewer.user.lastname
-          , organization_article: user.organization?' at ':''
-          , organization: user.organization
-          , amount: utils.formatCurrency(article.total)
-          , invoice_num: utils.formatInvoiceNumber(article.number)
-          , main_p: "Your Invoice total is "+utils.formatCurrency(article.total)
-          , action_href: domain+'/articles/'+article.id+'/token/'+viewer._id
-          , action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
-        }
-        , subject = 'Invoice #'+utils.formatInvoiceNumber(article.number)+' from '+viewer.user.firstname +' '+ viewer.user.lastname
-        ,fromname = user.firstname +' '+user.lastname
+        var fromname = user.firstname +' '+user.lastname,
+            views={
+              sender: fromname
+            , organization_article: user.organization?' at ':''
+            , organization: user.organization
+            , amount: utils.formatCurrency(article.total)
+            , invoice_num: utils.formatInvoiceNumber(article.number)
+            , action_href: domain+'/articles/'+article.id+'/token/'+viewer._id
+            , action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
+          }
+          , subject = 'Invoice #'+utils.formatInvoiceNumber(article.number)+' from '+viewer.user.firstname +' '+ viewer.user.lastname
 
         if (user.organization && user.organization.length>0){///Organization is optional.  this logic add it when we have it
           subject+=' at '+user.organization;
