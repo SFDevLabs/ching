@@ -79,9 +79,13 @@ block content
               - else
                 - var hasImage = ""
               
+              -if (article.title)
+                h2.title
+                  | #{article.title}
+              -else
+                a(href="javascript:void(0)").btn-edit Add a title...
+                br
 
-              h2.title
-                | #{article.title}
               br
               if (mainAuth || (article.status !== "sent" && article.status !== "draft"))
                 .muted.status
@@ -105,7 +109,7 @@ block content
                   !=article.description.replace(/\r?\n/g, '<br>')
               -else if (mainAuth)
                 br
-                a(href="javascript:void(0)").btn-edit Add a invoice details...
+                a(href="javascript:void(0)").btn-edit Add a description...
                     
               -if (article.body)
                 p=article.body
