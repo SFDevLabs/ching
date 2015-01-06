@@ -91,6 +91,11 @@ block content
                 span.right # #{formatInvoiceNumber(article.number)}
               .content
                 h5=article.title
+                if (article.organization)
+                  span 
+                    | Organization: 
+                  strong
+                    | #{article.organization.name}
                 if (article.viewers[0]!==Undefined && invoiceType==='sent')
                   span Recipients:
                   h4.dim #{article.viewers[0].user.organization} - #{article.viewers[0].user.firstname} #{article.viewers[0].user.lastname}

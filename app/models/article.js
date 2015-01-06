@@ -306,7 +306,7 @@ ArticleSchema.statics = {
 
   load: function (id, cb) {
     this.findOne({ _id : id })
-      .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile address city state zipcode organizations')
+      .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile address city state zipcode')
       .populate('comments.user')
       .populate('viewers.user', 'lastname email firstname organization')
       .populate('views.user', 'lastname email firstname organization')
@@ -372,7 +372,7 @@ ArticleSchema.statics = {
   list: function (options, cb) {
     var criteria = options.criteria || {};
 
-    this.find(criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, title:1 })
+    this.find(criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, title:1, organization:1 })
       // .or([
       //     options.criteria
       //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
@@ -382,6 +382,7 @@ ArticleSchema.statics = {
       // 
       .populate('user', 'firstname email lastname organization')
       .populate('viewers.user', 'firstname email lastname organization')
+      .populate('organization')
       .sort({'createdAt': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)

@@ -64,6 +64,12 @@ exports.article = {
     }
     next()
   },
+  // hasOrgAuthorization: function (req, res, next) {
+  //   if (req.user.organizations.indexOf(req.article.organization.id)) {
+  //     return res.send(401,'{"status":"Not Authroized"}')
+  //   }
+  //   next()  
+  // },
   hasUserAuthorization:function (req, res, next) {
     if (req.article.user.id != req.user.id) {
       return res.send(401,'{"status":"Not Authroized"}')
@@ -78,8 +84,16 @@ exports.article = {
     viewerAuth = req.article.viewers.some(function(val, i){
         return val.user.id === req.user.id
     });
+
+    if(req.article.organization){
+      orgAuth = req.user.organizations.some(function(val, i){
+          return req.article.organization.id==val.org
+      });      
+    }
+
+
     authorAuth = req.article.user.id === req.user.id
-    if (!viewerAuth && !authorAuth) {
+    if (!viewerAuth && !authorAuth && !orgAuth) {
       req.flash('info', 'You are not authorized')
       return res.redirect('/login')
     }

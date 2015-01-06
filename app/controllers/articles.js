@@ -236,9 +236,6 @@ exports.indexRecieved = function(req, res){
     perPage: perPage,
     page: page,
   }
-  options.criteria={
-    'viewers':{$elemMatch: {user:userID}} 
-  }
 
   utils.keenAnalytics('user_event', {type:'index_inbox', user:req.user.id, session:req.sessionID?req.sessionID:null});
 
@@ -309,10 +306,22 @@ var indexSent = exports.indexSent = function(req, res){
   //console.log(req.param('recipient'))
   //
 
+  var includes=[];
+  req.user.organizations.forEach(function(val, i){
+    includes.push(val.org)
+  });
+  // Org.find({_id:{$in:includes}},function(err, orgs){
 
+
+  // })
+  console.log(includes, req.user.organizations,'orgs')
 
   options.criteria={
-    user: userID,
+    $or:[
+    {user: userID,}, 
+    {'organization':{$in: includes}}]
+
+
     
     //number:7 //search for a number
     //viewers: {$elemMatch:[{user:'541479be4b4b3f00000603db'}]}  //find a viewer
