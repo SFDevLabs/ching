@@ -6,7 +6,10 @@
 	display: none !important;
 }
 
-.handsontable th, .handsontable td{
-	border-bottom: 0px;
+.handsontable tr th, .handsontable tr td{
+	border-bottom-color: #eee;
 }
 
+.handsontable tr:last-child th, .handsontable tr:last-child td{
+	border-bottom-color: #ccc;
+}

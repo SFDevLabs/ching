@@ -571,7 +571,10 @@ header .middle-buttons {
     min-height: 13.75em;
     background: #f7f7f7;
     border-bottom: 2px solid;
-    padding: 15px; }
+    padding: 10px; }
+    .list .article .content h4 {
+      margin-top: 5px;
+      margin-bottom: 5px; }
     .list .article .content h5 {
       margin: 0px; }
   .list .article .date {
@@ -736,7 +739,7 @@ body.show {
       visibility: visible; }
 
 .tags {
-  margin-top: 10px; }
+  margin-top: 7px; }
 
 div.tags span.tag {
   border: 1px solid #a5d24a;
