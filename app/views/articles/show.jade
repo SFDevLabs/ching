@@ -163,7 +163,7 @@ block content
                   p.col-sm-1 From:
                   if (!mainAuth)
                     .col-sm-3.to
-                      #dLabel(href='javascript:void(0)',type='button', data-toggle='dropdown', aria-haspopup='true', role='button', aria-expanded='false')
+                      #dLabel(aria-haspopup='true', role='button', aria-expanded='false')
                         p
                          strong #{article.user.firstname} #{article.user.lastname}
                         p=article.user.email
@@ -174,8 +174,8 @@ block content
                             strong=article.organization.name
                             if (article.organization.url)
                               |  (
-                              a(href=article.organization.url)
-                                | link
+                              a(href=article.organization.url, target="_blank")
+                                | #{article.organization.url}
                               | )
                   else
                     .col-sm-3.to.dropdown
@@ -216,9 +216,17 @@ block content
                                       strong #{article.user.firstname} #{article.user.lastname}
                                     p=article.user.email 
                                     p 
+                                      span.gray='Organization: '
                                       strong
                                         |#{organization.name}
 
+                          li
+                            form.form-inline(role="form", method="get", action="/users/" + req.user.id)
+                              button(type="submit")
+                                a
+                                  p
+                                    i.typcn.typcn-plus
+                                    |  Add Organization...
                     //- -if (article.user.firstname || article.user.lastname)
                     //-   p
                     //-     strong #{article.user.firstname} #{article.user.lastname}
@@ -262,14 +270,7 @@ block content
                         p
                           strong #{viewer.user.firstname} #{viewer.user.lastname}
                         p=viewer.user.email
-                        p.gray='Organization: '
-                        p=viewer.user.organization
-                        -if (mainAuth)
-                          form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')" )
-                            input(type='hidden', name='_csrf', value="#{csrf_token}")
-                            input(type="hidden", name="_method", value="DELETE")
-                            button.close-button(type="submit")
-                              span.typcn.typcn-delete
+
 
         - if (req.user && req.article && mainAuth)
           .row

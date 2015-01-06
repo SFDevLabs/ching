@@ -38,22 +38,45 @@ block main
             span(class="typcn typcn-mail")
               |  Send Reset Email
 
-    .row
+    .row.invoice-form
       hr
-      .col-md-4
-        h4
-          | Organizations:
-        - each orgObj in user.organizations
-          - var organization = orgObj.org
-          .name=organization.name
-          a(href='/organizations/'+organization.id)=organization.id
-          span= organization.address
-        form.form-horizontal(action="/organizations", method="post", role="form")
-          input(type='hidden', name='_csrf', value="#{csrf_token}")
-          br
-          button.btn(type='submit')
-            span(class="typcn typcn-plus")
-              |  New Organization
+      .col-md-12
+        .meta.clear.show-view
+          div.view-content
+              .clear.to-block.clearfix
+                p.col-sm-2
+                  strong Organizations: 
+                -if(user.organizations.length > 0)
+                - each orgObj in user.organizations
+                  - var organization = orgObj.org
+                  div.col-sm-3.to
+                    p
+                      strong #{organization.name}
+                      &nbsp
+                      a(href='/organizations/'+organization.id)
+                        | edit
+                    .meta
+                        p
+                          a(href=organization.url, target="_blank")
+                            |#{organization.url}
+            //- -if (true)
+            //-   form.form-inline(role="form", method="post", action='/organziations/'+org.id+'/removemember', onsubmit="return confirm('Remove this user from the group?')")
+            //-     input(type='hidden', name='_csrf', value="#{csrf_token}")
+            //-     input(type="hidden", name="_method", value="DELETE")
+            //-     input(value=viewer.id, type="hidden", name="_id")
+            //-     button.close-button(type="submit")
+            //-       span.typcn.typcn-delete
+          
+        //-   - var organization = orgObj.org
+        //-   .name=organization.name
+        //-   a(href='/organizations/'+organization.id)=organization.id
+        //-   span= organization.address
+        //- form.form-horizontal(action="/organizations", method="post", role="form")
+        //-   input(type='hidden', name='_csrf', value="#{csrf_token}")
+        br
+        button.btn(type='submit')
+          span(class="typcn typcn-plus")
+            |  New Organization
     .row.last
       hr
       .col-md-6
