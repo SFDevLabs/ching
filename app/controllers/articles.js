@@ -317,9 +317,12 @@ var indexSent = exports.indexSent = function(req, res){
   console.log(includes, req.user.organizations,'orgs')
 
   options.criteria={
-    $or:[
-    {user: userID,}, 
-    {'organization':{$in: includes}}]
+    $and:[
+      {$or:[
+        {user: userID},
+        {'organization':{$in: includes}}
+      ]}
+    ]
 
 
     
@@ -441,6 +444,24 @@ var indexSent = exports.indexSent = function(req, res){
 
         },
         function(asyncResult, callback){//List
+          if (!q){
+               callback(null, asyncResult)
+          }else
+          Org.find({name:qRegex},function(err, results){
+            console.log(results, "org")
+
+            var orgId = results.map(function(val, i){ return val.id})
+
+            var orgQueary = {organization:{$in:orgId}};
+            console.log(orgQueary, "orgQueary")
+
+            createOr();
+            options.criteria.$or.push(orgQueary);
+            asyncResult.org=results;
+            callback(null, asyncResult);
+          });
+        },
+        function(asyncResult, callback){//List
 
           //console.log(!isNaN(Number(q)))
           if (qRegex){
@@ -462,8 +483,9 @@ var indexSent = exports.indexSent = function(req, res){
           //    callback(null, asyncResult)
           // }
           //else
+          console.log(options.criteria)
           Article.list(options, function(err, articles) {
-           // console.log(err)
+            console.log(err)
             
             asyncResult.list=articles;
             callback(null, asyncResult);
