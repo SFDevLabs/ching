@@ -17,200 +17,199 @@ var mongoose = require('mongoose')
   , fs = require('fs')
   , emailTmplPwReset = fs.readFileSync('./app/views/email/password_reset.html','utf8')
   , emailTmplPwResetConfirm = fs.readFileSync('./app/views/email/password_reset_confirm.html','utf8')
-  , Mustache=require('mustache');
+  , Mustache=require('mustache')
+  , emailAddMemberTmpl = fs.readFileSync('./app/views/email/addmember.html','utf8');
 
-var login = function (req, res) {
-  var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
-  delete req.session.returnTo;
-  res.redirect(redirectTo);
-};
+// var login = function (req, res) {
+//   var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
+//   delete req.session.returnTo;
+//   res.redirect(redirectTo);
+// };
 
-exports.signin = function (req, res) {};
+//exports.signin = function (req, res) {};
 
 /**
  * Auth callback
  */
 
-exports.authCallback = login;
+//exports.authCallback = login;
 
 
 /**
  * Save pw in cookie and show in browser again.
  */
-exports.savepw = function (req, res, next) {
-    req.flash('savedbody',req.body);
-    next();
-};
+// exports.savepw = function (req, res, next) {
+//     req.flash('savedbody',req.body);
+//     next();
+// };
 
 /**
  * Show login form
  */
 
-exports.login = function (req, res) {
+// exports.login = function (req, res) {
  
-  var savedbody = req.flash('savedbody'),
-      password = savedbody.length && savedbody[0].password?savedbody[0].password:'',
-      email = savedbody.length && savedbody[0].email?savedbody[0].email:'';
+//   var savedbody = req.flash('savedbody'),
+//       password = savedbody.length && savedbody[0].password?savedbody[0].password:'',
+//       email = savedbody.length && savedbody[0].email?savedbody[0].email:'';
 
-  res.render('users/login', {
-    title: 'Login',
-    message: req.flash('error'),
-    password: password,
-    email: email,
-   // bodyClass: bodyClass
-  });
-};
+//   res.render('users/login', {
+//     title: 'Login',
+//     message: req.flash('error'),
+//     password: password,
+//     email: email,
+//    // bodyClass: bodyClass
+//   });
+// };
 
 /**
  * Show sign up form
  */
 
-exports.signup = function (req, res) {
-  //var bodyClass = "signup";
-  res.render('users/signup', {
-    title: 'Sign up',
-    //bodyClass: bodyClass,
-    user: new User()
-  });
-};
+// exports.signup = function (req, res) {
+//   //var bodyClass = "signup";
+//   res.render('users/signup', {
+//     title: 'Sign up',
+//     //bodyClass: bodyClass,
+//     user: new User()
+//   });
+// };
 
 /**
  * Show reset form
  */
 
-exports.resetpage = function (req, res) {
-  var bodyClass = 'reset';
-  res.render('users/reset', {
-    title: 'Reset',
-    bodyClass: bodyClass,
-    message: req.flash('error')
-  });
-};
+// exports.resetpage = function (req, res) {
+//   var bodyClass = 'reset';
+//   res.render('users/reset', {
+//     title: 'Reset',
+//     bodyClass: bodyClass,
+//     message: req.flash('error')
+//   });
+// };
 
 
 /**
  * Load Reset
  */
 
-exports.loadreset = function(req, res, next, resetid){
-
-  User.findOne({resetPasswordToken:resetid}, function(err,user){
-    req.user=user;
-    next();
-  });
-};
-
-/**
- * Reset Passwors
- */
-
-exports.resetPWpage = function (req, res) {
-  var bodyClass = 'reset';
-  if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ 
-     req.flash('error', 'Password reset link invalid.');
-     return  res.redirect('/login');
-  }
-  res.render('users/resetpage', {
-    bodyClass: bodyClass,
-    title: 'Reset Password',
-    message: req.flash('error')
-  });
-
-};
-
+// exports.loadreset = function(req, res, next, resetid){
+//   User.findOne({resetPasswordToken:resetid}, function(err,user){
+//     req.user=user;
+//     next();
+//   });
+// };
 
 /**
  * Reset Passwors
  */
 
-exports.resetPW = function (req, res) {
-  if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
-  req.user.resetPasswordExpires=undefined;
-  req.user.resetPasswordToken=undefined;
-  req.user.hashed_password=req.user.encryptPassword(req.body.password);
-  req.user.save(function (err) {
-      var views={
-        user_full_name: req.user.firstname+' '+req.user.lastname
-      }
-      sendEmail({
-          to: req.user.email
-        , fromname: 'Ching.io' 
-        , from: 'noreply@ching.io'
-        , subject: 'Your Ching.io password has been reset'
-        , message: 'Dear '+req.user.firstname+' '+req.user.lastname+',%0AYour password has been reset'
-        , html:Mustache.render(emailTmplPwResetConfirm, views)
-      }, function(err, json, b){
-        req.logIn(req.user, function(err) {
-          if (err) return next(err)
-          req.flash('success', 'Your password has been reset!')
-          return res.redirect('/')
-        });//render
-      });//email
-  });//save
-};
+// exports.resetPWpage = function (req, res) {
+//   var bodyClass = 'reset';
+//   if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ 
+//      req.flash('error', 'Password reset link invalid.');
+//      return  res.redirect('/login');
+//   }
+//   res.render('users/resetpage', {
+//     bodyClass: bodyClass,
+//     title: 'Reset Password',
+//     message: req.flash('error')
+//   });
+// };
 
 
 /**
  * Reset Passwors
  */
 
-exports.reset = function (req, res, next) {
+// exports.resetPW = function (req, res) {
+//   if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
+//   req.user.resetPasswordExpires=undefined;
+//   req.user.resetPasswordToken=undefined;
+//   req.user.hashed_password=req.user.encryptPassword(req.body.password);
+//   req.user.save(function (err) {
+//       var views={
+//         user_full_name: req.user.firstname+' '+req.user.lastname
+//       }
+//       sendEmail({
+//           to: req.user.email
+//         , fromname: 'Ching.io' 
+//         , from: 'noreply@ching.io'
+//         , subject: 'Your Ching.io password has been reset'
+//         , message: 'Dear '+req.user.firstname+' '+req.user.lastname+',%0AYour password has been reset'
+//         , html:Mustache.render(emailTmplPwResetConfirm, views)
+//       }, function(err, json, b){
+//         req.logIn(req.user, function(err) {
+//           if (err) return next(err)
+//           req.flash('success', 'Your password has been reset!')
+//           return res.redirect('/')
+//         });//render
+//       });//email
+//   });//save
+// };
 
-  var email = req.body.email,
-      options = { email: email }
-  User.userEmail(options,function(err, user){
-        if (!user){
-          req.flash('error', 'No email found.')
-          return res.redirect('/reset')    
-        }
-        var email = user.email
-        //move to utility
-        crypto.randomBytes(20, function(err, buf) {
-          var token = buf.toString('hex');
-          user.resetPasswordToken=token;
-          user.resetPasswordExpires=Date.now() + 3600000;
-          user.save(function (err) {    
-            views={
-              reset_link: domain+'/reset/'+token
-              , user_full_name: user.firstname+' '+user.lastname
-            };   
+
+/**
+ * Reset Passwors
+ */
+
+// exports.reset = function (req, res, next) {
+
+//   var email = req.body.email,
+//       options = { email: email }
+//   User.userEmail(options,function(err, user){
+//         if (!user){
+//           req.flash('error', 'No email found.')
+//           return res.redirect('/reset')    
+//         }
+//         var email = user.email
+//         //move to utility
+//         crypto.randomBytes(20, function(err, buf) {
+//           var token = buf.toString('hex');
+//           user.resetPasswordToken=token;
+//           user.resetPasswordExpires=Date.now() + 3600000;
+//           user.save(function (err) {    
+//             views={
+//               reset_link: domain+'/reset/'+token
+//               , user_full_name: user.firstname+' '+user.lastname
+//             };   
 
 
-            sendEmail({
-                to:email
-              , from: 'noreply@ching.io'
-              , message: domain+'/reset/'+token
-              , subject:'Reser your Ching.io Password'
-              , fromname:'Ching.io'
-              , html:Mustache.render(emailTmplPwReset, views)
-            }
-              , function(err, json){
-                if (err){ return next(err)};
-                req.flash('success', 'Check Your Email for a Reset Link. <br> Check you spam folder too.')
-                res.redirect('/reset')            
-            });//Email Sent
+//             sendEmail({
+//                 to:email
+//               , from: 'noreply@ching.io'
+//               , message: domain+'/reset/'+token
+//               , subject:'Reser your Ching.io Password'
+//               , fromname:'Ching.io'
+//               , html:Mustache.render(emailTmplPwReset, views)
+//             }
+//               , function(err, json){
+//                 if (err){ return next(err)};
+//                 req.flash('success', 'Check Your Email for a Reset Link. <br> Check you spam folder too.')
+//                 res.redirect('/reset')            
+//             });//Email Sent
 
-          });//User Saved
+//           });//User Saved
         
-        });//Token Made
+//         });//Token Made
 
-  })
-}
+//   })
+// }
 
 /**
  * Logout
  */
 
-exports.logout = function (req, res) {
-  req.logout()
-  res.redirect('/login')
-}
+// exports.logout = function (req, res) {
+//   req.logout()
+//   res.redirect('/login')
+// }
 
 /**
  * Session
  */
 
-exports.session = login
+//exports.session = login
 
 /**
  * Create user
@@ -266,7 +265,6 @@ exports.session = login
 // 
  exports.create = function (req, res) {
   var org = new Orgs({});
-
 
   org.save(function(err){
     if (err) return next(err);
@@ -326,9 +324,7 @@ exports.addresses = function (req, res) {
     .find({ email : /jeff/i },"firstname lastname organization email")
     .exec(function (err, results) {
       if (err) return next(err)
-      
         res.send(results)
-
     })
 }
 
@@ -337,15 +333,15 @@ exports.addresses = function (req, res) {
  * Show edit
  */
 
-exports.edit = function (req, res) {
-  var bodyClass = "profile";
-  var user = req.profile
-  res.render('users/edit', {
-    title: 'Edit Profile',
-    user: user,
-    bodyClass: bodyClass
-  })
-}
+// exports.edit = function (req, res) {
+//   var bodyClass = "profile";
+//   var user = req.profile
+//   res.render('users/edit', {
+//     title: 'Edit Profile',
+//     user: user,
+//     bodyClass: bodyClass
+//   })
+// }
 
 
 
@@ -369,10 +365,12 @@ exports.update = function (req, res, next) {
  */
 
 exports.addmember = function (req, res) {
-  var org = req.organization
-  User.findOne({email:req.body.email})
-      .exec(function (err, user) {
+  var org = req.organization,
+      validatedEmail = req.body.email.replace(/\.(?=[^@]*\@)/g, '');
+      req.body.email = validatedEmail;
 
+  User.findOne({email:validatedEmail})
+      .exec(function (err, user) {
         if (user){
           var duplicate = user.organizations.some(function(val){
             console.log(val.org,org._id )
@@ -383,23 +381,42 @@ exports.addmember = function (req, res) {
               org:org
             })            
           }
-          console.log(user)
-          user.save(function(){
-            if (err) return next(err)
-            return res.redirect('/organizations/'+org.id)    
-          });
 
         } else{
           user = new User(req.body);
           user.placeholderFromShare=true;
           user.organizations.push({
               org:org
-            });
-          user.save(function(){
-            return res.redirect('/organizations/'+org.id)
           });
+          // user.save(function(){
+          //   return res.redirect('/organizations/'+org.id)
+          // });
         }
-
+        user.save(function(){
+          if (err) return next(err)
+          //here we are sending the user an email to the new member
+          var views={
+              sender: viewer.user.firstname +' '+ viewer.user.lastname
+            , organization_article: user.organization?' at ':''
+            , organization: user.organization
+            , amount: utils.formatCurrency(article.total)
+            , invoice_num: utils.formatInvoiceNumber(article.number)
+            , main_p: "Your Invoice total is "+utils.formatCurrency(article.total)
+            , action_href: domain+'/articles/'+article.id+'/token/'+viewer._id
+            , action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
+          };
+          sendEmail({
+              to: viewer.user.email
+            , fromname: fromname 
+            , from: 'noreply@ching.io'
+            , subject: subject
+            , html : Mustache.render(emailAddMemberTmpl, views)
+            , message: 'Your invoice can be viewed at '+domain+'/articles/'+article.id+'/token/'+viewer._id
+            }, 
+            function(){
+              return res.redirect('/organizations/'+org.id)    
+           });            
+        });
       });
 }
 
