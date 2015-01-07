@@ -402,7 +402,11 @@ exports.addmember = function (req, res) {
             //, organization: user.organization
             //, amount: utils.formatCurrency(article.total)
             //, invoice_num: utils.formatInvoiceNumber(article.number)
-            , action_href: domain+'/organizations/'+org.id
+            , action_home: domain+'/organizations/'+org.id
+            , action_href: domain+"?all="+org.name
+            , organization: org.name
+            , newURL: domain+'/articles/new/'
+            , homeFeedURL: domain
             //, action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
           }
            , subject = org.name+' '+req.user.firstname+req.user.lastname
