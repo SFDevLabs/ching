@@ -1,19 +1,19 @@
 {
   "name": "ching",
-  "description": "A demo app illustrating the usage of express, mongoose, passportjs, jade and other modules in nodejs",
+  "description": "Ching - invoicing bliss for freelancers and consultants.",
   "keywords": [
-    "express",
-    "mongoose",
-    "mongodb",
-    "passport",
-    "demo"
+    "invoicing",
+    "freelance",
+    "consultant",
+    "csv upload",
+    "SF Dev Labs"
   ],
   "version": "3.0.0",
   "private": false,
-  "author": "Madhusudhan Srinivasa <madhums8@gmail.com> (http://madhums.github.com)",
+  "author": "Jenkins Jeffrey <jeff@sfdevlabs.com> (https://github.com/jeffj)",
   "repository" : {
     "type" : "git",
-    "url" : "https://github.com/madhums/node-express-mongoose-demo.git"
+    "url" : "https://github.com/SFDevLabs/ching"
   },
   "engines": {
     "node": "0.10.x",
