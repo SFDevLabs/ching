@@ -236,6 +236,9 @@ exports.indexRecieved = function(req, res){
     perPage: perPage,
     page: page,
   }
+  options.criteria={
+    'viewers':{$elemMatch: {user:userID}} 
+  }
 
   utils.keenAnalytics('user_event', {type:'index_inbox', user:req.user.id, session:req.sessionID?req.sessionID:null});
 
