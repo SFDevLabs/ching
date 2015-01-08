@@ -78,7 +78,8 @@ exports.article = {
   },
   hasViewAuthorization: function (req, res, next) {
     var viewerAuth
-      , authorAuth;
+      , authorAuth
+      , orgAuth;
     // auth = req.article.user.id !== req.user.id;
 
     viewerAuth = req.article.viewers.some(function(val, i){
