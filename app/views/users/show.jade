@@ -54,10 +54,10 @@ block main
                       strong #{organization.name}
                       &nbsp
                       a.btn.org.right(href='/organizations/'+organization.id)
-                        | edit
+                        | admin
                     .meta
                         p
-                          a(href=organization.url, target="_blank")
+                          a(href='/organizations/'+organization.id)
                             |#{organization.url}
             //- -if (true)
             //-   form.form-inline(role="form", method="post", action='/organziations/'+org.id+'/removemember', onsubmit="return confirm('Remove this user from the group?')")
