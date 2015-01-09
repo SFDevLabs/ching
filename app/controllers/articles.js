@@ -150,7 +150,6 @@ exports.returnJSON = function(req, res, next){
  * upload csv
  */
 exports.tableJSONView = function(req, res, next){
-  console.log()
   
     res.render('table_view', {
       title: 'Home',
@@ -317,7 +316,7 @@ var indexSent = exports.indexSent = function(req, res){
 
 
   // })
-  console.log(includes, req.user.organizations,'orgs')
+  //console.log(includes, req.user.organizations,'orgs')
 
   options.criteria={
     $and:[
@@ -451,12 +450,12 @@ var indexSent = exports.indexSent = function(req, res){
                callback(null, asyncResult)
           }else
           Org.find({name:qRegex},function(err, results){
-            console.log(results, "org")
+            //console.log(results, "org")
 
             var orgId = results.map(function(val, i){ return val.id})
 
             var orgQueary = {organization:{$in:orgId}};
-            console.log(orgQueary, "orgQueary")
+            //console.log(orgQueary, "orgQueary")
 
             createOr();
             options.criteria.$or.push(orgQueary);
@@ -486,9 +485,9 @@ var indexSent = exports.indexSent = function(req, res){
           //    callback(null, asyncResult)
           // }
           //else
-          console.log(options.criteria)
+          //console.log(options.criteria)
           Article.list(options, function(err, articles) {
-            console.log(err)
+            //console.log(err)
             
             asyncResult.list=articles;
             callback(null, asyncResult);
@@ -810,9 +809,11 @@ exports.show = function(req, res, next){
     var invoiceType='recieved'
   }
   var includes=[];
-  req.user.organizations.forEach(function(val, i){
-    includes.push(val.org)
-  });
+  if (req.user.organizations){
+    req.user.organizations.forEach(function(val, i){
+      includes.push(val.org)
+    });    
+  }
   Org.find({_id:{$in:includes}},function(err, orgs){
     res.render('articles/show', {
       title: title,
@@ -955,7 +956,7 @@ exports.graph=function(req, res){
       // });
 
 
-      console.log(graphObj)
+      //console.log(graphObj)
       res.send(graphObj)
 
 
