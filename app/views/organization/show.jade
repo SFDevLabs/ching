@@ -3,24 +3,38 @@ extends ../layouts/default
 block main
   link(rel='stylesheet', href='/css/index-page.css')
   .container.profile
-    h1= title
+    h2= title
+    a.typcn.typcn-arrow-back(href="/users/"+req.user.id)
+      | back to profile
     .row
       .col-md-8
         span.right.btn.btn-default.btn-edit
           span(class="typcn typcn-edit")
             |  Edit
-        h2.meta
-            p='Name: '+org.name
+        if (org.name)
+          h3=org.name
+        else
+          br
+          p
+            a.btn-edit(href="javascript:void(0);")
+              | Add an Organziation Name...
         .meta
             p
               a(href=org.url, target="_blank")
                 |#{org.url}
-            p
-              | Address:
+            if (org.address)
+              p
+                | Address:
+                br
+                | #{org.address}
+                br
+                | #{org.city}, #{org.state} #{org.zipcode}
+            else
               br
-              | #{org.address}
-              br
-              | #{org.city}, #{org.state} #{org.zipcode}
+              p
+                a.btn-edit(href="javascript:void(0);")
+                  | Add an Address...
+
 
 
     .row.invoice-form
@@ -80,12 +94,17 @@ block main
     .row.last
       hr
       .col-md-6
+        h4 Image for Your Invocies:
         - if (org.profileImageCDN && org.profileImageFile)
-          h4 Current Image:
+          
           img(src="#{org.profileImageCDN}/user_thumb_#{org.profileImageFile}")
+        - else 
+          p.gray
+            | Add an Image to the right 
+            i.typcn.typcn-arrow-right
       .col-md-6
         h4
-          | Add an Invoice Image
+          
         .csv-drop-file
           p
             input.file-uploader#fileuploadimage( type="file", name="files[]", multiple)
@@ -151,7 +170,9 @@ block subfoot
 
   script.
     $( document ).ready(function() {
-
+      if(getParameterByName('type')=='new'){
+        $(".edit-profile-modal").fadeIn();
+      }
       $("body").on("click", ".btn-edit", function() {
         $(".edit-profile-modal").fadeIn();
       });
@@ -168,6 +189,12 @@ block subfoot
       });
 
     });
+    function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
     $('#fileuploadimage').fileupload({
              url: '#{org.id}/uploadimage'
             ,dataType: 'json'

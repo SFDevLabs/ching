@@ -668,6 +668,10 @@ body.show {
   body.show footer {
     margin-top: 0; }
 
+.organization a.org {
+  padding: 2px 4px;
+  font-size: 14px; }
+
 .invoice-form {
   padding-top: 2.5em; }
   .invoice-form .properties {
