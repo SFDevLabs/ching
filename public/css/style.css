@@ -122,13 +122,9 @@ em strong, strong em {
 
 a {
   text-decoration: none;
-  -webkit-transition: color 0.5s ease-in-out;
-  transition: opacity color 0.5s ease-in-out;
   color: #0085c3; }
   a:active {
     color: #F92700; }
-  a:hover {
-    color: #006290; }
 
 .btn, a.button, .button {
   display: inline-block;
@@ -147,8 +143,7 @@ a {
   .btn:hover, a.button:hover, .button:hover {
     -webkit-transition: color 0.5s ease-in-out;
     transition: opacity color 0.5s ease-in-out;
-    border-color: #02c34e;
-    color: #02c34e; }
+    border-color: #02c34e; }
   .btn.action, a.button.action, .button.action {
     color: #fff;
     border-bottom: 3px solid rgba(0, 0, 0, 0.25);
@@ -170,7 +165,6 @@ a {
     border-color: #F92700;
     color: #F92700; }
     .btn.btn-danger:hover, a.button.btn-danger:hover, .button.btn-danger:hover {
-      color: #c61f00;
       border-color: #c61f00; }
   .btn.subtle, .btn.subtle.btn-danger, a.button.subtle, a.button.subtle.btn-danger, .button.subtle, .button.subtle.btn-danger {
     background: none;
@@ -591,25 +585,25 @@ header .middle-buttons {
     background: #d5d5d5; }
 
 .sent {
-  color: #c4c154;
+  color: #888;
   border-bottom-color: #c4c154; }
   .sent .status {
-    background: #c4c154; }
+    background: #C1F6FF; }
 
 .viewed {
-  color: #95D3DD;
+  color: #888;
   border-bottom-color: #c4c154; }
   .viewed .status {
     background: #C1F6FF; }
 
 .paid {
-  color: #02C3A6;
+  color: #888;
   border-bottom-color: #02C3A6; }
   .paid .status {
     background: #02C3A6; }
 
 .verified {
-  color: #02c34e;
+  color: #888;
   border-bottom-color: #02c34e; }
   .verified .status {
     background: #02c34e; }

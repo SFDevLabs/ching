@@ -18,7 +18,8 @@ var mongoose = require('mongoose')
   , emailTmplPwReset = fs.readFileSync('./app/views/email/password_reset.html','utf8')
   , emailTmplPwResetConfirm = fs.readFileSync('./app/views/email/password_reset_confirm.html','utf8')
   , Mustache=require('mustache')
-  , emailAddMemberTmpl = fs.readFileSync('./app/views/email/addmember.html','utf8');
+  , emailAddMemberTmpl = fs.readFileSync('./app/views/email/addmember.html','utf8')
+  , emailNewMemberTmpl = fs.readFileSync('./app/views/email/addmember.html','utf8');
 
 // var login = function (req, res) {
 //   var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
@@ -420,7 +421,7 @@ exports.addmember = function (req, res) {
             , message: 'You have been invited to the organization '+org.name+'. '+domain+'/organizations/'+org.id
             }, 
             function(err){
-              console.log(err,'err')
+              req.flash('success', 'New user added to the Organization! An email has been sent to the user informing them. ');
               return res.redirect('/organizations/'+org.id)    
            });            
         });
@@ -443,7 +444,7 @@ exports.removemember = function (req, res) {
         }
       });
       user.save(function(err){
-        return res.redirect('/users/'+req.user.id)
+        return res.redirect('/users/'+org.id)
       });
       
   });

@@ -198,15 +198,15 @@ strong em {
 
 a {
   text-decoration: none;
-  -webkit-transition: color 0.5s ease-in-out;
-  transition:opacity color 0.5s ease-in-out;
+  // -webkit-transition: color 0.5s ease-in-out;
+  // transition:opacity color 0.5s ease-in-out;
   color: $link;
   &:active {
     color: #F92700;
   }
-  &:hover {
-    color: $hover;
-  }
+  // &:hover {
+  //   color: $hover;
+  // }
 }
 
 .btn,
@@ -230,7 +230,7 @@ a.button,
     -webkit-transition: color 0.5s ease-in-out;
     transition:opacity color 0.5s ease-in-out;
     border-color: $actionbg;
-    color: $actionbg;
+    //color: $actionbg;
   }
 
   &.action {
@@ -257,7 +257,7 @@ a.button,
     border-color: $warnbg;
     color: $warnbg;
     &:hover {
-      color: $warnbghover;
+      //color: $warnbghover;
       border-color: $warnbghover;
     }
   }
@@ -913,15 +913,15 @@ header{
 }
 
 .sent {
-  color: #c4c154;
+  color: #888;
   border-bottom-color: #c4c154;
   .status {
-    background: #c4c154;
+    background: #C1F6FF;
   }
 }
 
 .viewed {
-  color: #95D3DD;
+  color: #888;
   border-bottom-color: #c4c154;
   .status {
     background: #C1F6FF;
@@ -929,7 +929,7 @@ header{
 }
 
 .paid {
-  color: #02C3A6;
+  color: #888;
   border-bottom-color: #02C3A6;
   .status {
     background: #02C3A6;
@@ -937,7 +937,7 @@ header{
 }
 
 .verified {
-  color: $actionbg;
+  color: #888;
   border-bottom-color: $actionbg;
   .status {
     background: $actionbg;
