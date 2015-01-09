@@ -920,6 +920,14 @@ header{
   }
 }
 
+.viewed {
+  color: #95D3DD;
+  border-bottom-color: #c4c154;
+  .status {
+    background: #C1F6FF;
+  }
+}
+
 .paid {
   color: #02C3A6;
   border-bottom-color: #02C3A6;
