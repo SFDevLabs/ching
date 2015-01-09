@@ -92,6 +92,8 @@ block content
                   |status:
               -if (article.status == "sent" && mainAuth)
                 h4.status(class="#{article.status} #{hasImage}") Sent on #{formatDate(article.invoicedOn)}
+              -else if (article.status == "viewed" && mainAuth)
+                h4.status(class="#{article.status} #{hasImage}") First viewed on #{formatDatetime(article.views[0].viewedAt)}
               -else if(article.status =='verified')
                 h4.status(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paymentVerifiedOn)}
               -else if (article.status == "paid")
@@ -270,6 +272,12 @@ block content
                         p
                           strong #{viewer.user.firstname} #{viewer.user.lastname}
                         p=viewer.user.email
+                        -if (mainAuth)
+                          form.form-inline(role="form", method="post", action="/articles/" + article._id + "/viewer/" + viewer._id, onsubmit="return confirm('Are you sure?')" )
+                            input(type='hidden', name='_csrf', value="#{csrf_token}")
+                            input(type="hidden", name="_method", value="DELETE")
+                            button.close-button(type="submit")
+                              span.typcn.typcn-delete
 
 
         - if (req.user && req.article && mainAuth)

@@ -86,6 +86,9 @@ block content
                 if (article.status=='sent' && invoiceType==='received')
                   span 
                     | Recieved
+                else if (article.status=='verified')
+                  span
+                    | Payment Verified 
                 else
                   span #{article.status}
                 span.right # #{formatInvoiceNumber(article.number)}

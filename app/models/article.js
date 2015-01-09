@@ -125,6 +125,8 @@ ArticleSchema
         val='draft';
       }else if (this.paidOn===null && this.dueOn && new Date()>this.dueOn){
         val='overdue';
+      } else if (this.invoicedOn!==null && this.views && this.views.length>0){
+        val='viewed';
       } else if (this.invoicedOn!==null){
         val='sent';
       }
@@ -372,7 +374,7 @@ ArticleSchema.statics = {
   list: function (options, cb) {
     var criteria = options.criteria || {};
 
-    this.find(criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, title:1, organization:1 })
+    this.find(criteria, { user:1,viewers:1, tags:1, total:1, number:1, paymentVerifiedOn:1, invoicedOn:1, dueOn:1, createdAt:1, paidOn:1, title:1, organization:1, views:1 })
       // .or([
       //     options.criteria
       //   ,{'viewers':{$elemMatch: {user:options.criteria.user } } }
