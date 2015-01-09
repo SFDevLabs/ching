@@ -271,7 +271,7 @@ var mongoose = require('mongoose')
 
     req.user.organizations.push({org:org.id, isAdmin:true})
     req.user.save(function(err){
-      res.redirect('/organizations/'+org.id)
+      res.redirect('/organizations/'+org.id+'?type=new')
     });
   });
  };
@@ -443,7 +443,7 @@ exports.removemember = function (req, res) {
         }
       });
       user.save(function(err){
-        return res.redirect('/organizations/'+org.id)
+        return res.redirect('/users/'+req.user.id)
       });
       
   });
