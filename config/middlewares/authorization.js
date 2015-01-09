@@ -6,6 +6,7 @@
 exports.requiresLogin = function (req, res, next) {
   if (req.isAuthenticated()) return next()
   if (req.method == 'GET') req.session.returnTo = req.originalUrl
+  req.flash('info', 'Please login to view this page.')
   res.redirect('/login')
 }
 
@@ -16,7 +17,7 @@ exports.requiresLogin = function (req, res, next) {
 exports.user = {
   hasAuthorization: function (req, res, next) {
     if (req.profile.id != req.user.id) {
-      req.flash('info', 'You are not authorized')
+      req.flash('info', 'Please login to view this page.')
       return res.redirect('/users/' + req.profile.id)
     }
     next()
@@ -41,7 +42,7 @@ exports.org = {
     if (orgCheck(req.user.organizations, req.organization.id)) {
       return next()
     }
-    req.flash('info', 'You are not authorized')
+    req.flash('info', 'You are not allowed to edit this.')
     return res.redirect('/')
   }
 }
@@ -53,7 +54,7 @@ exports.org = {
 exports.article = {
   hasEditAuthorization: function (req, res, next) {
     if (req.article.user.id != req.user.id) {
-      req.flash('info', 'You are not authorized')
+      req.flash('info', 'You are not allowed to edit this.')
       return res.redirect('/articles/' + req.article.id)
     }
     next()
@@ -95,7 +96,7 @@ exports.article = {
 
     authorAuth = req.article.user.id === req.user.id
     if (!viewerAuth && !authorAuth && !orgAuth) {
-      req.flash('info', 'You are not authorized')
+      req.flash('info', 'You are not allowed to edit this.')
       return res.redirect('/login')
     }
     next()
@@ -108,7 +109,7 @@ exports.article = {
       };
     });
     if (!auth) {
-      req.flash('info', 'You are not authorized')
+      req.flash('info', 'You are not allowed to edit this.')
       return res.redirect('/login')
     }
     next();
@@ -126,7 +127,7 @@ exports.comment = {
     if (req.user.id === req.comment.user.id || req.user.id === req.article.user.id) {
       next()
     } else {
-      req.flash('info', 'You are not authorized')
+      req.flash('info', 'You are not allowed to edit this.')
       res.redirect('/articles/' + req.article.id)
     }
   }
