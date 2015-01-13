@@ -290,11 +290,21 @@ exports.create = function (req, res, next) {
 exports.show = function (req, res) {
   var bodyClass = "profile";
   var user = req.user
-  res.render('users/show', {
-    title: 'Profile',
-    user: user,
-    bodyClass: bodyClass
-  })
+  User
+    .findOne({ _id : user.id })
+    .populate('organizations.org')
+    .exec(function (err, user) {
+      if (err) return next(err)
+      if (!user) return next(new Error('Failed to load User ' + id))
+      req.profile = user
+      res.render('users/show', {
+        title: 'Profile',
+        user: user,
+        bodyClass: bodyClass
+      });
+    })
+
+
 }
 
 /**
