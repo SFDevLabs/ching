@@ -1018,7 +1018,7 @@ exports.pdf = function(req, res){
       res.writeHead(200, {
           'Content-Type': 'application/pdf',
           'Access-Control-Allow-Origin': '*',
-          'Content-Disposition': 'attachment; filename='+filename+'_'+utils.formatInvoiceNumber(req.article.number)+'.pdf',
+          'Content-Disposition': 'attachment; filename=#'+utils.formatInvoiceNumber(req.article.number)+'.pdf',
       });
 
       // Pipe generated PDF into response
