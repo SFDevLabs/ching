@@ -21,7 +21,7 @@ module.exports = {
     app: {
       name: 'Ching'
     },
-    rootHost:'http://beta.ching.io',
+    rootHost:'http://ching.io',
     port:'80',//not required but placed for consistency
     facebook: {
       clientID: "APP_ID",
