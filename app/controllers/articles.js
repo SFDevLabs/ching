@@ -6,18 +6,17 @@ var mongoose = require('mongoose')
   , Article = mongoose.model('Article')
   , User = mongoose.model('User')
   , Org = mongoose.model('Org')
-
+  , authorization = require('../../config/middlewares/authorization.js')
   , utils = require('../../lib/utils')
   , csvParse = require('../../utils/csvParse')
   , validateEmail = utils.validateEmail
   , extend = require('util')._extend
-  , fs    = require('fs')
   , Converter=require("csvtojson").core.Converter
   , sendEmail = utils.sendEmail
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
   , domain = config.rootHost
-  , emailTmplPaid = fs.readFileSync('./app/views/email/paid.html','utf8')
+  , emailTmplPaid = utils.createEmail('./app/views/email/paid.html')
   , Mustache = require('mustache')
   , async = require('async')
   , itemsSchema = require('../models/article').itemsSchemaExport()
@@ -51,7 +50,7 @@ var mongoose = require('mongoose')
  */
 exports.uploadcsv = function(req, res, next){
 
-    getcsv(req.files, req.body, function(err, data){
+    utils.getcsv(req.files, req.body, function(err, data){
 
       var csvConverter=new Converter({});
 
@@ -176,19 +175,7 @@ var parseTimeQuantity = function(val){
 
 
 
-var getcsv=function(files, body, cb){
-   if (!files && body.csv){
-      cb(null, body.csv);
-   } else if (files && files.files[0]) {
-      fs.readFile(files.files[0].path, {encoding: 'utf-8'}, function(err,data){
-        fs.unlinkSync(files.files[0].path);
-        cb(null,data);
-      });//file read
-   }else{
-    cb('no csv', null);
-   }
 
-}
 
 
 /**
@@ -831,21 +818,61 @@ exports.show = function(req, res, next){
  * Record View
  */
 
+var isViewer=function(id, viewers){
+
+  viewers.forEach(function(val){
+
+    console.log()
+  });
+
+//article.user.id===user.id
+
+} 
+
 exports.record = function(req, res, next){
   var article = req.article
     , viewer  = req.user
     , user = req.user
     , userId = viewer.user && viewer.user.id? viewer.user._id:user.id;
 
-    if (user && article.user.id===user.id){
+    //console.log(article.viewers)
+    if (user && !authorization.isViewerCheck(article.viewers, user.id)){ //we are bonking out if the user or group member is viewing
       return next();
-    }
+    }else{
 
-    article.addPageView({user:userId}, function (err, obj, newViewer) {
-      if (err) return res.render('500')
-      next()
-    });
+      if (!article.viewers || article.viewers.length===0){
+        sendFirstViewerEmail();
+      }
+      article.addPageView({user:userId}, function (err, obj, newViewer) {
+        if (err) return res.render('500')
+        next()
+      });
+
+    }
 }
+
+sendFirstViewerEmail=function(){
+    var views={
+            user_full_name: article.user.firstname +' '+ article.user.lastname
+          , organization_article: article.user.organization?' of ':''
+          , organization: article.user.organization
+          , invoice_num: utils.formatInvoiceNumber(article.number)
+          , action_href: domain+'/articles/'+article.id
+          , notes : req.body.body?'Note Added: \"'+req.body.body+'\"':''
+        };
+        if (article.paymentVerifiedOn){
+          subject = 'Your invoice payment has been verified.'
+        }else{
+          subject = 'Your invoice has been marked as payed!'
+        }
+  sendEmail({to: article.user.email
+          , fromname : article.user.firstname +' '+article.user.lastname
+          , from: 'noreply@ching.io'
+          , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been paid.'
+          , html : Mustache.render(emailTmplPaid, views)
+          , message: subject
+        });
+};
 
 /**
  * Delete an article

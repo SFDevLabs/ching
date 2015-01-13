@@ -14,12 +14,11 @@ var mongoose = require('mongoose')
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
   , domain = config.rootHost
-  , fs = require('fs')
-  , emailTmplPwReset = fs.readFileSync('./app/views/email/password_reset.html','utf8')
-  , emailTmplPwResetConfirm = fs.readFileSync('./app/views/email/password_reset_confirm.html','utf8')
+  , emailTmplPwReset = utils.createEmail('./app/views/email/password_reset.html')
+  , emailTmplPwResetConfirm = utils.createEmail('./app/views/email/password_reset_confirm.html')
   , Mustache=require('mustache')
-  , emailAddMemberTmpl = fs.readFileSync('./app/views/email/addmember.html','utf8')
-  , emailNewMemberTmpl = fs.readFileSync('./app/views/email/addmember.html','utf8');
+  , emailAddMemberTmpl = utils.createEmail('./app/views/email/addmember.html') 
+  , emailAddNewMemberTmpl = utils.createEmail('./app/views/email/addmemberNewUser.html');
 
 // var login = function (req, res) {
 //   var redirectTo = req.session.returnTo ? req.session.returnTo : '/';

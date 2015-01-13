@@ -15,8 +15,8 @@ var mongoose = require('mongoose')
   , config = require('../../config/config')[env]
   , domain = config.rootHost
   , fs = require('fs')
-  , emailTmplPwReset = fs.readFileSync('./app/views/email/password_reset.html','utf8')
-  , emailTmplPwResetConfirm = fs.readFileSync('./app/views/email/password_reset_confirm.html','utf8')
+  , emailTmplPwReset = utils.createEmail('./app/views/email/password_reset.html') //fs.readFileSync('./app/views/email/password_reset.html','utf8')
+  , emailTmplPwResetConfirm = utils.createEmail('./app/views/email/password_reset_confirm.html') //fs.readFileSync('./app/views/email/password_reset_confirm.html','utf8')
   , Mustache=require('mustache');
 
 var login = function (req, res) {
