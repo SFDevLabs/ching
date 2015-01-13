@@ -14,8 +14,6 @@ var mongoose = require('mongoose')
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
   , domain = config.rootHost
-  , emailTmplPwReset = utils.createEmail('./app/views/email/password_reset.html')
-  , emailTmplPwResetConfirm = utils.createEmail('./app/views/email/password_reset_confirm.html')
   , Mustache=require('mustache')
   , emailAddMemberTmpl = utils.createEmail('./app/views/email/addmember.html') 
   , emailAddNewMemberTmpl = utils.createEmail('./app/views/email/addmemberNewUser.html');
@@ -371,9 +369,11 @@ exports.addmember = function (req, res) {
 
   User.findOne({email:validatedEmail})
       .exec(function (err, user) {
+
+        var emailTmpl;
         if (user){
+          emailTmpl= emailAddMemberTmpl;
           var duplicate = user.organizations.some(function(val){
-            console.log(val.org,org._id )
             return String(val.org)===org.id
           });
           if (!duplicate){
@@ -383,7 +383,8 @@ exports.addmember = function (req, res) {
           }
 
         } else{
-          user = new User(req.body);
+          emailTmpl= emailAddNewMemberTmpl;
+          var user = new User(req.body);
           user.placeholderFromShare=true;
           user.organizations.push({
               org:org
@@ -395,13 +396,14 @@ exports.addmember = function (req, res) {
         user.save(function(){
           if (err) return next(err)
           //here we are sending the user an email to the new member
-          var fromname = user.firstname +' '+user.lastname
+          var fromname = req.user.firstname +' '+req.user.lastname
               ,views={
             sender: fromname
             //, organization_article: user.organization?' at ':''
             //, organization: user.organization
             //, amount: utils.formatCurrency(article.total)
             //, invoice_num: utils.formatInvoiceNumber(article.number)
+            , action_signup : domain+'/signup?email='+user.email
             , action_home: domain+'/organizations/'+org.id
             , action_href: domain+"?all="+org.name
             , organization: org.name
@@ -416,7 +418,7 @@ exports.addmember = function (req, res) {
             , fromname: req.user.firstname +' '+req.user.lastname
             , from: 'noreply@ching.io'
             , subject: subject
-            , html : Mustache.render(emailAddMemberTmpl, views)
+            , html : Mustache.render(emailTmpl, views)
             , message: 'You have been invited to the organization '+org.name+'. '+domain+'/organizations/'+org.id
             }, 
             function(err){
@@ -443,7 +445,7 @@ exports.removemember = function (req, res) {
         }
       });
       user.save(function(err){
-        return res.redirect('/users/'+org.id)
+        return res.redirect('/users/'+user.id)
       });
       
   });
