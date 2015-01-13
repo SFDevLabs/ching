@@ -71,8 +71,8 @@ module.exports = function (app, passport) {
   });
 
   // user routes
-  app.get('/login', users.login)
-  app.get('/signup', users.signup)
+  app.get('/login', auth.requiresNotLogin, users.login)
+  app.get('/signup', auth.requiresNotLogin, users.signup)
   app.get('/logout', users.logout)
   app.get('/reset', users.resetpage)
   app.post('/reset', users.reset)

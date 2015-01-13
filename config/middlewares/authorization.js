@@ -11,6 +11,17 @@ exports.requiresLogin = function (req, res, next) {
 }
 
 /*
+ *  Generic Not require login routing middleware
+ */
+
+exports.requiresNotLogin = function (req, res, next) {
+  if (!req.isAuthenticated()) return next()
+  //if (req.method == 'GET') req.session.returnTo = req.originalUrl
+  //req.flash('info', 'Please login to view this page.')
+  res.redirect('/')
+}
+
+/*
  *  User authorization routing middleware
  */
 
@@ -25,12 +36,17 @@ exports.user = {
 }
 
 
-var orgCheck = function(list, id){
+var orgCheck = exports.orgCheck = function(list, id){
   return list.some(function(val,i){
     return String(val.org) === id
   });
 }
-
+var isViewerCheck = exports.isViewerCheck = function(list, id){
+  if (!list || !id){return false};
+  return list.some(function(val,i){
+    return String(val.user.id) === id
+  });
+}
 
 /*
  *  User authorization routing middleware
