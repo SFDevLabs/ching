@@ -14,8 +14,6 @@ block main
         .meta
             p='Name: '+user.firstname+" "+user.lastname
         .meta
-            p='Organization: '+user.organization
-        .meta
             p
               | Address:
               br
@@ -52,7 +50,6 @@ block main
                   div.col-sm-3.to
                     p
                       strong #{organization.name}
-                      &nbsp
                       a.btn.org.right(href='/organizations/'+organization.id)
                         | admin
                     .meta
