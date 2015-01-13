@@ -17,6 +17,7 @@ var mongoose = require('mongoose')
   , fs = require('fs')
   , emailTmplPwReset = utils.createEmail('./app/views/email/password_reset.html') //fs.readFileSync('./app/views/email/password_reset.html','utf8')
   , emailTmplPwResetConfirm = utils.createEmail('./app/views/email/password_reset_confirm.html') //fs.readFileSync('./app/views/email/password_reset_confirm.html','utf8')
+  , createUserEmail = utils.createEmail('./app/views/email/createUser.html') 
   , Mustache=require('mustache');
 
 var login = function (req, res) {
@@ -252,11 +253,29 @@ exports.create = function (req, res, next) {
             title: 'Sign up'
           })
         }
-        // manually login the user once successfully signed up
-        req.logIn(newUser, function(err) {
-          if (err) return next(err)
-          return res.redirect('/')
-        })
+        var views={
+            user_full_name: user.firstname+' '+user.lastname
+          , new_action:domain+'/articles/new'
+          , profile_action: domain+'/articles/new'
+        }
+        sendEmail({
+            to: user.email
+          , fromname: 'Ching.io' 
+          , from: 'noreply@ching.io'
+          , subject: 'Welcome to Ching'
+          , message: 'Dear '+user.firstname+' '+user.lastname+',%0AYour password has been reset'
+          , html:Mustache.render(createUserEmail, views)
+        }, function(err, json, b){
+          
+          // manually login the user once successfully signed up
+          req.logIn(newUser, function(err) {
+            if (err) return next(err)
+            return res.redirect('/')
+          });
+
+        });//email
+
+
 
       })//save function newUser
       })//save function Org
@@ -270,7 +289,7 @@ exports.create = function (req, res, next) {
 
 exports.show = function (req, res) {
   var bodyClass = "profile";
-  var user = req.profile
+  var user = req.user
   res.render('users/show', {
     title: 'Profile',
     user: user,
