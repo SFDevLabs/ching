@@ -445,7 +445,7 @@ exports.removemember = function (req, res) {
         }
       });
       user.save(function(err){
-        return res.redirect('/users/'+user.id)
+        return res.redirect('/settings')
       });
       
   });

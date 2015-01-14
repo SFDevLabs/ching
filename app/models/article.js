@@ -310,9 +310,9 @@ ArticleSchema.statics = {
     this.findOne({ _id : id })
       .populate('user', 'lastname firstname email organization profileImageCDN profileImageFile address city state zipcode')
       .populate('comments.user')
-      .populate('viewers.user', 'lastname email firstname organization')
-      .populate('views.user', 'lastname email firstname organization')
-      .populate('images.user', 'lastname email firstname organization')
+      .populate('viewers.user', 'lastname email firstname')
+      .populate('views.user', 'lastname email firstname')
+      .populate('images.user', 'lastname email firstname')
       .populate('organization')
       .exec(cb);
   },
