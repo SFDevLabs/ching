@@ -22,7 +22,7 @@ var mongoose = require('mongoose')
 
 var login = function (req, res) {
   var name = req.user.firstname?req.user.firstname:'';
-  utils.slackChing(name+'has loged in');
+  utils.slackChing(name+' has loged in');
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
   delete req.session.returnTo;
   res.redirect(redirectTo);

@@ -80,7 +80,7 @@ exports.create = function (req, res) {
 exports.sendInvoice=function(req, res){
 
 
-  utils.slackChing(req.user.firstname+'has sent and invoice!');
+  utils.slackChing(req.user.firstname+' has sent and invoice!');
   utils.keenAnalytics('user_event', {type:'invoice_sent', user:req.user.id, session:req.sessionID?req.sessionID:null });
 
   var   article= req.article
