@@ -124,7 +124,9 @@ block content
             .col-md-4.float-right.right
               - if (article.organization && article.organization.profileImageCDN && article.organization.profileImageFile)
                 .invoice-img
-                  img(src="#{article.organization.profileImageCDN}/user_thumb_#{article.organization.profileImageFile}")
+                  - var cdn = article.organization.profileImageCDN.replace("http","https");
+                  p=cdn
+                  img(src="#{cdn}/user_thumb_#{article.organization.profileImageFile}")
               - else if (article.organization)
                  h4.mini.invoice-img
                   a(href='/organizations/'+article.organization.id) Add an Organization Logo
@@ -132,7 +134,8 @@ block content
                   i.typcn.typcn-image
               - else if (article.user.profileImageCDN && article.user.profileImageFile)
                 .invoice-img
-                  img(src="#{article.user.profileImageCDN}/user_thumb_#{article.user.profileImageFile}")
+                  - var cdn = article.user.profileImageCDN.replace("http","https");
+                  img(src="#{cdn}/user_thumb_#{article.user.profileImageFile}")
               -else if (mainAuth)
                  h4.mini.invoice-img
                   a(href='/users/'+req.user.id) Add Your Logo
