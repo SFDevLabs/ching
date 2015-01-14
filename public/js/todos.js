@@ -400,8 +400,8 @@
 
         },
         dateFormater:function(todo,val){
-          if (typeof val === "string"){
-            todo.attributes.date = val.slice(0,10)
+          if (typeof val === "string" && val.length!==39){ //ISO dates are 39 characters long.  We get this from a copy paste.
+            todo.attributes.date = val.slice(0,10) //slicing off the offset
           }
         },
         tax1Formater:function(todo,val){
