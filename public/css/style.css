@@ -359,7 +359,7 @@ footer {
       text-align: center;
       clear: both;
       width: 100%;
-      font-weight: 900;
+      font-weight: 500;
       color: #FF9B00;
       margin-bottom: 0.3125em; }
     .landing header .header-content .computer {
@@ -434,7 +434,7 @@ footer {
     line-height: 1.5em; }
   .landing header p.tagline {
     line-height: 1.5em;
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 0.925em;
     font-size: 1.75em; }
 .landing .landing-content {

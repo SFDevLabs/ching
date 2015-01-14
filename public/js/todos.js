@@ -201,7 +201,7 @@
       }
 
       Handsontable.renderers.registerRenderer('qtyRender', this.qtyRender); //maps function to lookup string
-
+      $('#spinner').remove();
       this.handsonContainer.handsontable({
         data: cars,
         dataSchema: function(){
