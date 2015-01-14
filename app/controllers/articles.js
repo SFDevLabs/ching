@@ -17,6 +17,8 @@ var mongoose = require('mongoose')
   , config = require('../../config/config')[env]
   , domain = config.rootHost
   , emailTmplPaid = utils.createEmail('./app/views/email/paid.html')
+  , emailTmplPaidVerified = utils.createEmail('./app/views/email/paidVerified.html')
+  , invoiceFirstViewed = utils.createEmail('./app/views/email/firstviewed.html')
   , Mustache = require('mustache')
   , async = require('async')
   , itemsSchema = require('../models/article').itemsSchemaExport()
@@ -673,23 +675,29 @@ exports.edit = function (req, res) {
  */
 exports.payed = function(req, res){
   var article = req.article,
-      subject;
+      subject,
+      type;
 
   utils.keenAnalytics('user_event', {type:'invoice_payed', user:req.user.id, sender:req.article.user.id, session:req.sessionID?req.sessionID:null});
 
-  //
   if (req.article.user.id==req.user.id){
     article.paymentVerifiedOn=new Date();
+    type = "verified"
+  } else{
+    type= "payed"
   }
+  
+  article.views.push({
+    type: type,
+    user: req.user
+  });
 
   if (req.body.body){
     article.addComment(req.user, req.body, function (err) {
-      //hacky logic to account for tookens
-      redirect=req.token?'/articles/'+ article.id+'/token/'+req.token:'/articles/'+ article.id;
+      //hacky logic to account for tokens
       if (err) return res.render('500')
     })  
   }
-
 
   article.paidOn=new Date();
   var views={
@@ -699,17 +707,20 @@ exports.payed = function(req, res){
           , invoice_num: utils.formatInvoiceNumber(article.number)
           , action_href: domain+'/articles/'+article.id
           , notes : req.body.body?'Note Added: \"'+req.body.body+'\"':''
-        };
+        },
+        tmpl;
         if (article.paymentVerifiedOn){
-          subject = 'Your invoice payment has been verified.'
+          tmpl = emailTmplPaidVerified;
+          subject = 'Invoice '+utils.formatInvoiceNumber(article.number)+' payment has been verified.'
         }else{
-          subject = 'Your invoice has been marked as payed!'
+          tmpl = emailTmplPaid;
+          subject = 'Invoice '+utils.formatInvoiceNumber(article.number)+' has been marked as payed!'
         }
   sendEmail({to: article.user.email
           , fromname : article.user.firstname +' '+article.user.lastname
           , from: 'noreply@ching.io'
-          , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been paid.'
-          , html : Mustache.render(emailTmplPaid, views)
+          , subject: subject
+          , html : Mustache.render(tmpl, views)
           , message: subject
         },
   function(err, json){
@@ -718,8 +729,13 @@ exports.payed = function(req, res){
       if (err) {
         res.flash('error','Something Went Wrong')
       }
-      var redirect = '/articles/' + article._id;
-      if (req.token){redirect+='/token/'+req.token};
+
+      var redirect;
+      if (req.token){
+       redirect = '/articles/'+ article.id+'/token/'+req.token;
+      } else{
+        redirect = '/articles/' + article._id;
+      }
       res.redirect(redirect)
 
     })
@@ -814,9 +830,7 @@ exports.show = function(req, res, next){
   });//Org find
 }
 
-/**
- * Record View
- */
+
 
 var isViewer=function(id, viewers){
 
@@ -828,22 +842,22 @@ var isViewer=function(id, viewers){
 //article.user.id===user.id
 
 } 
-
+/**
+* Record View
+*/
 exports.record = function(req, res, next){
   var article = req.article
     , viewer  = req.user
     , user = req.user
     , userId = viewer.user && viewer.user.id? viewer.user._id:user.id;
 
-    //console.log(article.viewers)
     if (user && !authorization.isViewerCheck(article.viewers, user.id)){ //we are bonking out if the user or group member is viewing
       return next();
-    }else{
-
-      if (!article.viewers || article.viewers.length===0){
-        sendFirstViewerEmail();
+    } else{
+      if (!article.views || article.views.length===0){
+        sendFirstViewerEmail(article, viewer);
       }
-      article.addPageView({user:userId}, function (err, obj, newViewer) {
+      article.addPageView({user:userId, type:'viewed'}, function (err, obj, newViewer) {
         if (err) return res.render('500')
         next()
       });
@@ -851,26 +865,24 @@ exports.record = function(req, res, next){
     }
 }
 
-sendFirstViewerEmail=function(){
-    var views={
-            user_full_name: article.user.firstname +' '+ article.user.lastname
-          , organization_article: article.user.organization?' of ':''
-          , organization: article.user.organization
+sendFirstViewerEmail=function(article, viewer){ 
+    var name = viewer.firstname +' '+ viewer.lastname
+      , views={
+            user_full_name: name
           , invoice_num: utils.formatInvoiceNumber(article.number)
           , action_href: domain+'/articles/'+article.id
-          , notes : req.body.body?'Note Added: \"'+req.body.body+'\"':''
         };
-        if (article.paymentVerifiedOn){
-          subject = 'Your invoice payment has been verified.'
-        }else{
-          subject = 'Your invoice has been marked as payed!'
-        }
+
   sendEmail({to: article.user.email
-          , fromname : article.user.firstname +' '+article.user.lastname
+          , fromname : 'Ching'
           , from: 'noreply@ching.io'
-          , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been paid.'
-          , html : Mustache.render(emailTmplPaid, views)
-          , message: subject
+          , subject: name+' Viewed Invoice #'+utils.formatInvoiceNumber(article.number)
+          , html : Mustache.render(invoiceFirstViewed, views)
+          , message: views.user_full_name+' has viewed the invoice '+ views.invoice_num+'. Click this link to visit the invoice: '+domain+'/articles/'+article.id
+        },function(err, json){
+          if (err){console.log('Email Error')};
+
+          console.log('Email first sent')
         });
 };
 
