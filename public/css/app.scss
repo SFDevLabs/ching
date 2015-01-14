@@ -134,6 +134,20 @@ button.error {
   
 }
 
+.views {
+  font-weight: 900;
+  .type{font-size: 1.2em;}
+  .payed{
+    color:#02C3A6;
+  }
+  .viewed{
+    color:#45B9CD;
+  }
+  .verified{
+    color:#02c34e;
+  }
+}
+
 
 
 //datepicker

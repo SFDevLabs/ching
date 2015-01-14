@@ -92,6 +92,17 @@ button.error {
 #grid .htDimmed {
   color: inherit; }
 
+.views {
+  font-weight: 900; }
+  .views .type {
+    font-size: 1.2em; }
+  .views .payed {
+    color: #02C3A6; }
+  .views .viewed {
+    color: #45B9CD; }
+  .views .verified {
+    color: #02c34e; }
+
 #ui-datepicker-div {
   background-color: #fff;
   border: 1px solid #ddd; }

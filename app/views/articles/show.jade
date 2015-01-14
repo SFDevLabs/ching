@@ -453,8 +453,14 @@ block content
                         | &nbsp;
                       //- span.email=view.user.email
                       //-   | &nbsp;&nbsp;
+                      - if(view.type==='verified')
+                        span.type(class=view.type)
+                          | verified payment 
+                        |for
+                      - else
+                        span.type(class=view.type)=view.type
                       span
-                        | viewed the invoice.&nbsp;
+                        |  the invoice.&nbsp;
                       span.muted=formatDatetime(view.viewedAt.toISOString())
                     br
                         
