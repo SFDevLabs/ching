@@ -10,6 +10,7 @@ var mongoose = require('mongoose')
   , sendEmail = utils.sendEmail
   , fs = require('fs')
   , invoiceEmailTmpl = utils.createEmail('./app/views/email/invoice.html') 
+  , invoiceSentforAuthorEmailTmpl = utils.createEmail('./app/views/email/invoiceSentforAuthor.html') 
   , Mustache=require('mustache')
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
@@ -43,7 +44,6 @@ exports.create = function (req, res) {
       user,
       validatedEmail = req.body.email.replace(/\.(?=[^@]*\@)/g, ''),
       emailValidation = utils.validateEmail(req.body.email);
-      console.log(req.body.email)
 
   if (!req.body.email || req.body.email.length===0 || !emailValidation){
         req.flash('error', 'Please enter a valid email')
@@ -81,8 +81,6 @@ exports.sendInvoice=function(req, res){
 
   utils.keenAnalytics('user_event', {type:'invoice_sent', user:req.user.id, session:req.sessionID?req.sessionID:null });
 
-    //         , 
-
   var   article= req.article
       , articleJSON = article.toJSON()
       , user = req.user
@@ -93,19 +91,8 @@ exports.sendInvoice=function(req, res){
      return res.redirect('/articles/' + article.id);
   }
 
-
-
-  // sendEmail({
-  //           to:articleJSON.viewers[0].user.email
-  //           , subject: 'You have a new Invoice from '+user.organization
-  //           , from: 'noreply@ching.io'
-  //           ,html:Mustache.render(emailTmpl, views)//
-  //         }, function(err, json){
-  //           console.log(err, json)
-  //         })
-
-
   // we should create token here for each time we send the invoice! see authorization js line 67
+  invoiceSentEmailforAuthor(article)
   articleJSON.viewers.forEach(function(viewer, i){
         var fromname = user.firstname +' '+user.lastname,
             views={
@@ -117,13 +104,12 @@ exports.sendInvoice=function(req, res){
             , action_href: domain+'/articles/'+article.id+'/token/'+viewer._id
             , action_pdf_href: domain+'/articles/'+article.id+'/pdf/token/'+viewer._id
           }
-          , subject = 'Invoice #'+utils.formatInvoiceNumber(article.number)+' from '+viewer.user.firstname +' '+ viewer.user.lastname
+          , subject = 'Invoice #'+utils.formatInvoiceNumber(article.number)+' from '+article.user.firstname +' '+ article.user.lastname
 
-        if (user.organization && user.organization.length>0){///Organization is optional.  this logic add it when we have it
-          subject+=' at '+user.organization;
-          fromname+=' ('+user.organization+')';
-        };
-
+        // if (user.organization && user.organization.length>0){///Organization is optional.  this logic add it when we have it
+        //   subject+=' at '+user.organization;
+        //   fromname+=' ('+user.organization+')';
+        // };
         
         sendEmail({
             to: viewer.user.email
@@ -146,6 +132,28 @@ exports.sendInvoice=function(req, res){
           }
         });//email
   });
+};
+
+var invoiceSentEmailforAuthor = function(article){
+  views={
+            sender: "Ching"
+            // , organization_article: user.organization?' at ':''
+            // , organization: user.organization
+            , amount: utils.formatCurrency(article.total)
+            , invoice_num: utils.formatInvoiceNumber(article.number)
+            , action_href: domain+'/articles/'+article.id
+            , action_pdf_href: domain+'/articles/'+article.id+'/pdf/'
+          };
+  sendEmail({
+            to: article.user.email
+          , fromname: "Ching"
+          , from: 'noreply@ching.io'
+          , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' has been sent.'
+          , html : Mustache.render(invoiceSentforAuthorEmailTmpl, views)
+          , message: 'Invoice '+utils.formatInvoiceNumber(article.number)+' has been sent. You can view it at'+domain+'/articles/'+article.id+'.'
+        }, function(err, json){
+          if (err){  console.error(err, "email error") }
+    });
 }
 
 /**
