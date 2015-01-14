@@ -21,6 +21,8 @@ var mongoose = require('mongoose')
   , Mustache=require('mustache');
 
 var login = function (req, res) {
+  var name = req.user.firstname?req.user.firstname:'';
+  utils.slackChing(name+'has loged in');
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
   delete req.session.returnTo;
   res.redirect(redirectTo);
@@ -47,8 +49,7 @@ exports.savepw = function (req, res, next) {
  * Show login form
  */
 
-exports.login = function (req, res) {
- 
+exports.login = function (req, res) { 
   var savedbody = req.flash('savedbody'),
       password = savedbody.length && savedbody[0].password?savedbody[0].password:'',
       email = savedbody.length && savedbody[0].email?savedbody[0].email:'';
@@ -218,6 +219,7 @@ exports.session = login
  */
 
 exports.create = function (req, res, next) {
+
   // Check only when it is a new user or when email field is modified
   User.findOne({ email: req.body.email }).exec(function (err, user) {
       var newUser,
@@ -266,7 +268,7 @@ exports.create = function (req, res, next) {
           , message: 'Dear '+user.firstname+' '+user.lastname+',%0AYour password has been reset'
           , html:Mustache.render(createUserEmail, views)
         }, function(err, json, b){
-          
+          utils.slackChing(req.user.firstname+'has signed up, Horray');
           // manually login the user once successfully signed up
           req.logIn(newUser, function(err) {
             if (err) return next(err)

@@ -216,7 +216,6 @@ exports.token  = function(req, res, next, token){
 
 exports.indexRecieved = function(req, res){
 
-
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
   var perPage = 12,
       userID=req.user?req.user._id:null;
