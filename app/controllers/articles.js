@@ -53,8 +53,8 @@ var overdueMonitorEmail = function(results){
               var resultNum=results?results.length:''
               sendEmail({ to: 'jenkinsjeffrey@gmail.com'
                         , from: 'noreply@ching.io'
-                        , subject:resultNum+" overdue notices send to users. The domain that sent this is:"+domain
-                        , text: resultNum+" overdue notices send to users. The domain that sent this is:"+domain
+                        , subject:resultNum+" overdue notices send to users. The domain that sent this is:"+domain+' '+Date()
+                        , text: resultNum+" overdue notices send to users. The domain that sent this is:"+domain+' '+Date()
                       },function(err){
                         //console.log(err, 'email')
                         //email error goes here
