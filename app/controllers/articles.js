@@ -18,34 +18,65 @@ var mongoose = require('mongoose')
   , domain = config.rootHost
   , emailTmplPaid = utils.createEmail('./app/views/email/paid.html')
   , emailTmplPaidVerified = utils.createEmail('./app/views/email/paidVerified.html')
+  , emailTmplOverdue = utils.createEmail('./app/views/email/overdue.html')
   , invoiceFirstViewed = utils.createEmail('./app/views/email/firstviewed.html')
   , Mustache = require('mustache')
   , async = require('async')
   , itemsSchema = require('../models/article').itemsSchemaExport()
-  , _ = require("underscore");
+  , _ = require("underscore")
+  , CronJob = require('cron').CronJob;
 
-   //itemsSchema['click']={format: 'buttons', typeString:'string',columnPosition:9, displayName:'Clicky', colWidth:50};//Adding a click row to our item schema.
+var job = new CronJob('00 00 11 * * *', function(){ // 
+    var date = new Date(); //now
+    var dateMinus = new Date(); //24 hours ago
+    dateMinus.setHours(date.getHours() - 25);//25 hours ago
+    //queary for things that went past due 24 hours ago
+    Article.find({paidOn:null,invoicedOn:{'$ne': null }, dueOn:{$gt: dateMinus, $lt:date}},{number:1, user:1})
+          .populate('user','email')
+          .exec(function(err, results){
+              if (err){ return console.log(err)};
+              overdueMonitorEmail(results);
+              console.log(results)
+              results.forEach(function(result){
+                //console.log(result)
+                overdueEmail(result)
+              });
+    });
+  }, function () {
+    // This function is executed when the job stops
+  },
+  true /* Start the job right now */
+);
 
+var overdueMonitorEmail = function(results){
+              var resultNum=results?results.length:''
+              sendEmail({ to: 'jenkinsjeffrey@gmail.com'
+                        , from: 'noreply@ching.io'
+                        , subject:resultNum+" overdue notices send to users"
+                        , text: resultNum+" overdue notices send to users"
+                      },function(err){
+                        //console.log(err, 'email')
+                        //email error goes here
+                      });
+}
 
-// var Keen = require('keen.io');
-
-// var client = Keen.configure({
-//     projectId: "546dc37b36bca44b4bfcaf3e",
-//     writeKey: "8af6a1cc9a40021100e789f9010922a866fc7cafaeef7556217dd596738d779b0210ba1c45d11b5690865525fe9c05360e5aa344847617486eee4efe1a14575ecad3fce442b2c6c707c482b1c3a824914a216f64c76da2afbcde668c0095788281eb33f6c286678e43ad328eb0996717",
-//     readKey: "f631dfd829dba39d1d8efa8b22b6397ba7276991180db8733dbf354d2b645ef4b916bb3e71b9f6309a6181664a5ab2fb823cfdc3a3adec14a6e30dcbcb9783054cbdb4d8b5d1e97c14fca2a0a78abd793184a018057dd9e8b997196bd619984fb2ff3faa93a37580976b86b24658c1d2",
-//     masterKey: "56431B491A7ADDAA1DACA079F6165952"
-// });
-
-// var Analytics = function(collection, keyVals, cb){
-//   client.addEvent(collection, keyVals, function(err, res) {
-//     if (err && cb) {
-//       cb(err, null)
-//         console.log("Oh no, an error!", err);
-//     } else if (cb) {
-//       cb(null, res)
-//     }
-//   });
-// }
+var overdueEmail = function(article){
+  var views={
+          invoice_num: utils.formatInvoiceNumber(article.number)
+        , action_href: domain+'/articles/'+article.id
+  };
+  sendEmail({to: article.user.email
+          , fromname : 'Ching'
+          , from: 'noreply@ching.io'
+          , subject: 'Invoice #'+utils.formatInvoiceNumber(article.number)+' is overdue'
+          , html : Mustache.render(emailTmplOverdue, views)
+          , text: 'You can visit the invoice here: '+domain+'/articles/'+article.id
+        },
+  function(err, json){
+    //console.log(err, 'email overdue sent')
+    //email error goes here
+  });
+};
 
 /*
  * upload csv

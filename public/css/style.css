@@ -162,10 +162,10 @@ a {
       border-bottom-color: transparent; }
   .btn.btn-danger, a.button.btn-danger, .button.btn-danger {
     background: none;
-    border-color: #F92700;
-    color: #F92700; }
+    border-color: #FF9B00;
+    color: #FF9B00; }
     .btn.btn-danger:hover, a.button.btn-danger:hover, .button.btn-danger:hover {
-      border-color: #c61f00; }
+      border-color: #cc7c00; }
   .btn.subtle, .btn.subtle.btn-danger, a.button.subtle, a.button.subtle.btn-danger, .button.subtle, .button.subtle.btn-danger {
     background: none;
     border-color: #02c34e;
@@ -178,8 +178,8 @@ a {
     border: 2px solid rgba(0, 0, 0, 0.25);
     color: rgba(0, 0, 0, 0.35); }
     .btn.subtle.btn-danger:hover, a.button.subtle.btn-danger:hover, .button.subtle.btn-danger:hover {
-      color: #F92700;
-      border-color: #F92700; }
+      color: #FF9B00;
+      border-color: #FF9B00; }
   .btn.left, a.button.left, .button.left {
     display: block;
     float: left; }
@@ -609,10 +609,10 @@ header .middle-buttons {
     background: #02c34e; }
 
 .overdue {
-  color: #F92700;
-  border-bottom-color: #F92700; }
+  color: #FF9B00;
+  border-bottom-color: #FF9B00; }
   .overdue .status {
-    background: #F92700; }
+    background: #FF9B00; }
 
 .draft h2, .draft h2.dim, .draft .status, .draft .date, .sent h2, .sent h2.dim, .sent .status, .sent .date, .paid h2, .paid h2.dim, .paid .status, .paid .date, .overdue h2, .overdue h2.dim, .overdue .status, .overdue .date {
   -webkit-transition: color 0.5s ease-in-out;
@@ -780,7 +780,7 @@ div.tags span.tag {
   .close-button span:hover {
     -webkit-transition: color 0.5s ease-in-out;
     transition: color 0.5s ease-in-out;
-    color: #F92700; }
+    color: #FF9B00; }
 
 .table-container {
   padding-top: 1.25em; }

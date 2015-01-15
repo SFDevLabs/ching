@@ -50,7 +50,8 @@
     "pdfkit":"latest",
     "node-sass-middleware":"latest",
     "keen.io": "latest",
-    "request":"latest"
+    "request":"latest",
+    "cron":"latest"
   },
   "devDependencies": {
     "supertest": "latest",
