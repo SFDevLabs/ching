@@ -31,6 +31,7 @@ var job = new CronJob('00 00 11 * * *', function(){ //
     var dateMinus = new Date(); //24 hours ago
     dateMinus.setHours(date.getHours() - 25);//25 hours ago
     //queary for things that went past due 24 hours ago
+    console.log(results)
     Article.find({paidOn:null,invoicedOn:{'$ne': null }, dueOn:{$gt: dateMinus, $lt:date}},{number:1, user:1})
           .populate('user','email')
           .exec(function(err, results){
@@ -52,8 +53,8 @@ var overdueMonitorEmail = function(results){
               var resultNum=results?results.length:''
               sendEmail({ to: 'jenkinsjeffrey@gmail.com'
                         , from: 'noreply@ching.io'
-                        , subject:resultNum+" overdue notices send to users"
-                        , text: resultNum+" overdue notices send to users"
+                        , subject:resultNum+" overdue notices send to users. The domain that sent this is:"+domain
+                        , text: resultNum+" overdue notices send to users. The domain that sent this is:"+domain
                       },function(err){
                         //console.log(err, 'email')
                         //email error goes here
