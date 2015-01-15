@@ -31,7 +31,6 @@ var job = new CronJob('00 00 11 * * *', function(){ //
     var dateMinus = new Date(); //24 hours ago
     dateMinus.setHours(date.getHours() - 25);//25 hours ago
     //queary for things that went past due 24 hours ago
-    console.log(results)
     Article.find({paidOn:null,invoicedOn:{'$ne': null }, dueOn:{$gt: dateMinus, $lt:date}},{number:1, user:1})
           .populate('user','email')
           .exec(function(err, results){
