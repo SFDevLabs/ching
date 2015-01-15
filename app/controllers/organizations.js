@@ -18,249 +18,10 @@ var mongoose = require('mongoose')
   , emailAddMemberTmpl = utils.createEmail('./app/views/email/addmember.html') 
   , emailAddNewMemberTmpl = utils.createEmail('./app/views/email/addmemberNewUser.html');
 
-// var login = function (req, res) {
-//   var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
-//   delete req.session.returnTo;
-//   res.redirect(redirectTo);
-// };
-
-//exports.signin = function (req, res) {};
-
 /**
- * Auth callback
+ *  create org
  */
 
-//exports.authCallback = login;
-
-
-/**
- * Save pw in cookie and show in browser again.
- */
-// exports.savepw = function (req, res, next) {
-//     req.flash('savedbody',req.body);
-//     next();
-// };
-
-/**
- * Show login form
- */
-
-// exports.login = function (req, res) {
- 
-//   var savedbody = req.flash('savedbody'),
-//       password = savedbody.length && savedbody[0].password?savedbody[0].password:'',
-//       email = savedbody.length && savedbody[0].email?savedbody[0].email:'';
-
-//   res.render('users/login', {
-//     title: 'Login',
-//     message: req.flash('error'),
-//     password: password,
-//     email: email,
-//    // bodyClass: bodyClass
-//   });
-// };
-
-/**
- * Show sign up form
- */
-
-// exports.signup = function (req, res) {
-//   //var bodyClass = "signup";
-//   res.render('users/signup', {
-//     title: 'Sign up',
-//     //bodyClass: bodyClass,
-//     user: new User()
-//   });
-// };
-
-/**
- * Show reset form
- */
-
-// exports.resetpage = function (req, res) {
-//   var bodyClass = 'reset';
-//   res.render('users/reset', {
-//     title: 'Reset',
-//     bodyClass: bodyClass,
-//     message: req.flash('error')
-//   });
-// };
-
-
-/**
- * Load Reset
- */
-
-// exports.loadreset = function(req, res, next, resetid){
-//   User.findOne({resetPasswordToken:resetid}, function(err,user){
-//     req.user=user;
-//     next();
-//   });
-// };
-
-/**
- * Reset Passwors
- */
-
-// exports.resetPWpage = function (req, res) {
-//   var bodyClass = 'reset';
-//   if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ 
-//      req.flash('error', 'Password reset link invalid.');
-//      return  res.redirect('/login');
-//   }
-//   res.render('users/resetpage', {
-//     bodyClass: bodyClass,
-//     title: 'Reset Password',
-//     message: req.flash('error')
-//   });
-// };
-
-
-/**
- * Reset Passwors
- */
-
-// exports.resetPW = function (req, res) {
-//   if (!req.user || new Date(req.user.resetPasswordExpires) < Date.now()){ return next(err)};
-//   req.user.resetPasswordExpires=undefined;
-//   req.user.resetPasswordToken=undefined;
-//   req.user.hashed_password=req.user.encryptPassword(req.body.password);
-//   req.user.save(function (err) {
-//       var views={
-//         user_full_name: req.user.firstname+' '+req.user.lastname
-//       }
-//       sendEmail({
-//           to: req.user.email
-//         , fromname: 'Ching.io' 
-//         , from: 'noreply@ching.io'
-//         , subject: 'Your Ching.io password has been reset'
-//         , message: 'Dear '+req.user.firstname+' '+req.user.lastname+',%0AYour password has been reset'
-//         , html:Mustache.render(emailTmplPwResetConfirm, views)
-//       }, function(err, json, b){
-//         req.logIn(req.user, function(err) {
-//           if (err) return next(err)
-//           req.flash('success', 'Your password has been reset!')
-//           return res.redirect('/')
-//         });//render
-//       });//email
-//   });//save
-// };
-
-
-/**
- * Reset Passwors
- */
-
-// exports.reset = function (req, res, next) {
-
-//   var email = req.body.email,
-//       options = { email: email }
-//   User.userEmail(options,function(err, user){
-//         if (!user){
-//           req.flash('error', 'No email found.')
-//           return res.redirect('/reset')    
-//         }
-//         var email = user.email
-//         //move to utility
-//         crypto.randomBytes(20, function(err, buf) {
-//           var token = buf.toString('hex');
-//           user.resetPasswordToken=token;
-//           user.resetPasswordExpires=Date.now() + 3600000;
-//           user.save(function (err) {    
-//             views={
-//               reset_link: domain+'/reset/'+token
-//               , user_full_name: user.firstname+' '+user.lastname
-//             };   
-
-
-//             sendEmail({
-//                 to:email
-//               , from: 'noreply@ching.io'
-//               , message: domain+'/reset/'+token
-//               , subject:'Reser your Ching.io Password'
-//               , fromname:'Ching.io'
-//               , html:Mustache.render(emailTmplPwReset, views)
-//             }
-//               , function(err, json){
-//                 if (err){ return next(err)};
-//                 req.flash('success', 'Check Your Email for a Reset Link. <br> Check you spam folder too.')
-//                 res.redirect('/reset')            
-//             });//Email Sent
-
-//           });//User Saved
-        
-//         });//Token Made
-
-//   })
-// }
-
-/**
- * Logout
- */
-
-// exports.logout = function (req, res) {
-//   req.logout()
-//   res.redirect('/login')
-// }
-
-/**
- * Session
- */
-
-//exports.session = login
-
-/**
- * Create user
- */
-
-// exports.create = function (req, res, next) {
-//   // Check only when it is a new user or when email field is modified
-//   User.findOne({ email: req.body.email }).exec(function (err, user) {
-//       var newUser,
-//       orgObj = {org: new Org({name:req.body.organization}), isAdmin:true };
-
-//       if (!err && user && user.placeholderFromShare){ //Save over the placeholder
-//          newUser = extend(user, req.body) //Combine the objects
-//          newUser.placeholderFromShare=false; //Remove placeholder flag
-//       } else if (!err && user){  //Already existis and not a placeholder
-//           return res.render('users/signup', {
-//             errors: utils.errors([{ message: 'Email already exists'}]),
-//             user: user,
-//             title: 'Sign up'
-//           })
-//       } else { //Brand spankin new so we make a new user
-//           var user ={};
-//           for (var key in req.body) {
-//             user[key]=req.body[key]
-//           };
-//           if(req.body.organization){
-//             user.organizations = [orgObj];
-//             user.defautOrgIndex = 1;
-//           }
-//           newUser = new User(user)
-//       }
-//       newUser.provider = 'local'; //Set as local auth
-//       orgObj.org.save(function (err) {
-//       newUser.save(function (err) {
-//         if (err){
-//           return res.render('users/signup', {
-//             errors: utils.errors(err.errors),
-//             user: user,
-//             title: 'Sign up'
-//           })
-//         }
-//         // manually login the user once successfully signed up
-//         req.logIn(newUser, function(err) {
-//           if (err) return next(err)
-//           return res.redirect('/')
-//         })
-
-//       })//save function newUser
-//       })//save function Org
-      
-//   });//findone function
-// }
-// 
  exports.create = function (req, res) {
   var org = new Orgs({});
 
@@ -268,7 +29,7 @@ var mongoose = require('mongoose')
     if (err) return next(err);
     var data = {
         type:'new_org'
-      , user:newUser.id?newUser.id:''
+      , user:req.user.id?req.user.id:''
       , session:req.sessionID?req.sessionID:null
       }
     utils.keenAnalytics('user_event', data);///Send data to the analytics engine
@@ -429,7 +190,7 @@ exports.addmember = function (req, res) {
             function(err){
               var data = {
                   type:'new_org_member'
-                , user:newUser.id?newUser.id:''
+                , user:req.user.id?req.user.id:''
                 , session:req.sessionID?req.sessionID:null
                 }
               utils.keenAnalytics('user_event', data);///Send data to the analytics engine
@@ -456,6 +217,7 @@ exports.removemember = function (req, res) {
         }
       });
       user.save(function(err){
+        req.flash('success', 'User Has been removed from the organization.');
         return res.redirect('/settings')
       });
       
