@@ -877,7 +877,7 @@ sendFirstViewerEmail=function(article, viewer){
           , from: 'noreply@ching.io'
           , subject: name+' Viewed Invoice #'+utils.formatInvoiceNumber(article.number)
           , html : Mustache.render(invoiceFirstViewed, views)
-          , message: views.user_full_name+' has viewed the invoice '+ views.invoice_num+'. Click this link to visit the invoice: '+domain+'/articles/'+article.id
+          , message: views.user_full_name+' has viewed invoice '+ views.invoice_num+'. Click this link to visit the invoice: '+domain+'/articles/'+article.id
         },function(err, json){
           if (err){console.log('Email Error')};
 
