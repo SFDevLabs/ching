@@ -661,7 +661,10 @@ $('#fileuploadimage').fileupload({
 $('.date').datepicker();
 $("abbr.timeago").timeago();
 
-
+$('#tags').tagsInput({
+  'height':'60px',
+  'width':'280px'
+});
 
 // var swap=function(x,y){
 //   var m =$('#example').data('handsontable')
