@@ -125,7 +125,6 @@ block content
               - if (article.organization && article.organization.profileImageCDN && article.organization.profileImageFile)
                 .invoice-img
                   - var cdn = article.organization.profileImageCDN.replace("http","https");
-                  p=cdn
                   img(src="#{cdn}/user_thumb_#{article.organization.profileImageFile}")
               - else if (article.organization)
                  h4.mini.invoice-img
