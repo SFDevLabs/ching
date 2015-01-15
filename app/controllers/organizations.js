@@ -266,7 +266,12 @@ var mongoose = require('mongoose')
 
   org.save(function(err){
     if (err) return next(err);
-
+    var data = {
+        type:'new_org'
+      , user:newUser.id?newUser.id:''
+      , session:req.sessionID?req.sessionID:null
+      }
+    utils.keenAnalytics('user_event', data);///Send data to the analytics engine
     req.user.organizations.push({org:org.id, isAdmin:true})
     req.user.save(function(err){
       res.redirect('/organizations/'+org.id+'?type=new')
@@ -422,6 +427,12 @@ exports.addmember = function (req, res) {
             , message: 'You have been invited to the organization '+org.name+'. '+domain+'/organizations/'+org.id
             }, 
             function(err){
+              var data = {
+                  type:'new_org_member'
+                , user:newUser.id?newUser.id:''
+                , session:req.sessionID?req.sessionID:null
+                }
+              utils.keenAnalytics('user_event', data);///Send data to the analytics engine
               req.flash('success', 'New user added to the Organization! An email has been sent to the user informing them. ');
               return res.redirect('/organizations/'+org.id)    
            });            

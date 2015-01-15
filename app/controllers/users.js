@@ -23,6 +23,12 @@ var mongoose = require('mongoose')
 var login = function (req, res) {
   var name = req.user.firstname?req.user.firstname:'';
   utils.slackChing(name+' has loged in');
+  var data = {
+      type:'login'
+    , user:req.user.id?req.user.id:''
+    , session:req.sessionID?req.sessionID:null
+    }
+  utils.keenAnalytics('user_event', data);///Send data to the analytics engine
   var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
   delete req.session.returnTo;
   res.redirect(redirectTo);
@@ -269,7 +275,14 @@ exports.create = function (req, res, next) {
           , message: 'Dear '+user.firstname+' '+user.lastname+',%0AYour password has been reset'
           , html:Mustache.render(createUserEmail, views)
         }, function(err, json, b){
-          utils.slackChing(req.user.firstname+'has signed up, Horray');
+          var data = {
+              type:'login'
+            , user:newUser.id?newUser.id:''
+            , session:req.sessionID?req.sessionID:null
+            }
+          utils.keenAnalytics('user_event', data);///Send data to the analytics engine
+          var name = newUser.firstname?newUser.firstname:'';
+          utils.slackChing(name+'has signed up, Horray');
           // manually login the user once successfully signed up
           req.logIn(newUser, function(err) {
             if (err) return next(err)
