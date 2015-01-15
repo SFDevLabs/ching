@@ -24,6 +24,12 @@ exports.load = function (req, res, next, id) {
  */
 
 exports.create = function (req, res) {
+  var data = {
+      type:'create_comment'
+    , user:req.user.id
+    , session:req.sessionID?req.sessionID:null
+    }
+  utils.keenAnalytics('user_event', data);///Send data to the analytics engine
   var article = req.article
     , user = req.user;
   if (!req.body.body) return res.redirect('/articles/'+ article.id)
@@ -41,9 +47,12 @@ exports.create = function (req, res) {
 
 exports.destroy = function (req, res) {
   var article = req.article
-
-    console.log(req.param())
-
+  var data = {
+      type:'destroy_comment'
+    , user:req.user.id
+    , session:req.sessionID?req.sessionID:null
+    }
+  utils.keenAnalytics('user_event', data);///Send data to the analytics engine
   article.removeComment(req.param('commentId'), function (err) {
     if (err) {
       req.flash('error', 'Oops! The comment was not found')
