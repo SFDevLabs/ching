@@ -114,6 +114,7 @@ exports.resetPWpage = function (req, res) {
   }
   res.render('users/resetpage', {
     bodyClass: bodyClass,
+    nofooter: true,
     title: 'Reset Password',
     message: req.flash('error')
   });

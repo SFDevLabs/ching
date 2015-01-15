@@ -8,7 +8,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.face
         include ../includes/messages
       block main
       block content
-    -if (req.isAuthenticated()) 
+    -if (req.isAuthenticated() && !nofooter) 
       include ../includes/footer
     include ../includes/foot
     block subfoot
