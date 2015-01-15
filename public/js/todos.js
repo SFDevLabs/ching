@@ -1,4 +1,4 @@
-//$(function ($, _, Backbone) {
+$(function ($, _, Backbone) {
 
   "use strict";
 
@@ -723,4 +723,4 @@ $('#tags').tagsInput({
 // 
 
 
-//}(jQuery, _, Backbone));
+}(jQuery, _, Backbone));

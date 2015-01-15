@@ -324,9 +324,9 @@ block content
       .col-md-12
         .scroll-indicator
         .row
+          div#spinner
           .col-md-12.table-container
-            #spinner
-            #grid
+            div#grid
             table.remove-sidebar
               tbody
       .row.clear
@@ -815,7 +815,9 @@ block subfoot
       });
       //spinjs
       var target = document.getElementById('spinner');
-      var spinner = new Spinner({lines: 13,length: 20,width: 10,radius: 38}).spin(target);
+      if (target!==null){
+        new Spinner({lines: 13,length: 20,width: 10,radius: 38}).spin(target);
+      };
       //Keen Anatalytics
       window.keenClient = undefined;
       if (Keen){
