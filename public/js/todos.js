@@ -1,9 +1,12 @@
 $(function ($, _, Backbone) {
-
   "use strict";
 
   var AppView, App, aId=window.location.pathname.split('/')[2], tokenId=window.location.pathname.split('/')[4];;
-
+  
+  var target = document.getElementById('spinner');
+  if (target!==null && Spinner){
+    new Spinner({lines: 13,length: 20,width: 10,radius: 38}).spin(target);
+  };
 
   AppView = Backbone.View.extend({
     el: $("#todoapp"),
