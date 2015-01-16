@@ -37,7 +37,7 @@ block main
 
           - if (article.paidOn)
             button.btn.btn-danger.subtle.btn-payed
-              span.typcn.typcn-mail
+              span.typcn-arrow-back-outline
                 |  Mark as Not Paid
           -else if(!article.paymentVerified)
             button.btn.btn-payed
@@ -93,7 +93,7 @@ block content
               -if (article.status == "sent" && mainAuth)
                 h4.status(class="#{article.status} #{hasImage}") Sent on #{formatDate(article.invoicedOn)}
               -else if (article.status == "viewed" && mainAuth)
-                h4.status(class="#{article.status} #{hasImage}") First viewed on #{formatDatetime(article.views[0].viewedAt)}
+                h4.status(class="#{article.status} #{hasImage}") First viewed on #{formatDate(article.views[0].viewedAt)}
               -else if(article.status =='verified')
                 h4.status(class="#{article.status} #{hasImage}") Paid on #{formatDate(article.paymentVerifiedOn)}
               -else if (article.status == "paid")
@@ -155,8 +155,8 @@ block content
               if (article.paidOn)
                 h4.mini Paid On: #{formatDate(article.paidOn)}   
               h4.gray
-                span Created 
-                span= formatDatetime(article.createdAt, "%b %d, %Y at %I:%M %p")
+                span Created: 
+                span= formatDate(article.createdAt, "%b %d, %Y at %I:%M %p")
 
       hr
       .row
@@ -461,7 +461,7 @@ block content
                         span.type(class=view.type)=view.type
                       span
                         |  the invoice.&nbsp;
-                      span.muted=formatDatetime(view.viewedAt.toISOString())
+                      span.muted=formatDate(view.viewedAt.toISOString())
                     br
                         
 
@@ -609,9 +609,8 @@ block subfoot
           //-   input.form-control#file(type='file', name="image[]")
           .form-group
             button.btn(type='submit')
-              span.typcn.typcn-mail
+              span.typcn.typcn-bell
                 |Confirm Payment
-
 
   .modal.confirm-send-modal
     .container

@@ -761,6 +761,8 @@ exports.payed = function(req, res){
       }
 
       var redirect;
+      req.flash('success', 'You have marked this invoice as payed.')
+
       if (req.token){
        redirect = '/articles/'+ article.id+'/token/'+req.token;
       } else{
