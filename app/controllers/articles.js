@@ -553,7 +553,7 @@ var indexSent = exports.indexSent = function(req, res){
             res.render('articles/index', {
               bodyClass: bodyClass,
               invoiceType: 'sent',
-              title: 'My Invoices - Ching',
+              title: 'My Invoices',
               articles: results.list,
               page: page + 1,
               pages: Math.ceil(results.count / perPage),
