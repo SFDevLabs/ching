@@ -184,7 +184,7 @@ exports.returnJSON = function(req, res, next){
 exports.tableJSONView = function(req, res, next){
   
     res.render('table_view', {
-      title: 'Home',
+      title: 'Table - Ching',
       csvdata: req.body.csvdata//JSON.parse(req.body.csvdata)
     })
 
@@ -293,7 +293,7 @@ exports.homeOrSent = function(req, res){
     return indexSent(req, res)
   }else{
     res.render('articles/home', {
-      title: 'Home',
+      title: 'Ching - Zero Effort Invoicing',
       bodyClass: bodyClass
     })
   }
@@ -553,7 +553,7 @@ var indexSent = exports.indexSent = function(req, res){
             res.render('articles/index', {
               bodyClass: bodyClass,
               invoiceType: 'sent',
-              title: 'My Invoices',
+              title: 'My Invoices - Ching',
               articles: results.list,
               page: page + 1,
               pages: Math.ceil(results.count / perPage),
