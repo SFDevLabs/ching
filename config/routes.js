@@ -113,7 +113,7 @@ module.exports = function (app, passport) {
 
 
   ///addresses api
-  app.get('/users/:userId/addresses', users.addresses)
+  //app.get('/users/:userId/addresses', users.addresses)
 
 
   app.get('/auth/facebook',
