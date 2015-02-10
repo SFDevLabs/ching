@@ -179,11 +179,11 @@ ArticleSchema.methods = {
           //console.log(images)
 
     //if (!images || !images.length) return this.save(cb);
-     // console.log(images)
 
     var imager = new Imager(imagerConfig, 'S3');
     var self = this;
 
+    console.log(images);
     this.validate(function (err) {
       if (err) return cb(err);
       imager.upload(images, function (err, cdnUri, files) {

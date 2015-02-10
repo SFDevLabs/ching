@@ -11,7 +11,7 @@
           i.typcn.typcn-delete
     - var name = comment.user.organization ? comment.user.organization : comment.user.firstname+' '+comment.user.lastname
     p
-      a(href="/users/"+comment.user._id)= name
+      a=name
       |  :&nbsp;
       !=comment.body.replace(/\r?\n/g, '<br>')
     span.muted= formatDate(comment.createdAt)

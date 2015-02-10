@@ -382,7 +382,7 @@ exports.update = function (req, res, next) {
   user.save(function(err){
     if (err) return next(err)
       req.flash('success', 'Successfully Updated Your Profile!')
-      return res.redirect('/users/'+user.id)
+      return res.redirect('/settings')
   })
 
 }

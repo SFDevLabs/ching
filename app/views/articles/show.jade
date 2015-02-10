@@ -137,7 +137,7 @@ block content
                   img(src="#{cdn}/user_thumb_#{article.user.profileImageFile}")
               -else if (mainAuth)
                  h4.mini.invoice-img
-                  a(href='/users/'+req.user.id) Add Your Logo
+                  a(href='/settings') Add Your Logo
                   |&nbsp;
                   i.typcn.typcn-image
               - if (req.user && req.article && mainAuth)
@@ -225,7 +225,7 @@ block content
                                         |#{organization.name}
 
                           li
-                            form.form-inline(role="form", method="get", action="/users/" + req.user.id)
+                            form.form-inline(role="form", method="get", action="/settings")
                               button(type="submit")
                                 a
                                   p

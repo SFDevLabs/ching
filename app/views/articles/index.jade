@@ -118,7 +118,7 @@ block content
                         span #{tag}&nbsp;
                 .meta
                   span Total: &nbsp;
-                  span(href="/users/"+article.user._id)= formatCurrency(article.total)
+                  span= formatCurrency(article.total)
                 p.date
                   | Created: 
                   span.dim= formatDate(article.createdAt)
