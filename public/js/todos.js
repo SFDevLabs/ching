@@ -248,6 +248,7 @@ $(function ($, _, Backbone) {
       });
       this.handsonObj.addHook('beforeChange',function(input, type){
         if (input.length>1){ ///Are we chaning more than 1 item.  Lets do it in a batch
+          cars.dateFormaterCol();
           App.disableSave=true;
         }
       });
@@ -500,6 +501,14 @@ $(function ($, _, Backbone) {
       else{
         Backbone.sync('update',this, c)
       }
+    },
+    dateFormaterCol:function(a,b,v){
+      this.each(function(obj){ //we need to formate the dates of the collection when we edit mpore than one.
+        var val = obj.get('date');
+        if (val!==null && typeof val==="object"){
+          obj.attributes.date = (val.getMonth()+1)+"/"+val.getDate()+"/"+val.getFullYear();
+        }
+      })
     }
 
   });
