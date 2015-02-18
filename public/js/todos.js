@@ -642,24 +642,26 @@ $('#fileuploadimage').fileupload({
         ,previewCrop: true
     }).on('fileuploaddone', function (e, data) {
         
-          
+        //Just reload the page
+        window.location=window.location.href.replace("#files-images","")+"#files-images"
+        window.location.reload();
         //This is totally hack logic duplicated in show to render the photos you upload to the site.
-        $('.images-grid').html('')
-        data.result.forEach(function(val,i){
-          var imgthumb = $('<img>').attr('src',val.cdnUri+'/thumb_'+val.file);
-          var image = $('<a class="image">')
-              .attr('data-src',val.cdnUri+'/detail_'+val.file)
-              .attr('href','javascript:void(0)')
-              .append(imgthumb)
-          $('.images-grid')
-            .prepend(image);
+        // $('.images-grid').html('')
+        // data.result.forEach(function(val,i){
+        //   var imgthumb = $('<img>').attr('src',val.cdnUri+'/thumb_'+val.file);
+        //   var image = $('<a class="image">')
+        //       .attr('data-src',val.cdnUri+'/detail_'+val.file)
+        //       .attr('href','javascript:void(0)')
+        //       .append(imgthumb)
+        //   $('.images-grid')
+        //     .prepend(image);
 
-          if (val.itemReference){
-            var b=cars.findWhere({_id:val.itemReference})
-            if (b)
-              $('.images-grid').prepend(b.get('item'));
-          }          
-        })
+        //   if (val.itemReference){
+        //     var b=cars.findWhere({_id:val.itemReference})
+        //     if (b)
+        //       $('.images-grid').prepend(b.get('item'));
+        //   }          
+        // })
      });
 
 ///turn on date picker

@@ -264,7 +264,7 @@ form .form-group {
   form .form-group hr.line-margin {
     margin-bottom: -1em; }
 form .separator {
-  margin-bottom: 0.25em; }
+  margin-bottom: .25em; }
 
 input[type=text], input[type=email], input[type=password], textarea {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -540,7 +540,7 @@ header .middle-buttons {
 
 .list header.row {
   margin-top: 4em;
-  margin-bottom: 0.5em; }
+  margin-bottom: .5em; }
   .list header.row h2 {
     margin-bottom: 0em;
     margin-top: 0em; }
@@ -681,7 +681,7 @@ body.show {
       background: #fafafa;
       border: 1px dashed #e6e6e6; }
     .invoice-form .properties .btn {
-      margin: 0.7em 0em 0em; }
+      margin: .7em 0em 0em; }
     .invoice-form .properties .status {
       margin-top: 0em; }
     .invoice-form .properties .invoice-img i {
@@ -807,7 +807,7 @@ div.tags span.tag {
     font-size: 1em; }
 
 .meta {
-  padding-top: 0.25em; }
+  padding-top: .25em; }
   .meta:last-child {
     margin-bottom: 1.25em; }
   .meta hr {
@@ -822,7 +822,7 @@ div.tags span.tag {
   padding: 1px;
   font-size: 14px;
   font-weight: 400;
-  line-height: 1.42857;
+  line-height: 1.42857143;
   text-align: left;
   white-space: normal;
   background-color: #fff;
@@ -888,8 +888,8 @@ ul.pagination {
       font-size: 1.25em; }
 
 .file-uploader {
-  -webkit-transition: background-color 0.5s ease-in-out;
-  transition: background-color 0.5s ease-in-out;
+  -webkit-transition: background-color .5s ease-in-out;
+  transition: background-color .5s ease-in-out;
   border-radius: 5px;
   padding: 5px 0px 2px 0px;
   margin: 0px; }
@@ -897,9 +897,9 @@ ul.pagination {
     background-color: rgba(255, 155, 0, 0.5); }
 
 .fadeIn {
-  transition: opacity 0.25s ease-in-out;
-  -moz-transition: opacity 0.25s ease-in-out;
-  -webkit-transition: opacity 0.25s ease-in-out; }
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out; }
 
 .fade {
   opacity: 0 !important; }

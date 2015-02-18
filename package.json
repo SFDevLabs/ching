@@ -51,7 +51,8 @@
     "node-sass-middleware":"latest",
     "keen.io": "latest",
     "request":"latest",
-    "cron":"latest"
+    "cron":"latest",
+    "knox": "latest"
   },
   "devDependencies": {
     "supertest": "latest",

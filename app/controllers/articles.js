@@ -160,7 +160,7 @@ exports.uploadImage = function(req, res){
   var article = req.article;
   var files = req.files.files;
 
-  console.log(req.files)
+  // console.log(req.files)
 
   if (!files || files.length===0){ return res.send([])};  
   article.uploadAndSave(files, req.user.id, function(err) {

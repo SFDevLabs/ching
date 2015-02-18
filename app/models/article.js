@@ -10,8 +10,14 @@ var mongoose = require('mongoose')
   , utils = require('../../lib/utils')
   , Imager = require('imager')
   , imagerConfig = require(config.root + '/config/imager.js')
-  , _ = require("underscore");
-
+  , _ = require("underscore")
+  , knox = require("knox")
+  , client = knox.createClient({
+    key: imagerConfig.storage.S3.key
+  , secret: imagerConfig.storage.S3.secret
+  , bucket: imagerConfig.storage.S3.bucket
+}),
+  cdnBucketURI = "http://"+imagerConfig.storage.S3.bucket+".s3.amazonaws.com";
 /**
  * Getters
  */
@@ -73,7 +79,8 @@ var ArticleSchema = new Schema({
     createdAt: { type : Date, default : Date.now },
     file: {type : String, default : '', trim : true},
     cdnUri: {type : String, default : '', trim : true},
-    itemReference: {type : String, default:null}
+    fileType: {type : String, default:null},
+    fileName: {type : String, default:null}
   }],
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
@@ -183,18 +190,34 @@ ArticleSchema.methods = {
     var imager = new Imager(imagerConfig, 'S3');
     var self = this;
 
-    console.log(images);
     this.validate(function (err) {
+      console.log(images)
       if (err) return cb(err);
-      imager.upload(images, function (err, cdnUri, files) {
-        if (err) return cb(err);
-        if (files.length) {
-          files.forEach(function(val){
-            self.images.push({ cdnUri : cdnUri, file : val, user:userId});
-          });
-        }
-        self.save(cb);
-      }, 'article');
+      if (images[0] && images[0].type && images[0].type.search(/image/)!==-1){
+        var name = images[0].name;
+        imager.upload(images, function (err, cdnUri, files) {
+          if (err) return cb(err);
+          if (files.length) {
+            files.forEach(function(val){
+              self.images.push({ cdnUri : cdnBucketURI, file : val, user:userId, fileName: name, fileType:'image'});
+            });
+          }
+          self.save(cb);
+        }, 'article');        
+      }else if (images[0]){
+        var time = new Date().getTime().toString();
+        var path = images[0].path;
+        var ext = path.match(/\.[0-9a-z]+$/i)
+        var fileName = time+ext;
+        var name = images[0].name;
+        client.putFile(path, 'file_'+fileName, function(err, res){
+          console.log(err, res)
+          self.images.push({ cdnUri : cdnBucketURI, file : fileName, user:userId, fileType:'file', fileName: name});
+          self.save(cb);
+            // Always either do something with `res` or at least call `res.resume()`.
+        });
+      }
+
     });
   },
 

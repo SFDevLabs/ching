@@ -383,34 +383,38 @@ block content
               .csv-paste-text
                 textarea#csv-ajax(placeholder="paste csv text here!")
                 a.csv-toggle.btn.subtle(onclick="post()") Submit
-        hr
-        .row
-            .col-md-6.images-grid
-              h4
-                | Images
-              - each image in article.images
-                //- span=image.file
-                //- span=image.cdnUri
-                //- span=image.user
-                //-span=image.itemReference
+      hr
+      .row
+        .col-md-6.images-grid#files-images
+          h4
+            | Images and Files
+          - each image in article.images
+              //- span=image.file
+              //- span=image.cdnUri
+              //- span=image.user
+              //-span=image.itemReference
 
-                //- a(href=image.cdnUri+'/mini_'+image.file)
-                //-   | link
-
+              //- a(href=image.cdnUri+'/mini_'+image.file)
+              //-   | link
+              if (image.fileType==='file')
+                a.file(href=image.cdnUri+'/file_'+image.file, target="_blank",title=image.fileName)
+                  div
+                    | File: #{image.fileName}
+              else
                 a.image(href="javascript:void(0)", data-src=image.cdnUri+'/detail_'+image.file)
                   img(src=image.cdnUri+'/thumb_'+image.file)
-
-            .col-md-6
-              h4
-                | Add Image
-              .csv-drop-file
-                p
-                  input.file-uploader#fileuploadimage( type="file", name="files[]", multiple)
-                #dropzoneimage.dropzone
-                  span.typcn.typcn-folder-open
-                  .muted.text
-                    | Drag and drop image files here
-                div(id="files", class="files")
+        - if (req.user && req.article && mainAuth)
+              .col-md-6
+                h4
+                  | Add Image or File to Invoice
+                .csv-drop-file
+                  p
+                    input.file-uploader#fileuploadimage( type="file", name="files[]", multiple)
+                  #dropzoneimage.dropzone
+                    span.typcn.typcn-folder-open
+                    .muted.text
+                      | Drag and drop files here
+                  div(id="files", class="files")
 
               //- .col-md-6
               //-   a.click(href='#none') &nbsp (toggle textarea and file upload)

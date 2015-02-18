@@ -30,14 +30,28 @@
 }
 
 .images-grid{
-  .image{
+  a {
     width: 100px;
     height: 100px;
-    overflow: hidden;
     background-color: #eee;
     display: inline-block;
     margin: 5px;
   }
+  .image{
+    overflow: hidden;
+  }
+  .file{    
+    padding: 2px;
+    font-size: 10px;
+    word-wrap: break-word;
+    position: relative;
+    * {
+      word-wrap: break-word;
+      position: absolute;
+      width: 100%;
+      padding: 5px;      
+    }
+ }
 }
 
 #wrap {
