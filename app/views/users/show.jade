@@ -194,6 +194,10 @@ block subfoot
   script.
     $( document ).ready(function() {
 
+      if(getParameterByName('type')==='edit'){
+        $(".edit-profile-modal").fadeIn();
+      }
+
       $("body").on("click", ".btn-edit", function() {
         $(".edit-profile-modal").fadeIn();
       });
@@ -202,6 +206,12 @@ block subfoot
       });
 
     });
+    function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
     $('#fileuploadimage').fileupload({
              url: '#{user.id}/uploadimage'
             ,dataType: 'json'

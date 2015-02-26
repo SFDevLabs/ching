@@ -170,7 +170,7 @@ block subfoot
 
   script.
     $( document ).ready(function() {
-      if(getParameterByName('type')=='new'){
+      if(getParameterByName('type')==='edit'){
         $(".edit-profile-modal").fadeIn();
       }
       $("body").on("click", ".btn-edit", function() {

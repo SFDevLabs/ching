@@ -1118,6 +1118,9 @@ body.show {
       p {
         margin-bottom: 0;
       }
+      a{
+        margin-right: 10px;
+      }
       &:hover {
         background: #fafafa;
         border: 1px dashed darken($bg, 10%);

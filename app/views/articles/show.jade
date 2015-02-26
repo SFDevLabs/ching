@@ -177,10 +177,10 @@ block content
                           p
                             strong=article.organization.name
                             if (article.organization.url)
-                              |  (
+                              |  - 
                               a(href=article.organization.url, target="_blank")
                                 | #{article.organization.url}
-                              | )
+                              | 
                   else
                     .col-sm-3.to.dropdown
                         a#dLabel(href='javascript:void(0)',type='button', data-toggle='dropdown', aria-haspopup='true', role='button', aria-expanded='false')
@@ -192,10 +192,11 @@ block content
                             p.gray
                               | Organization:
                             p
-                              strong=article.organization.name
-                              |  (
-                              a(href='/organizations/'+article.organization.id)="edit"
-                              | )
+                              strong=article.organization.name 
+                              |  &nbsp;
+                              |  -
+                              a(href='/organizations/'+article.organization.id+"?type=edit")="edit"
+                              
 
                         ul.dropdown-menu(role='menu', aria-labelledby='dLabel')
                           li
@@ -225,12 +226,14 @@ block content
                                         |#{organization.name}
 
                           li
-                            form.form-inline(role="form", method="get", action="/settings")
+                            form.form-inline(action="/organizations", method="post", role="form")
+                              input(type='hidden', name='_csrf', value="#{csrf_token}")
                               button(type="submit")
                                 a
                                   p
                                     i.typcn.typcn-plus
                                     |  Add Organization...
+                            
                     //- -if (article.user.firstname || article.user.lastname)
                     //-   p
                     //-     strong #{article.user.firstname} #{article.user.lastname}
@@ -249,9 +252,13 @@ block content
                           br               
                           |#{article.organization.city}, #{article.organization.state} #{article.organization.zipcode} 
                         a(target="_blank" href="https://www.google.com/maps/place/#{article.organization.address},+#{article.organization.city},+#{article.organization.state}+#{article.organization.zipcode} ")
-                            | map
-                        a(href='/organizations/'+article.organization.id)
-                          | Edit Address
+                          | map
+                        a(href='/organizations/'+article.organization.id+"?type=edit")
+                          | edit
+                      -else if(article.organization && !article.organization.address)                     
+                        a.button(href='/organizations/'+article.organization.id+"?type=edit")
+                          i.typcn.typcn-edit
+                          | Add Address
                       -else if(!article.organization && article.user.address)
                         p
                           strong Address:
@@ -260,12 +267,13 @@ block content
                           br               
                           |#{article.user.city}, #{article.user.state} #{article.user.zipcode} 
                         a(target="_blank" href="https://www.google.com/maps/place/#{article.user.address},+#{article.user.city},+#{article.user.state}+#{article.user.zipcode} ")
-                            | map
-                        a(href="/settings")
-                          | Edit Address
-                      -else                        
-                        a(href="/settings")
-                          | Add an Address
+                          | map
+                        a(href="/settings?type=edit")
+                          | edit 
+                      -else                      
+                        a.button(href="/settings?type=edit")
+                          i.typcn.typcn-edit
+                          | Add Address
 
       hr
       .row

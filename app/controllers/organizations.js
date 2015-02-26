@@ -35,7 +35,7 @@ var mongoose = require('mongoose')
     utils.keenAnalytics('user_event', data);///Send data to the analytics engine
     req.user.organizations.push({org:org.id, isAdmin:true})
     req.user.save(function(err){
-      res.redirect('/organizations/'+org.id+'?type=new')
+      res.redirect('/organizations/'+org.id+'?type=edit')
     });
   });
  };

@@ -714,6 +714,8 @@ body.show {
     border: 1px solid transparent; }
     .invoice-form .to-block .to p {
       margin-bottom: 0; }
+    .invoice-form .to-block .to a {
+      margin-right: 10px; }
     .invoice-form .to-block .to:hover {
       background: #fafafa;
       border: 1px dashed #e6e6e6; }
