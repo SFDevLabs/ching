@@ -37,7 +37,7 @@ block main
 
           - if (article.paidOn)
             button.btn.btn-danger.subtle.btn-payed
-              span.typcn-arrow-back-outline
+              span.typcn.typcn-arrow-back-outline
                 |  Mark as Not Paid
           -else if(!article.paymentVerified)
             button.btn.btn-payed
@@ -250,6 +250,8 @@ block content
                           |#{article.organization.city}, #{article.organization.state} #{article.organization.zipcode} 
                         a(target="_blank" href="https://www.google.com/maps/place/#{article.organization.address},+#{article.organization.city},+#{article.organization.state}+#{article.organization.zipcode} ")
                             | map
+                        a(href='/organizations/'+article.organization.id)
+                          | Edit Address
                       -else if(!article.organization && article.user.address)
                         p
                           strong Address:
@@ -259,6 +261,12 @@ block content
                           |#{article.user.city}, #{article.user.state} #{article.user.zipcode} 
                         a(target="_blank" href="https://www.google.com/maps/place/#{article.user.address},+#{article.user.city},+#{article.user.state}+#{article.user.zipcode} ")
                             | map
+                        a(href="/settings")
+                          | Edit Address
+                      -else                        
+                        a(href="/settings")
+                          | Add an Address
+
       hr
       .row
         .col-md-12

@@ -80,7 +80,8 @@ var ArticleSchema = new Schema({
     file: {type : String, default : '', trim : true},
     cdnUri: {type : String, default : '', trim : true},
     fileType: {type : String, default:null},
-    fileName: {type : String, default:null}
+    fileName: {type : String, default:null},
+    itemReference: {type : String, default:null}
   }],
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
