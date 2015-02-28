@@ -253,9 +253,10 @@ block content
                           |#{article.organization.city}, #{article.organization.state} #{article.organization.zipcode} 
                         a(target="_blank" href="https://www.google.com/maps/place/#{article.organization.address},+#{article.organization.city},+#{article.organization.state}+#{article.organization.zipcode} ")
                           | map
-                        a(href='/organizations/'+article.organization.id+"?type=edit")
-                          | edit
-                      -else if(article.organization && !article.organization.address)                     
+                        -if (mainAuth)
+                          a(href='/organizations/'+article.organization.id+"?type=edit")
+                            | edit
+                      -else if(article.organization && !article.organization.address && mainAuth)                     
                         a.button(href='/organizations/'+article.organization.id+"?type=edit")
                           i.typcn.typcn-edit
                           | Add Address
@@ -268,8 +269,9 @@ block content
                           |#{article.user.city}, #{article.user.state} #{article.user.zipcode} 
                         a(target="_blank" href="https://www.google.com/maps/place/#{article.user.address},+#{article.user.city},+#{article.user.state}+#{article.user.zipcode} ")
                           | map
-                        a(href="/settings?type=edit")
-                          | edit 
+                        -if (mainAuth)
+                          a(href="/settings?type=edit")
+                            | edit 
                       -else                      
                         a.button(href="/settings?type=edit")
                           i.typcn.typcn-edit
