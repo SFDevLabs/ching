@@ -470,8 +470,9 @@ $(function ($, _, Backbone) {
           return response;
         },
         addHoursToDate:function(date, hours) {
-            date = new Date(date);// conver ttot date object from string
-            return new Date(date.getTime() + hours*3600000);
+            if(date.length===24){date=date.slice(0,10)};//if it full UTC slice off the timestamp which we will never use here.
+            date = new Date(date);// conver to date object from string
+            return new Date(date.getTime() + (hours+1)*3600000); //backfill the timestamp
         }
    });
 
