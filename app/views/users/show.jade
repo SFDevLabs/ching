@@ -153,46 +153,6 @@ block subfoot
               span.typcn.typcn-times
               |  Cancel
 
-  - each orgObj in user.organizations
-    - var organization = orgObj.org
-    .modal.edit-profile-modal
-      .container
-        .modal-wrap.col-lg-8
-          span.close-button
-            span.typcn.typcn-delete
-          form.block(action=action, method="post", role="form", autocomplete="off")
-            input(type='hidden', name='_csrf', value="#{csrf_token}")
-            input(type="hidden", name="_method", value="PUT")
-
-            .form-group
-              label.control-label(for='name') First name 
-              input#name.form-control(type='text', name="firstname", placeholder='First name (optinal)', value=organization.name)
-
-            .form-group
-              label.control-label(for='name') Address
-              input#email.form-control(type='text', name="address", placeholder='Address', value=organization.address)
-
-            .form-group.col-sm-4
-              //label.control-label(for='name') City
-              input#email.form-control(type='text', name="city", placeholder='City', value=organization.city)
-
-            .form-group.col-sm-3
-              //label.control-label(for='name') State
-              input#state.form-control(type='text', name="state", placeholder='State', value=organization.state)
-
-            .form-group.col-sm-2
-              //label.control-label(for='name') Zipcode
-              input#email.form-control(type='number', name="zipcode", placeholder='Zipcode', value=organization.zipcode)
-
-
-            .form-group
-              button.left-float.btn.action(type='submit')
-                span.typcn.typcn-tick
-                |  Save
-              a.right-float.btn.subtle.cancel.btn-danger(href='/articles', title="cancel")
-                span.typcn.typcn-times
-                |  Cancel
-
   script(type="text/javascript", src='/js/vendor/jquery-ui.js')
   script(type="text/javascript", src="/js/vendor/jquery.ui.widget.js")
   script(type="text/javascript", src="/js/vendor/jquery.iframe-transport.js")
