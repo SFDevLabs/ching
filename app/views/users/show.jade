@@ -145,6 +145,14 @@ block subfoot
             //label.control-label(for='name') Zipcode
             input#email.form-control(type='number', name="zipcode", placeholder='Zipcode', value=user.zipcode)
 
+          .form-group
+            button.left-float.btn.action(type='submit')
+              span.typcn.typcn-tick
+              |  Save
+            a.right-float.btn.subtle.cancel.btn-danger(href='/settings', title="cancel")
+              span.typcn.typcn-times
+              |  Cancel
+
   - each orgObj in user.organizations
     - var organization = orgObj.org
     .modal.edit-profile-modal
