@@ -181,7 +181,7 @@ block subfoot
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
     $('#fileuploadimage').fileupload({
-             url: '#{user.id}/uploadimage'
+             url: '/users/#{user.id}/uploadimage'
             ,dataType: 'json'
             ,autoUpload: true
             ,dropZone: $('#dropzoneimage')
