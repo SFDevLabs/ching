@@ -16,7 +16,7 @@
     "url" : "https://github.com/SFDevLabs/ching"
   },
   "engines": {
-    "node": "0.10.x",
+    "node": ">=5.x",
     "npm":  "2.1.x"
   },
   "scripts": {
