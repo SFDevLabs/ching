@@ -44,7 +44,7 @@
     "view-helpers": "latest",
     "forever": "latest",
     "stylus":"latest",
-    "sendgrid":"4.0.0",
+    "sendgrid":"2.0.0",
     "csvtojson":"latest",
     "underscore" : "latest",
     "pdfkit":"latest",
