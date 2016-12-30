@@ -1,4 +1,6 @@
-html, body, header {
+html,
+body,
+header {
   height: 100%; }
 
 .chart-wrapper {
@@ -9,7 +11,8 @@ html, body, header {
     border-radius: 5px;
     background: #f7f7f7;
     font-size: 14px; }
-    .chart-wrapper #area-chart .axis path, .chart-wrapper #area-chart .axis line {
+    .chart-wrapper #area-chart .axis path,
+    .chart-wrapper #area-chart .axis line {
       fill: none;
       stroke: #000;
       shape-rendering: crispEdges; }

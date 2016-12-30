@@ -26,8 +26,10 @@
   background-color: #eee;
   display: inline-block;
   margin: 5px; }
+
 .images-grid .image {
   overflow: hidden; }
+
 .images-grid .file {
   padding: 2px;
   font-size: 10px;
@@ -142,10 +144,13 @@ button.error {
 
 #csv-file .csv-paste-text {
   display: none; }
+
 #csv-file.visible .csv-paste-text {
   display: block; }
+
 #csv-file.visible .csv-drop-file {
   display: none; }
+
 #csv-file .csv-open-table-window {
   margin-top: 10px;
   display: none; }
@@ -184,17 +189,17 @@ button.error {
     height: 100%;
     z-index: 1000;
     width: 40px;
-    background: -moz-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, #ffffff 100%);
+    background: -moz-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, white 100%);
     /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(255, 255, 255, 0.01)), color-stop(47%, rgba(255, 255, 255, 0.48)), color-stop(73%, rgba(255, 255, 255, 0.74)), color-stop(100%, #ffffff));
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(255, 255, 255, 0.01)), color-stop(47%, rgba(255, 255, 255, 0.48)), color-stop(73%, rgba(255, 255, 255, 0.74)), color-stop(100%, white));
     /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, #ffffff 100%);
+    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, white 100%);
     /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, #ffffff 100%);
+    background: -o-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, white 100%);
     /* Opera 11.10+ */
-    background: -ms-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, #ffffff 100%);
+    background: -ms-linear-gradient(left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, white 100%);
     /* IE10+ */
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, #ffffff 100%);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.48) 47%, rgba(255, 255, 255, 0.74) 73%, white 100%);
     /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#03ffffff', endColorstr='#ffffff',GradientType=1 );
     /* IE6-9 */ } }
@@ -243,6 +248,7 @@ button.error {
 
 #grid thead th:nth-child(11) {
   display: none; }
+
 #grid tbody tr :nth-child(11) {
   font-size: 1.5em;
   display: block;
@@ -252,5 +258,6 @@ button.error {
     display: inline; }
   #grid tbody tr :nth-child(11) * {
     display: none; }
+
 #grid tbody td.visible * {
   display: inline; }

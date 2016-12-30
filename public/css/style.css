@@ -1,5 +1,7 @@
 @import url("/css/font-sans");
-html, body, header {
+html,
+body,
+header {
   width: 100%; }
 
 body {
@@ -13,6 +15,7 @@ body {
 .invoice-bar .typcn:before {
   font-size: 1.5em;
   line-height: 1em; }
+
 .invoice-bar .btn {
   margin-top: 5px;
   margin-right: 5px; }
@@ -63,7 +66,10 @@ footer, .page-wrap:after {
       top: 0px;
       opacity: 1; }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font: 1em "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400; }
 
@@ -103,7 +109,8 @@ em {
 strong {
   font-weight: bold; }
 
-em strong, strong em {
+em strong,
+strong em {
   font-style: italic;
   font-weight: bold; }
 
@@ -126,7 +133,9 @@ a {
   a:active {
     color: #F92700; }
 
-.btn, a.button, .button {
+.btn,
+a.button,
+.button {
   display: inline-block;
   background: none;
   border: 2px solid rgba(0, 0, 0, 0.25);
@@ -140,11 +149,15 @@ a {
   font-weight: 400;
   border-radius: 3px;
   cursor: pointer; }
-  .btn:hover, a.button:hover, .button:hover {
+  .btn:hover,
+  a.button:hover,
+  .button:hover {
     -webkit-transition: color 0.5s ease-in-out;
     transition: opacity color 0.5s ease-in-out;
     border-color: #02c34e; }
-  .btn.action, a.button.action, .button.action {
+  .btn.action,
+  a.button.action,
+  .button.action {
     color: #fff;
     border-bottom: 3px solid rgba(0, 0, 0, 0.25);
     border-top: 3px solid rgba(255, 255, 255, 0.25);
@@ -154,36 +167,58 @@ a {
     background: #02c34e;
     -webkit-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out; }
-    .btn.action:hover, a.button.action:hover, .button.action:hover {
+    .btn.action:hover,
+    a.button.action:hover,
+    .button.action:hover {
       -webkit-transition: all 0.5s ease-in-out;
       transition: all 0.5s ease-in-out;
       background: #01913a;
       border-top-color: rgba(0, 0, 0, 0.25);
       border-bottom-color: transparent; }
-  .btn.btn-danger, a.button.btn-danger, .button.btn-danger {
+  .btn.btn-danger,
+  a.button.btn-danger,
+  .button.btn-danger {
     background: none;
     border-color: #FF9B00;
     color: #FF9B00; }
-    .btn.btn-danger:hover, a.button.btn-danger:hover, .button.btn-danger:hover {
+    .btn.btn-danger:hover,
+    a.button.btn-danger:hover,
+    .button.btn-danger:hover {
       border-color: #cc7c00; }
-  .btn.subtle, .btn.subtle.btn-danger, a.button.subtle, a.button.subtle.btn-danger, .button.subtle, .button.subtle.btn-danger {
+  .btn.subtle, .btn.subtle.btn-danger,
+  a.button.subtle,
+  a.button.subtle.btn-danger,
+  .button.subtle,
+  .button.subtle.btn-danger {
     background: none;
     border-color: #02c34e;
     color: #02c34e; }
-    .btn.subtle:hover, .btn.subtle.btn-danger:hover, a.button.subtle:hover, a.button.subtle.btn-danger:hover, .button.subtle:hover, .button.subtle.btn-danger:hover {
+    .btn.subtle:hover, .btn.subtle.btn-danger:hover,
+    a.button.subtle:hover,
+    a.button.subtle.btn-danger:hover,
+    .button.subtle:hover,
+    .button.subtle.btn-danger:hover {
       color: #01913a;
       border-color: #01913a; }
-  .btn.subtle.btn-danger, a.button.subtle.btn-danger, .button.subtle.btn-danger {
+  .btn.subtle.btn-danger,
+  a.button.subtle.btn-danger,
+  .button.subtle.btn-danger {
     background: none;
     border: 2px solid rgba(0, 0, 0, 0.25);
     color: rgba(0, 0, 0, 0.35); }
-    .btn.subtle.btn-danger:hover, a.button.subtle.btn-danger:hover, .button.subtle.btn-danger:hover {
+    .btn.subtle.btn-danger:hover,
+    a.button.subtle.btn-danger:hover,
+    .button.subtle.btn-danger:hover {
       color: #FF9B00;
       border-color: #FF9B00; }
-  .btn.left, a.button.left, .button.left {
+  .btn.left,
+  a.button.left,
+  .button.left {
     display: block;
     float: left; }
-  .btn.right, a.button.right, .button.right {
+  .btn.right,
+  a.button.right,
+  .button.right {
     display: block;
     float: right; }
 
@@ -201,7 +236,8 @@ h1 {
   }
   */ }
 
-.invoice-form .left p, .invoice-form h1 {
+.invoice-form .left p,
+.invoice-form h1 {
   margin-bottom: 0; }
 
 h2 {
@@ -214,7 +250,9 @@ h3 {
   line-height: 1em;
   margin-bottom: 0.625em; }
 
-p, ul, ol {
+p,
+ul,
+ol {
   margin-bottom: 1.25em;
   color: #666; }
 
@@ -240,18 +278,36 @@ p, ul, ol {
 .col.center-block {
   float: none; }
 
-form.large label, form.large input, form.large textarea, form.large select, form.large button, form.block label, form.block input, form.block textarea, form.block select, form.block button {
+form.large label,
+form.large input,
+form.large textarea,
+form.large select,
+form.large button, form.block label,
+form.block input,
+form.block textarea,
+form.block select,
+form.block button {
   display: block;
   clear: both;
   width: 100%; }
-form.large textarea:focus, form.large input:focus, form.block textarea:focus, form.block input:focus {
+
+form.large textarea:focus,
+form.large input:focus, form.block textarea:focus,
+form.block input:focus {
   outline: none;
   border-color: #6c878d; }
+
 form.large button, form.block button {
   width: auto; }
-form.large label, form.large input, form.large textarea, form.large select, form.large button {
+
+form.large label,
+form.large input,
+form.large textarea,
+form.large select,
+form.large button {
   font-size: 1.25em;
   line-height: 1.25em; }
+
 form .form-group {
   margin-bottom: 1em;
   padding-left: 0px; }
@@ -263,14 +319,18 @@ form .form-group {
     margin: auto; }
   form .form-group hr.line-margin {
     margin-bottom: -1em; }
+
 form .separator {
   margin-bottom: .25em; }
 
-input[type=text], input[type=email], input[type=password], textarea {
+input[type=text],
+input[type=email],
+input[type=password],
+textarea {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
   outline: none;
   border: 2px solid #f0f0f0;
-  border-top-color: #d6d6d6;
+  border-top-color: #d7d7d7;
   border-radius: 3px;
   padding: 0.5em 1em; }
 
@@ -280,16 +340,19 @@ input.half {
 
 .navbar {
   background: #f0f0f0;
-  border-bottom: 1px solid #d6d6d6; }
+  border-bottom: 1px solid #d7d7d7; }
 
 nav.navbar .navbar-brand {
   font-weight: 600; }
+
 nav.navbar p, nav.navbar ul li {
   margin-bottom: 0; }
 
 .navbar-header .navbar-brand {
   display: block; }
-.navbar-header .logo, .navbar-header .logo img {
+
+.navbar-header .logo,
+.navbar-header .logo img {
   display: block;
   width: 30px;
   float: left;
@@ -300,10 +363,12 @@ nav.navbar p, nav.navbar ul li {
 .login .logo {
   box-shadow: 0 2px 0 #909fa0;
   background: #f0f0f0; }
+
 .login .logo img {
   padding: 1.25em; }
 
-.logo, .logo img {
+.logo,
+.logo img {
   display: block;
   max-width: 100px;
   border-radius: 100em; }
@@ -319,14 +384,15 @@ footer {
   float: none;
   clear: both;
   border-top: 1px solid rgba(0, 0, 0, 0.25); }
-  footer .logo, footer .logo img {
+  footer .logo,
+  footer .logo img {
     border-radius: 0;
     max-width: 50px; }
   footer .footer-contact {
     margin: 1.5em; }
     footer .footer-contact li a {
       color: rgba(255, 255, 255, 0.75);
-      font-size: 1.1em;
+      font-size: 1.10em;
       font-weight: 500; }
   footer img {
     opacity: 0.5;
@@ -429,26 +495,30 @@ footer {
     text-shadow: 0 1px rgba(0, 0, 0, 0.15); }
     .landing header .more span {
       display: block; }
-  .landing header .tagline, .landing header div > p {
+  .landing header .tagline,
+  .landing header div > p {
     font-size: 1.4em;
     line-height: 1.5em; }
   .landing header p.tagline {
-    line-height: 1.5em;
+    line-height: 1.50em;
     font-weight: 500;
     margin-bottom: 0.925em;
     font-size: 1.75em; }
+
 .landing .landing-content {
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
   margin: 0; }
+
 .landing .details {
   text-align: center; }
   .landing .details .button {
     margin: 0 1.25em; }
   .landing .details ul li {
     margin-top: 2em; }
+
 .landing .feature-list {
   padding: 3.75em 0 2.5em 0;
   border-top: 1px solid #dedede;
@@ -468,6 +538,7 @@ footer {
     text-align: justify;
     width: 80%;
     margin: auto; }
+
 .landing .logos {
   background: #fafafa;
   padding: 6em 0; }
@@ -485,12 +556,16 @@ footer {
     max-width: 100%;
     max-height: 100px;
     opacity: 0.35; }
+
 .landing p:last-child {
   margin-bottom: 0; }
+
 .landing h2.mini {
   font-size: 1.875em; }
+
 .landing .feature-list .mini i {
   font-size: 1.5em; }
+
 .landing .cta {
   border-top: 1px solid rgba(0, 0, 0, 0.5);
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
@@ -502,6 +577,7 @@ footer {
   .landing .cta p {
     font-size: 1.5em;
     margin-top: 1.25em; }
+
 .landing footer {
   margin-top: 0; }
 
@@ -518,19 +594,24 @@ body.login {
 .search button {
   padding: 0px 10px;
   height: 32px; }
+
 .search input {
   height: 32px; }
+
 .search .search-icon {
   font-size: 1.2em;
   line-height: 1em; }
 
 header > div {
   float: left; }
+
 header .title-row {
   width: 50%; }
+
 header .right-row {
   width: 35%;
   float: right; }
+
 header .middle-buttons {
   padding: 0px 5px; }
   header .middle-buttons button {
@@ -544,16 +625,20 @@ header .middle-buttons {
   .list header.row h2 {
     margin-bottom: 0em;
     margin-top: 0em; }
+
 .list h1 {
   margin-bottom: 0.3125em; }
+
 .list .counts {
   margin-top: 5em; }
   .list .counts li {
     display: inline-block;
     margin-left: 1.25em;
     font-weight: 600; }
+
 .list .all {
   color: #000; }
+
 .list .article {
   margin-bottom: 30px; }
   .list .article .status {
@@ -614,14 +699,48 @@ header .middle-buttons {
   .overdue .status {
     background: #FF9B00; }
 
-.draft h2, .draft h2.dim, .draft .status, .draft .date, .sent h2, .sent h2.dim, .sent .status, .sent .date, .paid h2, .paid h2.dim, .paid .status, .paid .date, .overdue h2, .overdue h2.dim, .overdue .status, .overdue .date {
+.draft h2,
+.draft h2.dim,
+.draft .status,
+.draft .date,
+.sent h2,
+.sent h2.dim,
+.sent .status,
+.sent .date,
+.paid h2,
+.paid h2.dim,
+.paid .status,
+.paid .date,
+.overdue h2,
+.overdue h2.dim,
+.overdue .status,
+.overdue .date {
   -webkit-transition: color 0.5s ease-in-out;
   transition: color 0.5s ease-in-out; }
-.draft:hover, .sent:hover, .paid:hover, .overdue:hover {
+
+.draft:hover,
+.sent:hover,
+.paid:hover,
+.overdue:hover {
   -webkit-transition: color 0.5s ease-in-out;
   transition: color 0.5s ease-in-out;
   border-color: #0085c3; }
-  .draft:hover h2, .draft:hover h2.dim, .draft:hover .status, .draft:hover .date, .sent:hover h2, .sent:hover h2.dim, .sent:hover .status, .sent:hover .date, .paid:hover h2, .paid:hover h2.dim, .paid:hover .status, .paid:hover .date, .overdue:hover h2, .overdue:hover h2.dim, .overdue:hover .status, .overdue:hover .date {
+  .draft:hover h2,
+  .draft:hover h2.dim,
+  .draft:hover .status,
+  .draft:hover .date,
+  .sent:hover h2,
+  .sent:hover h2.dim,
+  .sent:hover .status,
+  .sent:hover .date,
+  .paid:hover h2,
+  .paid:hover h2.dim,
+  .paid:hover .status,
+  .paid:hover .date,
+  .overdue:hover h2,
+  .overdue:hover h2.dim,
+  .overdue:hover .status,
+  .overdue:hover .date {
     color: #0085c3; }
 
 .controls {
@@ -631,7 +750,8 @@ header .middle-buttons {
   padding: 15px 0;
   border-bottom: 1px solid #cccccc;
   text-align: center; }
-  .controls form, .controls .btn {
+  .controls form,
+  .controls .btn {
     display: inline-block;
     margin: 1 1.25em 0; }
 
@@ -654,10 +774,10 @@ header .middle-buttons {
     padding: 1.25em; }
     .modal .modal-wrap.col-lg-8 {
       left: 50%;
-      margin-left: -33.33333%; }
+      margin-left: -33.33333333%; }
     .modal .modal-wrap.col-lg-9 {
       left: 45%;
-      margin-left: -33.33333%; }
+      margin-left: -33.33333333%; }
 
 body.show {
   background: #f5f5f5; }
@@ -707,7 +827,8 @@ body.show {
     margin-right: 111px;
     z-index: 1000;
     border-bottom: 2px solid #aaa; }
-  .invoice-form .to-block > p:first-child, .invoice-form .to-block .to {
+  .invoice-form .to-block > p:first-child,
+  .invoice-form .to-block .to {
     padding-top: 1.25em; }
   .invoice-form .to-block .to {
     padding-bottom: 1.25em;
