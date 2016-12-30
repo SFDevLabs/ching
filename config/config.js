@@ -55,8 +55,8 @@ module.exports = {
       callbackURL: "http://localhost:3000/auth/linkedin/callback"
     },
     sendgrid:{
-      api_user: 'process.env.SEND_GRID_USER',
-      api_key: 'process.env.SEND_GRID_KEY'
+      api_user: process.env.SEND_GRID_USER,
+      api_key: process.env.SEND_GRID_KEY
     }
   },
   development: {
@@ -100,8 +100,8 @@ module.exports = {
       callbackURL: "http://localhost:3000/auth/linkedin/callback"
     },
     sendgrid:{
-      api_user: 'process.env.SEND_GRID_USER',
-      api_key: 'process.env.SEND_GRID_KEY'
+      api_user: process.env.SEND_GRID_USER,
+      api_key: process.env.SEND_GRID_KEY
     }
   },
   test: {
