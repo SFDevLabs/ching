@@ -16,8 +16,7 @@
     "url": "https://github.com/SFDevLabs/ching"
   },
   "engines": {
-    "node": ">=8.x",
-    "npm": "5.5.1"
+    "node": ">=6.x"
   },
   "scripts": {
     "start": "NODE_ENV=development ./node_modules/.bin/nodemon server.js",
