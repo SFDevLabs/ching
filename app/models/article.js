@@ -110,10 +110,10 @@ var ArticleSchema = new Schema({
 //   //   this.salt = this.makeSalt()
 //   //   this.hashed_password = this.encryptPassword(password)
 //   // })
-//   .get(function() { 
+//   .get(function() {
 //     var val
 //     if (this.items.length){
-//       val = this.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal}) 
+//       val = this.items.map(function(val){ return val.total }).reduce(function(pVal,cVal){return pVal+cVal})
 //     }else{
 //       val = 0;
 //     }
@@ -204,7 +204,7 @@ ArticleSchema.methods = {
             });
           }
           self.save(cb);
-        }, 'article');        
+        }, 'article');
       }else if (images[0]){
         var time = new Date().getTime().toString();
         var path = images[0].path;
@@ -347,7 +347,7 @@ ArticleSchema.statics = {
         .limit( 1 )
         .sort( {number:-1} )
         .exec(function(err, highest){
-            if (err) { cb(err,null);}       
+            if (err) { cb(err,null);}
             if (highest.length && typeof highest[0].number==='number'){
               number = highest[0].number+1;
             }else{
@@ -377,7 +377,7 @@ ArticleSchema.statics = {
       // ])
       // .where('viewers')
       // .in([options.criteria.user])
-      // 
+      //
       // .populate('user', 'firstname email lastname organization')
       // .populate('viewers.user', 'firstname email lastname organization')
       //.sort({'createdAt': -1}) // sort by date
@@ -405,7 +405,7 @@ ArticleSchema.statics = {
       // ])
       // .where('viewers')
       // .in([options.criteria.user])
-      // 
+      //
       .populate('user', 'firstname email lastname organization')
       .populate('viewers.user', 'firstname email lastname organization')
       .populate('organization')
@@ -424,11 +424,11 @@ ArticleSchema.statics = {
    * @api private
    */
   all:function (options,cb){
-      
+
       this.find(options.criteria)
       .populate('user', 'firstname email lastname organization')
       .populate('viewers.user', 'firstname email lastname organization')
-      .sort({'createdAt': -1}) 
+      .sort({'createdAt': -1})
       .exec(cb);
   },
 
@@ -441,6 +441,10 @@ ArticleSchema.statics = {
                       //{ $group: { _id: null, count: { $sum: 1 } } }
                      ] ).exec(function(err,res){
                         // console.log(err,res,res2, 'agg')
+                        if (err || res === undefined){
+                          cb(err, 0);
+                        }
+                        console.log(res,'resres')
                         var total;
                         if (res[0]){
                          total = res[0].total;
@@ -449,7 +453,7 @@ ArticleSchema.statics = {
                         }
                         cb(null, total);
                        });
-    
+
   }
 
 

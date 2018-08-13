@@ -11,13 +11,13 @@
   "version": "3.0.0",
   "private": false,
   "author": "Jenkins Jeffrey <jeff@sfdevlabs.com> (https://github.com/jeffj)",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/SFDevLabs/ching"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SFDevLabs/ching"
   },
   "engines": {
     "node": ">=5.x",
-    "npm":  "2.1.x"
+    "npm": "2.1.x"
   },
   "scripts": {
     "start": "NODE_ENV=development ./node_modules/.bin/nodemon server.js",
@@ -26,7 +26,7 @@
   "dependencies": {
     "express": "3.4.x",
     "jade": "latest",
-    "mustache":"latest",
+    "mustache": "latest",
     "mongoose": "latest",
     "connect-mongo": "latest",
     "connect-flash": "latest",
@@ -43,15 +43,15 @@
     "async": "latest",
     "view-helpers": "latest",
     "forever": "latest",
-    "stylus":"latest",
-    "sendgrid":"4.7.1",
-    "csvtojson":"latest",
-    "underscore" : "latest",
-    "pdfkit":"latest",
-    "node-sass-middleware":"latest",
+    "stylus": "latest",
+    "sendgrid": "4.7.1",
+    "csvtojson": "latest",
+    "underscore": "latest",
+    "pdfkit": "latest",
+    "node-sass-middleware": "latest",
     "keen.io": "latest",
-    "request":"latest",
-    "cron":"latest",
+    "request": "latest",
+    "cron": "latest",
     "knox": "latest"
   },
   "devDependencies": {
