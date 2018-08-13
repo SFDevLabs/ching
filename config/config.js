@@ -60,7 +60,7 @@ module.exports = {
     }
   },
   development: {
-    db: 'mongodb://localhost/ching',
+    db: 'mongodb://heroku_app31527951:45dhfgp4d4nssruli9iek1ck8l@ds053090.mongolab.com:53090/heroku_app31527951',
     root: rootPath,
     notifier: notifier,
     app: {
