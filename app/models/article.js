@@ -92,7 +92,7 @@ var ArticleSchema = new Schema({
     isPayment: { type: Boolean, default: false },
     createdAt: { type : Date, default : Date.now }
   }],
-  tags: {type: [], get: getTags, set: setTags},
+  tags: {type: []},
   createdAt  : {type : Date, default : Date.now},
   invoicedOn:{type : Date, default : null},
   paidOn:{type : Date, default : null},
