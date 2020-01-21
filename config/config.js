@@ -27,7 +27,7 @@ module.exports = {
       readKey: process.env.KEEN_READ_KEY,
       masterKey: process.env.KEEN_MASTER_KEY
     },
-    rootHost:'http://ching.io',
+    rootHost:'https://chingio.herokuapp.com/',
     port:'80',//not required but placed for consistency
     facebook: {
       clientID: "APP_ID",
