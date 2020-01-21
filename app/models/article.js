@@ -22,17 +22,17 @@ var mongoose = require('mongoose')
  * Getters
  */
 
-var getTags = function (tags) {
-  return tags.join(',');
-};
+// var getTags = function (tags) {
+//   return tags.join(',');
+// };
 
 /**
  * Setters
  */
 
-var setTags = function (tags) {
-  return tags.split(',');
-};
+// var setTags = function (tags) {
+//   return tags.split(',');
+// };
 
 /**
  * Article Schema
