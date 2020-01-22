@@ -22,17 +22,24 @@ var mongoose = require('mongoose')
  * Getters
  */
 
-// var getTags = function (tags) {
-//   return tags.join(',');
-// };
+var getTags = function (tags) {
+  if (tags && tags.join){
+    return tags.join(',');
+  }
+  return '';
+  
+};
 
 /**
  * Setters
  */
 
-// var setTags = function (tags) {
-//   return tags.split(',');
-// };
+var setTags = function (tags) {
+  if (tags && tags.split){
+    return tags.split(',');
+  }
+  return []
+};
 
 /**
  * Article Schema
@@ -92,7 +99,7 @@ var ArticleSchema = new Schema({
     isPayment: { type: Boolean, default: false },
     createdAt: { type : Date, default : Date.now }
   }],
-  tags: {type: []},
+  tags: {type: [], set:setTags, get:getTags},
   createdAt  : {type : Date, default : Date.now},
   invoicedOn:{type : Date, default : null},
   paidOn:{type : Date, default : null},
