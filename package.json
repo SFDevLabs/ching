@@ -51,7 +51,8 @@
     "keen.io": "latest",
     "request": "latest",
     "cron": "latest",
-    "knox": "latest"
+    "knox": "latest",
+    "node-sass":"4.13.1"
   },
   "devDependencies": {
     "supertest": "latest",
