@@ -52,7 +52,7 @@
     "request": "latest",
     "cron": "latest",
     "knox": "latest",
-    "node-sass":"4.13.1"
+    "node-sass":"7.0.0"
   },
   "devDependencies": {
     "supertest": "latest",
